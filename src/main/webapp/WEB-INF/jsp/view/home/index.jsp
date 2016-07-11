@@ -12,14 +12,14 @@
     <title>Reigate Mens Joggers</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--link href="css/bootstrap.min.css" rel="stylesheet"-->
 
     <!-- Custom CSS -->
-    <link href="css/landing-page.css" rel="stylesheet">
+    <!--link href="css/landing-page.css" rel="stylesheet"-->
 
     <!-- Custom Fonts -->
-    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+    <!--link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"-->
+    <!--link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css"-->
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -28,29 +28,54 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
 </head>
 
 <body>
 
-<div class="jumbotron text-center">
-  <h1>Reigate Mens Joggers</h1>
-  <p>Coming Soon!</p>
-</div>
+	<div class="jumbotron text-center">
+	  <h1>Reigate Mens Joggers</h1>
+	  <p>Its got to be better than sitting on the sofa right? Escape that stuffy office and come and for a run - you won't regret it!</p>
+	</div>
 
 <div class="container">
-  <div class="row">
-    <div class="col-sm-12">
-      <h3>Contacts</h3>
-      <p>While the mens site is under construction, please refer to <a href="http://www.reigateladiesjoggers.co.uk">www.reigateladiesjoggers.co.uk</a></p>
-    </div>
-  </div>
+	  		<p>This is a mixed ability session so if you are returning to running, trying running for the first time or wanting to increase your running there is something for everyone.</p>
+      		<p>Its a fun, friendly group where no one gets left behind. We will have a real variety of sessions from hills work, speed work, interval training and steady runs. We also will have social events, races and plan special events.</p>
 </div>
 
+	<hr/>
+
+	<div class="container">
+	  <div class="row">
+	    <div class="col-sm-4">
+	      <h3>When?</h3>
+	      <p>Every Tuesday 7.30pm - 8.30pm<p>
+	    </div>
+	    <div class="col-sm-4">
+	      <h3>Where?</h3>
+	      <p>Our coach Richard will be waiting for you at St Bedes School. Carlton Road, Redhill. Please do come along!<p>
+	    </div>
+	    <div class="col-sm-4">
+	      <h3>How Much?</h3>
+	      <p>First session FREE! Sessions following are £5.00 and can be bought in blocks of 10<p>
+	    </div>
+	  </div>
+	</div>
+
+	<hr/>
+
+	<div class="container small text-right ">
+	Still under construction! More to come... © Paul Verity (2016)
+	</div>
+
     <!-- jQuery -->
-    <script src="js/jquery.js"></script>
+    <!--script src="js/jquery.js"></script-->
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+    <!--script src="js/bootstrap.min.js"></script-->
 
 </body>
 
