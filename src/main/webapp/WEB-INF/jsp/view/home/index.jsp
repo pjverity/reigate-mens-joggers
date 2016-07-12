@@ -11,16 +11,6 @@
 
     <title>Reigate Mens Joggers</title>
 
-    <!-- Bootstrap Core CSS -->
-    <!--link href="css/bootstrap.min.css" rel="stylesheet"-->
-
-    <!-- Custom CSS -->
-    <!--link href="css/landing-page.css" rel="stylesheet"-->
-
-    <!-- Custom Fonts -->
-    <!--link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"-->
-    <!--link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css"-->
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -41,10 +31,10 @@
 	  <p>Its got to be better than sitting on the sofa right? Escape that stuffy office and come and for a run - you won't regret it!</p>
 	</div>
 
-<div class="container">
+	<div class="container">
 	  		<p>This is a mixed ability session so if you are returning to running, trying running for the first time or wanting to increase your running there is something for everyone.</p>
       		<p>Its a fun, friendly group where no one gets left behind. We will have a real variety of sessions from hills work, speed work, interval training and steady runs. We also will have social events, races and plan special events.</p>
-</div>
+	</div>
 
 	<hr/>
 
@@ -68,14 +58,8 @@
 	<hr/>
 
 	<div class="container small text-right ">
-	Still under construction! More to come... © Paul Verity (2016)
+		Still under construction! More to come... © Paul Verity (2016)
 	</div>
-
-    <!-- jQuery -->
-    <!--script src="js/jquery.js"></script-->
-
-    <!-- Bootstrap Core JavaScript -->
-    <!--script src="js/bootstrap.min.js"></script-->
 
 </body>
 
