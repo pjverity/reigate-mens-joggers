@@ -28,12 +28,12 @@
 
 	<div class="jumbotron text-center">
 	  <h1>Reigate Mens Joggers</h1>
-	  <p>Its got to be better than sitting on the sofa right? Escape that stuffy office and come and for a run - you won't regret it!</p>
+	  <p>Its got to be better than sitting on the sofa right? Escape that stuffy office and come for a run - you won't regret it!</p>
 	</div>
 
 	<div class="container">
-	  		<p>This is a mixed ability session so if you are returning to running, trying running for the first time or wanting to increase your running there is something for everyone.</p>
-      		<p>Its a fun, friendly group where no one gets left behind. We will have a real variety of sessions from hills work, speed work, interval training and steady runs. We also will have social events, races and plan special events.</p>
+	  	<p>This is a mixed ability session so if you are returning to running, trying running for the first time or wanting to increase your running there is something for everyone.</p>
+      	<p>Its a fun, friendly group where no one gets left behind. We will have a real variety of sessions from hills work, speed work, interval training and steady runs. We also will have social events, races and plan special events.</p>
 	</div>
 
 	<hr/>
