@@ -73,6 +73,15 @@
 					<path>/rmj</path>
 				</configuration>
 			</plugin>
+			<!-- Currently no remote repository to deploy artifacts to, so skip configure the plugin to skip deployment -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
