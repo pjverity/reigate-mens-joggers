@@ -60,8 +60,8 @@
 
 <hr/>
 
-<div class="container small text-right ">
-    Still under construction! More to come... © Paul Verity (2016)
+<div class="container small text-right">
+    <small class="text-muted">Still under construction! More to come... © Paul Verity (2016)</small>
 </div>
 
 </body>
