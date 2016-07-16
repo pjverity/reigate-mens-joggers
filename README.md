@@ -1,6 +1,5 @@
 ## Reigate Mens Joggers Website
 
-Still under construction
-
+http://www.reigatemensjoggers.co.uk/
 
 © Paul Verity 2016
