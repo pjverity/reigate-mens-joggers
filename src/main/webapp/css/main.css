@@ -1,0 +1,9 @@
+a.social-buttons {
+    display: inline-block;
+    background-color: white;
+    height: 40px;
+    width: 40px;
+    border-radius: 100%;
+    line-height: 40px;
+    outline: 0;
+}
