@@ -38,6 +38,7 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<a href="https://www.facebook.com/ReigateMensJoggers" class="social-buttons"><i class="fa fa-facebook fa-fw"></i></a>
+				<a href="https://twitter.com/MensJoggers" class="social-buttons"><i class="fa fa-twitter fa-fw"></i></a>
 			</div>
 		</div>
 	</div>
