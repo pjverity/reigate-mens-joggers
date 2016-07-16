@@ -7,3 +7,9 @@ a.social-buttons {
     line-height: 40px;
     outline: 0;
 }
+
+a.social-buttons.small {
+    height: 10px;
+    width: 10px;
+    line-height: 10px;
+}

@@ -77,7 +77,7 @@
 <hr/>
 
 <div class="container small text-right">
-	<small class="text-muted">Still under construction! More to come... © Paul Verity (2016)</small>
+	<small class="text-muted">Still under construction. More to come! © Paul Verity (2016) <a href="https://github.com/pjverity/rmj" class="social-buttons small"><i class="fa fa-github fa-fw"></i></a></small>
 </div>
 
 </body>
