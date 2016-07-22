@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Appenders>
+
+		<!-- Only interested in events that cause warnings or errors in the console to reduce noise when debugging -->
+		<Console name="Console" target="SYSTEM_OUT">
+			<ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level &lt;%X{id}&gt; [%t] %class{1} %M %L %msg%n"/>
+		</Console>
+
+		<!-- Standard rolling log file -->
+		<RollingFile name="rollingFileAppender" fileName="../logs/rmj.log" filePattern="../logs/rmj.%d{MM-dd-yyyy}-%i.log">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level &lt;%X{id}&gt; [%t] %class{1} %M %L %msg%n"/>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="10 MB"/>
+			</Policies>
+			<DefaultRolloverStrategy min="1" max="4"/>
+		</RollingFile>
+
+	</Appenders>
+
+	<Loggers>
+
+		<!-- For any logging that comes outside of our code, only log anything more severe than a warning -->
+		<Root level="WARN">
+			<AppenderRef ref="Console"/>
+		</Root>
+
+		<!--
+		Log anything from our own code. However, only anything more severe than a warning will go to the console due to the threshold filter,
+		Everything else will be dumped in to a log file on disk
+		-->
+		<Logger name="uk.co.vhome.rmj" level="ALL">
+			<Appender-ref ref="rollingFileAppender"/>
+		</Logger>
+
+		<!-- Not too fussed about logging in this package, inherits the parent loggers -->
+		<Logger name="uk.co.vhome.rmj.site" level="WARN" />
+
+	</Loggers>
+
+</Configuration>
