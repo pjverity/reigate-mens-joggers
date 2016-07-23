@@ -48,7 +48,7 @@ public class Bootstrap implements WebApplicationInitializer
 
 	public void onStartup(ServletContext servletContext) throws ServletException
 	{
-		servletContext.getServletRegistration(DEFAULT_SERVLET_NAME).addMapping("/img/*","/css/*", "/sitemap.xml");
+		servletContext.getServletRegistration(DEFAULT_SERVLET_NAME).addMapping("/css/*", "/font-awesome-4.6.3/*", "/sitemap.xml");
 
 		AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
 		rootContext.register(RootContextConfiguration.class);
