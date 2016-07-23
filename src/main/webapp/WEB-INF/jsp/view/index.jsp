@@ -31,8 +31,7 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-12">
-				<p>Its got to be better than sitting on the sofa right? Escape that stuffy office and come for a run - you won't
-					regret it!</p>
+				<p>Its got to be better than sitting on the sofa right? Escape that stuffy office and come for a run - you won't regret it!</p>
 			</div>
 		</div>
 		<div class="row">
@@ -57,27 +56,30 @@
 	<div class="row">
 		<div class="col-sm-4">
 			<h3>When?</h3>
-			<p>Every Tuesday 7.30pm - 8.30pm
-			<p>
+			<p>Every Tuesday 7.30pm - 8.30pm</p>
 		</div>
 		<div class="col-sm-4">
 			<h3>Where?</h3>
-			<p>Our coach Richard will be waiting for you at St Bedes School. Carlton Road, Redhill. Please do come
-				along!
-			<p>
+			<p>Our coach Richard will be waiting for you at St Bedes School. Carlton Road, Redhill. Please do come along!</p>
 		</div>
 		<div class="col-sm-4">
 			<h3>How Much?</h3>
-			<p>First session FREE! Sessions following are £5.00 and can be bought in blocks of 10
-			<p>
+			<p>First session FREE! Sessions following are £5.00 and can be bought in blocks of 10</p>
 		</div>
 	</div>
 </div>
 
 <hr/>
 
-<div class="container small text-right">
-	<small class="text-muted">Still under construction. More to come! © Paul Verity (2016) <a href="https://github.com/pjverity/rmj" class="social-buttons small"><i class="fa fa-github fa-fw"></i></a></small>
+<div class="container small">
+	<div class="row">
+		<div class="col-sm-6">
+			<small class="text-muted">Not a man? Why not check out our sister site <a href="http://www.reigateladiesjoggers.co.uk">www.reigateladiesjoggers.co.uk</a></small>
+		</div>
+		<div class="col-sm-6 text-right">
+			<small class="text-muted">Still under construction. More to come! © Paul Verity (2016) <a href="https://github.com/pjverity/rmj" class="social-buttons small"><i class="fa fa-github fa-fw"></i></a></small>
+		</div>
+	</div>
 </div>
 
 </body>
