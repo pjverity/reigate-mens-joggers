@@ -1,11 +1,12 @@
-package uk.co.vhome.rmj;
+package uk.co.vhome.rmj.config;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
-import uk.co.vhome.rmj.config.RootContextConfiguration;
-import uk.co.vhome.rmj.config.ServletContextConfiguration;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -14,7 +15,7 @@ import javax.servlet.ServletRegistration;
 /**
  * This is called once when the container initialises the application, before any Listeners
  * are called. This is the earliest point of initialisation. How does it get called? Well...
- *
+ * <p>
  * Servlet 3.0+ containers use the Java Service Provider API to locate classes that
  * implement the ServletContainerInitializer interface. It then instantiates them
  * and calls their onStartup() method. To hook in to Java's SPI loading framework so
@@ -22,25 +23,27 @@ import javax.servlet.ServletRegistration;
  * containing a META-INF/services/javax.servlet.ServletContainerInitializer file that
  * lists the FQN of the concrete classes in the JAR implementing that interface. This
  * JAR then has to be packaged and placed in the web applications /lib directory.
- *
+ * <p>
  * To avoid all the pain of creating and deploying that JAR, the spring-web JAR on the
  * applications class path already provides this via the SpringServletContainerInitializer.
  * The JAR contains the META-INF/services file listing SpringServletContainerInitializer as the
  * concrete class implementing ServletContainerInitializer.
- *
+ * <p>
  * The implementation of SpringServletContainerInitializer declares that it can handle classes
  * of type WebApplicationInitializer. The container scans for classes implementing this
  * and provides them to the onStartup() method, SpringServletContainerInitializer then
  * instantiates them and calls onStartup() on those instances... So, all we have to do
  * is implement WebApplicationInitializer and allow classpath scanning to find us and
  * for SpringServletContainerInitializer to call us!
- *
+ * <p>
  * And so that is how we get to initialise our Spring app contexts, Servlets, Filters etc
  * programmatically at start-up!
  */
 @SuppressWarnings("unused")
-public class Bootstrap implements WebApplicationInitializer
+@Order(1)
+public class BootstrapFramework implements WebApplicationInitializer
 {
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final String DEFAULT_SERVLET_NAME = "default";
 
@@ -48,7 +51,12 @@ public class Bootstrap implements WebApplicationInitializer
 
 	public void onStartup(ServletContext servletContext) throws ServletException
 	{
-		servletContext.getServletRegistration(DEFAULT_SERVLET_NAME).addMapping("/css/*", "/font-awesome-4.6.3/*", "/sitemap.xml");
+		LOGGER.traceEntry("Initialising...");
+
+		servletContext.getServletRegistration(DEFAULT_SERVLET_NAME).addMapping(
+				"/css/*",
+				"/font-awesome-4.6.3/*",
+				"/sitemap.xml");
 
 		AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
 		rootContext.register(RootContextConfiguration.class);
@@ -60,5 +68,7 @@ public class Bootstrap implements WebApplicationInitializer
 
 		dispatcher.setLoadOnStartup(1);
 		dispatcher.addMapping("/");
+
+		LOGGER.traceExit();
 	}
 }
