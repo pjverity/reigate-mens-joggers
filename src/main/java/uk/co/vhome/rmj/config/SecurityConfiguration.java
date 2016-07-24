@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+import static uk.co.vhome.rmj.config.BootstrapFramework.ADDITIONAL_RESOURCE_PATHS;
+
 /*
  * Configure web security for the site
  */
@@ -17,20 +19,31 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception
 	{
-		super.configure(auth);
+		auth.inMemoryAuthentication()
+				.withUser("paul")
+				.password("test")
+				.authorities("ADMIN");
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception
 	{
 		http.authorizeRequests()
-				.antMatchers("/admin/**").hasRole("ADMIN")
-				.anyRequest().permitAll();
+				.antMatchers("/admin/**").authenticated()
+				.antMatchers("/**").permitAll()
+				.and().formLogin()
+				.defaultSuccessUrl("/admin/")
+				.usernameParameter("username")
+				.passwordParameter("password")
+				.permitAll()
+				.and()
+				.csrf().disable();
 	}
 
 	@Override
 	public void configure(WebSecurity web) throws Exception
 	{
-		super.configure(web);
+		// Bypass the security filters for efficiency
+		web.ignoring().antMatchers(ADDITIONAL_RESOURCE_PATHS);
 	}
 }
