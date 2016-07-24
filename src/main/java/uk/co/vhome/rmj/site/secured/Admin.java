@@ -21,7 +21,7 @@ public class Admin
 	{
 		LOGGER.traceEntry();
 
-		return LOGGER.traceExit("admin");
+		return LOGGER.traceExit("/jsp/secured/admin");
 	}
 
 }

@@ -18,6 +18,6 @@ public class Home
 	{
 		LOGGER.traceEntry();
 
-		return LOGGER.traceExit("index");
+		return LOGGER.traceExit("/jsp/index");
 	}
 }
