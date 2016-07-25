@@ -21,6 +21,8 @@ public class AdminHomeController
 	{
 		LOGGER.traceEntry();
 
+		LOGGER.warn("I'm in");
+
 		return LOGGER.traceExit("/jsp/administration/index");
 	}
 

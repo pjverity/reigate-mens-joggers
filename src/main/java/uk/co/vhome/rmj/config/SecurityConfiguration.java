@@ -1,5 +1,7 @@
 package uk.co.vhome.rmj.config;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,9 +18,13 @@ import static uk.co.vhome.rmj.config.BootstrapFramework.ADDITIONAL_RESOURCE_PATH
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 {
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception
 	{
+		LOGGER.info("Configuring authentication...");
+
 		auth.inMemoryAuthentication()
 				.withUser("paul")
 				.password("test")
@@ -32,6 +38,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 	@Override
 	protected void configure(HttpSecurity http) throws Exception
 	{
+		LOGGER.info("Configuring HTTP security...");
+
 		http.authorizeRequests()
 				.antMatchers("/admin/**").hasAuthority("ADMIN")
 				.antMatchers("/member/**").hasAnyAuthority("MEMBER")
@@ -48,6 +56,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 	@Override
 	public void configure(WebSecurity web) throws Exception
 	{
+		LOGGER.info("Configuring Web security...");
+
 		// Bypass the security filters for efficiency
 		web.ignoring().antMatchers(ADDITIONAL_RESOURCE_PATHS);
 	}

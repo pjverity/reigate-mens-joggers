@@ -2,15 +2,14 @@ package uk.co.vhome.rmj.config;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.core.annotation.Order;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
-import uk.co.vhome.rmj.config.filters.LoggingFilter;
 
-import javax.servlet.*;
-import java.util.EnumSet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
 
 /**
  * This is called once when the container initialises the application, before any Listeners
@@ -40,7 +39,6 @@ import java.util.EnumSet;
  * programmatically at start-up!
  */
 @SuppressWarnings("unused")
-@Order(1)
 public class BootstrapFramework implements WebApplicationInitializer
 {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -55,7 +53,7 @@ public class BootstrapFramework implements WebApplicationInitializer
 
 	public void onStartup(ServletContext servletContext) throws ServletException
 	{
-		LOGGER.traceEntry("Initialising...");
+		LOGGER.info("Configuring Servlet...");
 
 		// All servlets should have access to resources at these paths
 		servletContext.getServletRegistration(DEFAULT_SERVLET_NAME).addMapping(ADDITIONAL_RESOURCE_PATHS);
@@ -88,11 +86,5 @@ public class BootstrapFramework implements WebApplicationInitializer
 
 		// The dispatcher should respond to requests from the root path
 		dispatcher.addMapping("/");
-
-		// Now add in our logging filter which should handle all dispatcher types at all URLs
-		FilterRegistration.Dynamic registration = servletContext.addFilter("loggingFilter", new LoggingFilter());
-		registration.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
-
-		LOGGER.traceExit();
 	}
 }

@@ -8,9 +8,10 @@ import java.util.UUID;
 
 /**
  * A servlet filter that accepts all types of dispatcher requests and adds additional diagnostic
- * information to the request for logging.
+ * information to the request for logging. This filter executes before Springs authentication
+ * filter. Filter order defined in {@link uk.co.vhome.rmj.config.BootstrapSecurity}
  */
-public class LoggingFilter implements Filter
+public class PreAuthenticationLoggingFilter implements Filter
 {
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException { }
