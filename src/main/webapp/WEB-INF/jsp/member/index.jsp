@@ -21,7 +21,7 @@
 </head>
 
 <body>
-	Super secret admin screen!
+Members only screen!
 </body>
 
 <head>

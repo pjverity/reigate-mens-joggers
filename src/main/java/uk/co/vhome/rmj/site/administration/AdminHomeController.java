@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.site.secured;
+package uk.co.vhome.rmj.site.administration;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping("/admin")
 @SuppressWarnings("unused")
-public class Admin
+public class AdminHomeController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
@@ -21,7 +21,7 @@ public class Admin
 	{
 		LOGGER.traceEntry();
 
-		return LOGGER.traceExit("/jsp/secured/admin");
+		return LOGGER.traceExit("/jsp/administration/index");
 	}
 
 }

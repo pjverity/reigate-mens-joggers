@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.site;
+package uk.co.vhome.rmj.site.world;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping("/")
 @SuppressWarnings("unused")
-public class Home
+public class WelcomeController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
@@ -18,6 +18,6 @@ public class Home
 	{
 		LOGGER.traceEntry();
 
-		return LOGGER.traceExit("/jsp/index");
+		return LOGGER.traceExit("/jsp/world/index");
 	}
 }

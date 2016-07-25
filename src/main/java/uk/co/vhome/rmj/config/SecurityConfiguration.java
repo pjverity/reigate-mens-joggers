@@ -22,14 +22,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 		auth.inMemoryAuthentication()
 				.withUser("paul")
 				.password("test")
-				.authorities("ADMIN");
+				.authorities("MEMBER","ADMIN")
+				.and()
+				.withUser("member")
+				.password("member")
+				.authorities("MEMBER");
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception
 	{
 		http.authorizeRequests()
-				.antMatchers("/admin/**").authenticated()
+				.antMatchers("/admin/**").hasAuthority("ADMIN")
+				.antMatchers("/member/**").hasAnyAuthority("MEMBER")
 				.antMatchers("/**").permitAll()
 				.and().formLogin()
 				.defaultSuccessUrl("/admin/")
