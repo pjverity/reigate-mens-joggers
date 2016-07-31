@@ -47,9 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 					.defaultSuccessUrl("/")
 					.usernameParameter("username")
 					.passwordParameter("password")
-					.permitAll()
-				.and()
-					.csrf().disable();
+					.permitAll();
 	}
 
 	@Override
