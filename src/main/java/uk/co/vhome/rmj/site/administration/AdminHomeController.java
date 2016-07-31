@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Secured administration functions
  */
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("admin")
 @SuppressWarnings("unused")
 public class AdminHomeController
 {

@@ -2,7 +2,6 @@ package uk.co.vhome.rmj.config;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -14,7 +13,6 @@ import static uk.co.vhome.rmj.config.BootstrapFramework.ADDITIONAL_RESOURCE_PATH
 /*
  * Configure web security for the site
  */
-@Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 {
@@ -44,13 +42,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 				.antMatchers("/admin/**").hasAuthority("ADMIN")
 				.antMatchers("/member/**").hasAnyAuthority("MEMBER")
 				.antMatchers("/**").permitAll()
-				.and().formLogin()
-				.defaultSuccessUrl("/admin/")
-				.usernameParameter("username")
-				.passwordParameter("password")
-				.permitAll()
 				.and()
-				.csrf().disable();
+					.formLogin()
+					.defaultSuccessUrl("/")
+					.usernameParameter("username")
+					.passwordParameter("password")
+					.permitAll()
+				.and()
+					.csrf().disable();
 	}
 
 	@Override

@@ -84,7 +84,7 @@ public class BootstrapFramework implements WebApplicationInitializer
 		// Don't wait for the first request to initialise the servlet, initialise on load
 		dispatcher.setLoadOnStartup(1);
 
-		// The dispatcher should respond to requests from the root path
+		// The dispatcher should respond to requests from the root path (Don't use '/*' See p.335 Pro Java For Web Apps)
 		dispatcher.addMapping("/");
 	}
 }
