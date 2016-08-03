@@ -11,6 +11,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 import javax.persistence.SharedCacheMode;
 import javax.persistence.ValidationMode;
@@ -24,14 +25,14 @@ import java.util.Map;
 		excludeFilters = @ComponentScan.Filter(Controller.class)
 )
 @EnableTransactionManagement(mode = AdviceMode.PROXY) //p.607
-public class RootContextConfiguration
+public class RootContextConfiguration implements TransactionManagementConfigurer
 {
 
 	private static final String HIBERNATE_DIALECT = "org.hibernate.dialect.PostgreSQL94Dialect";
 
 	private static final String SCHEMA_GENERATION_KEY = "javax.persistence-schema-generation.database.action";
 
-	// See p.602
+	// Configure our Datasource (ie, the connection to the Database) See p.602
 	@Bean
 	public DataSource springJpaDataSource()
 	{
@@ -39,6 +40,8 @@ public class RootContextConfiguration
 		return lookup.getDataSource("jdbc/RMJ");
 	}
 
+	// Configure the persistence unit (Which managers our entities and configures the JPA implementation
+	// (Hibernate O/RM being the chosen JPA implementation) (p604)
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean()
 	{
@@ -62,5 +65,12 @@ public class RootContextConfiguration
 	public PlatformTransactionManager jpaTransactionManager()
 	{
 		return new JpaTransactionManager(entityManagerFactoryBean().getObject());
+	}
+
+	// Protect against Spring choosing the wrong transaction manager is we create several (p.609)
+	@Override
+	public PlatformTransactionManager annotationDrivenTransactionManager()
+	{
+		return jpaTransactionManager();
 	}
 }
