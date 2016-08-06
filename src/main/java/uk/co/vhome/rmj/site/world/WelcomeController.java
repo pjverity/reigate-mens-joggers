@@ -29,8 +29,6 @@ public class WelcomeController
 	{
 		LOGGER.traceEntry();
 
-		userService.getAllUsers();
-
 		return LOGGER.traceExit("/jsp/world/index");
 	}
 }

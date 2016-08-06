@@ -7,4 +7,5 @@ import uk.co.vhome.rmj.model.User;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long>
 {
+	User findByEmailAddress(String username);
 }

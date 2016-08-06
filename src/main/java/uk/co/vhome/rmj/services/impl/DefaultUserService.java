@@ -3,6 +3,10 @@ package uk.co.vhome.rmj.services.impl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +15,7 @@ import uk.co.vhome.rmj.repositories.UserRepository;
 import uk.co.vhome.rmj.services.UserService;
 
 import javax.inject.Inject;
+import java.util.Collections;
 
 @Service
 class DefaultUserService implements UserService
@@ -35,11 +40,11 @@ class DefaultUserService implements UserService
 	}
 
 	@Override
-	public boolean signUp(String emailAddress, String password)
+	public boolean signUp(String emailAddress, String password, String firstName, String lastName)
 	{
 		String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-		User newUser = new User(emailAddress, hashedPassword);
+		User newUser = new User(emailAddress, hashedPassword, firstName, lastName);
 
 		try
 		{
@@ -54,4 +59,19 @@ class DefaultUserService implements UserService
 		return true;
 	}
 
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
+	{
+		User user = userRepository.findByEmailAddress(username);
+
+		GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(user.getRole().trim());
+
+		return new org.springframework.security.core.userdetails.User(user.getEmailAddress(),
+				user.getPassword(),
+				user.isEnabled(),
+				true,
+				true,
+				true,
+				Collections.singletonList(grantedAuthority));
+	}
 }

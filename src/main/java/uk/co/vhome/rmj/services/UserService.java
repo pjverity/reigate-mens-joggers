@@ -1,10 +1,16 @@
 package uk.co.vhome.rmj.services;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import uk.co.vhome.rmj.model.User;
 
-public interface UserService
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+
+public interface UserService extends UserDetailsService
 {
+	@RolesAllowed("ADMIN")
 	Iterable<User> getAllUsers();
 
-	boolean signUp(String emailAddress, String password);
+	@PermitAll
+	boolean signUp(String emailAddress, String password, String firstName, String lastName);
 }
