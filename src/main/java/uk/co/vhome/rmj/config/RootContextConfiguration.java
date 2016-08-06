@@ -3,6 +3,7 @@ package uk.co.vhome.rmj.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -21,6 +22,11 @@ import java.util.Map;
 @ComponentScan(
 		basePackages = "uk.co.vhome",
 		excludeFilters = @ComponentScan.Filter(Controller.class)
+)
+@EnableJpaRepositories(     //p.651
+		basePackages = "uk.co.vhome.rmj.repositories",
+		entityManagerFactoryRef = "entityManagerFactoryBean",
+		transactionManagerRef = "jpaTransactionManager"
 )
 @EnableTransactionManagement //p.607
 public class RootContextConfiguration // implements TransactionManagementConfigurer
@@ -59,7 +65,7 @@ public class RootContextConfiguration // implements TransactionManagementConfigu
 	}
 
 	@Bean
-	public PlatformTransactionManager txManager()
+	public PlatformTransactionManager jpaTransactionManager()
 	{
 		return new JpaTransactionManager(entityManagerFactoryBean().getObject());
 	}

@@ -1,43 +1,57 @@
 package uk.co.vhome.rmj.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "Users")
 public class User implements Serializable
 {
-	private long uid;
+	private long id;
 
-	private String username;
+	private String emailAddress;
 
 	private String password;
 
 	private boolean enabled;
 
-	@Id
-	public long getUid()
+	private Date lastLogin;
+
+	private String role;
+
+	public User()
 	{
-		return uid;
 	}
 
-	public void setUid(long uid)
+	public User(String emailAddress, String password)
 	{
-		this.uid = uid;
+		this.emailAddress = emailAddress;
+		this.password = password;
+		this.enabled = true;
+	}
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) //p.571
+	public long getId()
+	{
+		return id;
+	}
+
+	public void setId(long id)
+	{
+		this.id = id;
 	}
 
 	@Basic
-	public String getUsername()
+	public String getEmailAddress()
 	{
-		return username;
+		return emailAddress;
 	}
 
-	public void setUsername(String username)
+	public void setEmailAddress(String emailAddress)
 	{
-		this.username = username;
+		this.emailAddress = emailAddress;
 	}
 
 	@Basic
@@ -62,14 +76,37 @@ public class User implements Serializable
 		this.enabled = enabled;
 	}
 
+	@Basic
+	public Date getLastLogin()
+	{
+		return lastLogin;
+	}
+
+	public void setLastLogin(Date lastLogin)
+	{
+		this.lastLogin = lastLogin;
+	}
+
+	@Basic
+	public String getRole()
+	{
+		return role;
+	}
+
+	public void setRole(String role)
+	{
+		this.role = role;
+	}
+
 	@Override
 	public String toString()
 	{
 		return "User{" +
-				"uid=" + uid +
-				", username='" + username + '\'' +
-				", password='" + password + '\'' +
+				"id=" + id +
+				", emailAddress='" + emailAddress + '\'' +
 				", enabled=" + enabled +
+				", lastLogin=" + lastLogin +
+				", role='" + role + '\'' +
 				'}';
 	}
 }

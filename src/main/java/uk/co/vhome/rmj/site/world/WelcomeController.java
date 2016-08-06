@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import uk.co.vhome.rmj.repositories.DefaultUserRepository;
+import uk.co.vhome.rmj.services.UserService;
 
 import javax.inject.Inject;
 
@@ -16,12 +16,12 @@ public class WelcomeController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final DefaultUserRepository userRepository;
+	private final UserService userService;
 
 	@Inject
-	public WelcomeController(DefaultUserRepository userRepository)
+	public WelcomeController(UserService userService)
 	{
-		this.userRepository = userRepository;
+		this.userService = userService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -29,7 +29,7 @@ public class WelcomeController
 	{
 		LOGGER.traceEntry();
 
-		userRepository.getAll();
+		userService.getAllUsers();
 
 		return LOGGER.traceExit("/jsp/world/index");
 	}
