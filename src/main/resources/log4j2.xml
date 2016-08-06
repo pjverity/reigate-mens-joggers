@@ -5,12 +5,12 @@
 		<!-- Standard console logging that logs only warnings or above to reduce noise when debugging -->
 		<Console name="Console" target="SYSTEM_OUT">
 			<ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY" />
-			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level &lt;%X{id}&gt; (%X{username}) [%t] %C{-3}%M(%F:%L) %msg%n"/>
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level &lt;%X{id}&gt; (%X{username}) [%t] %C{-3}.F%M(%F:%L) %msg%n"/>
 		</Console>
 
 		<!-- Standard rolling log file. Writes relative to where the web container deploys apps to on the server  -->
 		<RollingFile name="rollingFileAppender" fileName="../logs/rmj.log" filePattern="../logs/rmj.%d{MM-dd-yyyy}-%i.log">
-			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level &lt;%X{id}&gt; (%X{username}) [%t] %C{-3}%M(%F:%L) %msg%n"/>
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level &lt;%X{id}&gt; (%X{username}) [%t] %C{-3}.%M(%F:%L) %msg%n"/>
 			<Policies>
 				<SizeBasedTriggeringPolicy size="10 MB"/>
 			</Policies>
@@ -32,9 +32,6 @@
 
 		<!-- Not too fussed at the moment about logging in this package, inherits the parent loggers, so no need to specify an appender -->
 		<Logger name="uk.co.vhome.rmj.site" level="WARN" />
-
-		<!-- See some bootstrapping information to put our minds at rest -->
-		<Logger name="uk.co.vhome.rmj.site.config" level="INFO" />
 
 	</Loggers>
 </Configuration>

@@ -1,6 +1,5 @@
 package uk.co.vhome.rmj.config;
 
-import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +10,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 import javax.persistence.SharedCacheMode;
 import javax.persistence.ValidationMode;
@@ -24,10 +22,9 @@ import java.util.Map;
 		basePackages = "uk.co.vhome",
 		excludeFilters = @ComponentScan.Filter(Controller.class)
 )
-@EnableTransactionManagement(mode = AdviceMode.PROXY) //p.607
-public class RootContextConfiguration implements TransactionManagementConfigurer
+@EnableTransactionManagement //p.607
+public class RootContextConfiguration // implements TransactionManagementConfigurer
 {
-
 	private static final String HIBERNATE_DIALECT = "org.hibernate.dialect.PostgreSQL94Dialect";
 
 	private static final String SCHEMA_GENERATION_KEY = "javax.persistence-schema-generation.database.action";
@@ -62,15 +59,20 @@ public class RootContextConfiguration implements TransactionManagementConfigurer
 	}
 
 	@Bean
-	public PlatformTransactionManager jpaTransactionManager()
+	public PlatformTransactionManager txManager()
 	{
 		return new JpaTransactionManager(entityManagerFactoryBean().getObject());
 	}
 
-	// Protect against Spring choosing the wrong transaction manager is we create several (p.609)
+	// TODO - Find our why this doesn't work, causes a circular reference
+	// Protect against Spring choosing the wrong transaction manager if we create several (p.609)
+/*
 	@Override
 	public PlatformTransactionManager annotationDrivenTransactionManager()
 	{
-		return jpaTransactionManager();
+		LOGGER.traceEntry();
+
+		return txManager();
 	}
+*/
 }

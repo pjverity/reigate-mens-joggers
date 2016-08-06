@@ -62,7 +62,7 @@ public class BootstrapFramework implements WebApplicationInitializer
 		// spring XML context files to configure the application context
 		AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
 
-		// Register the root application context that Spring will instantiate and manage when the application
+		// Import the root application context configuration that Spring will instantiate and manage when the application
 		// starts up. This will contain beans common to all inheriting application contexts. Also import the
 		// security configuration in to the root context so that it applies throughout the application.
 		rootContext.register(RootContextConfiguration.class, SecurityConfiguration.class);
