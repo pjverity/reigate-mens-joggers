@@ -12,5 +12,5 @@ public interface UserService extends UserDetailsService
 	Iterable<User> getAllUsers();
 
 	@PermitAll
-	boolean signUp(String emailAddress, String password, String firstName, String lastName);
+	boolean memberSignUp(String emailAddress, String password, String firstName, String lastName);
 }

@@ -9,7 +9,9 @@ import java.time.ZonedDateTime;
 @Table(name = "Users")
 public class User implements Serializable
 {
-	private static final String MEMBER = "MEMBER";
+	public static final String MEMBER = "MEMBER";
+
+	public static final String ADMIN = "ADMIN";
 
 	private long id;
 
@@ -31,14 +33,14 @@ public class User implements Serializable
 	{
 	}
 
-	public User(String emailAddress, String password, String firstName, String lastName)
+	public User(String emailAddress, String password, String firstName, String lastName, String role)
 	{
 		this.emailAddress = emailAddress;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.password = password;
 		this.enabled = true;
-		this.role = MEMBER;
+		this.role = role;
 		this.lastLogin = ZonedDateTime.now(ZoneId.of("UTC"));
 	}
 

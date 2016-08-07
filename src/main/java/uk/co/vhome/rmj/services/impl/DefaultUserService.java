@@ -14,6 +14,7 @@ import uk.co.vhome.rmj.model.User;
 import uk.co.vhome.rmj.repositories.UserRepository;
 import uk.co.vhome.rmj.services.UserService;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.Collections;
 
@@ -30,6 +31,18 @@ class DefaultUserService implements UserService
 		this.userRepository = userRepository;
 	}
 
+	@PostConstruct
+	private void initialiseDatabase()
+	{
+		if ( userRepository.count() > 0 ) {
+			return;
+		}
+
+		LOGGER.info("Initialising bare database...");
+
+		adminSignUp();
+	}
+
 	@Override
 	@Transactional
 	public Iterable<User> getAllUsers()
@@ -40,11 +53,21 @@ class DefaultUserService implements UserService
 	}
 
 	@Override
-	public boolean signUp(String emailAddress, String password, String firstName, String lastName)
+	public boolean memberSignUp(String emailAddress, String password, String firstName, String lastName)
+	{
+		return signUp(emailAddress, password, firstName, lastName, User.MEMBER);
+	}
+
+	private void adminSignUp()
+	{
+		signUp("admin@reigatemensjoggers.co.uk", "admin", "Administrator", "", User.ADMIN);
+	}
+
+	private boolean signUp(String emailAddress, String password, String firstName, String lastName, String role)
 	{
 		String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-		User newUser = new User(emailAddress, hashedPassword, firstName, lastName);
+		User newUser = new User(emailAddress, hashedPassword, firstName, lastName, role);
 
 		try
 		{
