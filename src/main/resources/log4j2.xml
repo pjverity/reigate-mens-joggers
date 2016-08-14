@@ -5,7 +5,7 @@
 		<!-- Standard console logging that logs only warnings or above to reduce noise when debugging -->
 		<Console name="Console" target="SYSTEM_OUT">
 			<ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY" />
-			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level &lt;%X{id}&gt; (%X{username}) [%t] %C{-3}.F%M(%F:%L) %msg%n"/>
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level &lt;%X{id}&gt; (%X{username}) [%t] %C{-3}.%M(%F:%L) %msg%n"/>
 		</Console>
 
 		<!-- Standard rolling log file. Writes relative to where the web container deploys apps to on the server  -->
