@@ -2,7 +2,6 @@ package uk.co.vhome.rmj.config;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,10 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
@@ -39,23 +37,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 		this.springJpaDataSource = springJpaDataSource;
 	}
 
-	@Bean
-	JdbcUserDetailsManager jdbcUserDetailsManager()
-	{
-		JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager();
-		userDetailsManager.setDataSource(springJpaDataSource);
-
-		initialiseAdminUser(userDetailsManager);
-
-		return userDetailsManager;
-	}
-
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception
 	{
 		LOGGER.info("Configuring authentication...");
 
-		auth.userDetailsService(jdbcUserDetailsManager()).passwordEncoder(new BCryptPasswordEncoder());
+		// Store users in a database using a JDBC datasource to connect to it. So that passwords are not
+		// stored in the database in plain text, they are hashed using the given password encoder
+		auth.jdbcAuthentication()
+				.dataSource(springJpaDataSource)
+				.passwordEncoder(new BCryptPasswordEncoder());
+
+		// If the database is empty, set up a default admin account
+		initialiseAdminUser((UserDetailsManager)auth.getDefaultUserDetailsService());
 	}
 
 	@Override
@@ -64,9 +58,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 		LOGGER.info("Configuring HTTP security...");
 
 		http.authorizeRequests()
-				.antMatchers("/admin/**").hasAuthority("ADMIN")
-				.antMatchers("/member/**").hasAnyAuthority("MEMBER", "ADMIN")
-				.antMatchers("/**").permitAll()
+					.antMatchers("/admin/**").hasAuthority("ADMIN")
+					.antMatchers("/member/**").hasAnyAuthority("MEMBER", "ADMIN")
+					.antMatchers("/**").permitAll()
 				.and()
 					.formLogin()
 					.defaultSuccessUrl("/")
@@ -84,7 +78,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 		web.ignoring().antMatchers(ADDITIONAL_RESOURCE_PATHS);
 	}
 
-	private void initialiseAdminUser(JdbcUserDetailsManager userDetailsManager)
+	private void initialiseAdminUser(UserDetailsManager userDetailsManager)
 	{
 		if ( !userDetailsManager.userExists("admin") )
 		{
@@ -92,6 +86,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
 			SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ADMIN");
 			userDetailsManager.createUser(new User("admin", BCrypt.hashpw("test", BCrypt.gensalt()), Collections.singleton(authority)));
+		}
+
+		if ( !userDetailsManager.userExists("member") )
+		{
+			SimpleGrantedAuthority authority = new SimpleGrantedAuthority("MEMBER");
+			userDetailsManager.createUser(new User("member", BCrypt.hashpw("test", BCrypt.gensalt()), Collections.singleton(authority)));
 		}
 	}
 }
