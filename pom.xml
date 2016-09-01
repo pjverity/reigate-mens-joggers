@@ -57,6 +57,14 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+
+
 		<!--
 			A JPA implementation used for persistence. JPA (Java Persistence API) is a standardised interface for O/RM providers.
 			EclipseLink is the reference implementation of the JPA (p550, p564) org.eclipse.persistence:javax.persistence.
@@ -114,6 +122,10 @@
 			<artifactId>spring-security-crypto</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+		</dependency>
 		<!--
 			Boring logging stuff
 		-->

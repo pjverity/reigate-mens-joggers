@@ -66,7 +66,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 					.defaultSuccessUrl("/")
 					.usernameParameter("username")
 					.passwordParameter("password")
-					.permitAll();
+					.permitAll()
+				.and()
+					.logout()
+					.logoutSuccessUrl("/")
+					.deleteCookies("JSESSIONID");
 	}
 
 	@Override

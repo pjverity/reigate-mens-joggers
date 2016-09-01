@@ -1,3 +1,7 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,15 +10,10 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Reigate Mens Running Club">
-	<meta name="author" content="Paul Verity">
+	<meta name="description" content="">
+	<meta name="author" content="">
 
 	<title>Reigate Mens Joggers</title>
-
-	<link rel="stylesheet" href="font-awesome-4.6.3/css/font-awesome.min.css">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-	      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<link rel="stylesheet" href="css/main.css">
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -22,6 +21,11 @@
 	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 	<![endif]-->
+
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
+	      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link href="css/main.css" rel="stylesheet">
+	<link href="font-awesome-4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 </head>
 
@@ -32,14 +36,35 @@
 		<div class="navbar-header">
 			<a href="#" class="navbar-brand">RMJ</a>
 		</div>
-<%--
-		<form class="navbar-form navbar-right" role="login">
-			<div class="form-group">
-				<input type="text" class="form-control" placeholder="Email address">
-			</div>
-			<button type="submit" class="btn btn-default">Login</button>
-		</form>
---%>
+
+		<%-- Display the users name and a way to log out if a user is logged in --%>
+		<security:authorize access="isAuthenticated()">
+			<ul class="nav navbar-nav navbar-right">
+				<security:authentication property="principal.username" var="username"/>
+				<li>
+					<p class="navbar-text">Logged in as: <c:out value="${username}"/></p>
+				</li>
+				<li>
+					<form:form modelAttribute="userdetails" action="/rmj/logout" class="navbar-form" role="logout">
+						<form:button value="Logout" class="btn btn-default">Logout</form:button>
+					</form:form>
+				</li>
+			</ul>
+		</security:authorize>
+
+		<%-- If no user is logged in, then provide a mini login form --%>
+		<security:authorize access="!isAuthenticated()">
+			<form:form modelAttribute="userdetails" class="navbar-form navbar-right" role="login">
+				<div class="form-group">
+					<form:input path="username" type="text" class="form-control" placeholder="e-mail address"/>
+					&nbsp;
+					<form:input path="password" type="password" class="form-control" placeholder="password"/>
+					&nbsp;
+					<form:button type="submit" class="btn btn-default">Login</form:button>
+				</div>
+			</form:form>
+		</security:authorize>
+
 	</div>
 </nav>
 
@@ -50,15 +75,15 @@
 				<h1>Reigate Mens Joggers</h1>
 			</div>
 		</div>
-<%--
-		<div class="row">
-			<div class="col-lg-12">
-				<p>
-					<button type="button" class="btn btn-success btn-lg">SIGN UP!</button>
-				</p>
-			</div>
-		</div>
---%>
+		<%--
+				<div class="row">
+					<div class="col-lg-12">
+						<p>
+							<button type="button" class="btn btn-success btn-lg">SIGN UP!</button>
+						</p>
+					</div>
+				</div>
+		--%>
 		<div class="row">
 			<div class="col-lg-12">
 				<p>Its got to be better than sitting on the sofa right? Escape that stuffy office and come for a run - you won't regret it!</p>
@@ -94,7 +119,7 @@
 		</div>
 		<div class="col-sm-4">
 			<h3>How Much?</h3>
-			<p>First session FREE! Sessions following are £5.00 and can be bought in blocks of 10</p>
+			<p>First session FREE! Sessions following are £5 and can be bought in blocks of 10</p>
 		</div>
 	</div>
 </div>
