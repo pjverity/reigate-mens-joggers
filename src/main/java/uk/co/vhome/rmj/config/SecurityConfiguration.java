@@ -63,6 +63,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 					.antMatchers("/**").permitAll()
 				.and()
 					.formLogin()
+					.loginPage("/")
 					.defaultSuccessUrl("/")
 					.usernameParameter("username")
 					.passwordParameter("password")

@@ -39,17 +39,36 @@
 
 		<%-- Display the users name and a way to log out if a user is logged in --%>
 		<security:authorize access="isAuthenticated()">
-			<ul class="nav navbar-nav navbar-right">
-				<security:authentication property="principal.username" var="username"/>
-				<li>
-					<p class="navbar-text">Logged in as: <c:out value="${username}"/></p>
-				</li>
-				<li>
-					<form:form modelAttribute="userdetails" action="/rmj/logout" class="navbar-form" role="logout">
-						<form:button value="Logout" class="btn btn-default">Logout</form:button>
-					</form:form>
-				</li>
-			</ul>
+			<form:form name="logoutForm" modelAttribute="userdetails" action="/rmj/logout" role="logout">
+				<ul class="nav navbar-nav navbar-right">
+					<security:authentication property="principal.username" var="username"/>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+								${username} <span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li>
+								<security:authorize access="hasAuthority('ADMIN')">
+									<c:url value="admin" var="adminURL"/>
+									<a href="${adminURL}">Admin</a>
+								</security:authorize>
+								<security:authorize access="hasAuthority('MEMBER')">
+									<c:url value="member" var="memberURL"/>
+									<a href="${memberURL}">Member</a>
+								</security:authorize>
+							</li>
+							<li>
+								<c:url value="account" var="accountURL"/>
+								<a href="account">My Account</a>
+							</li>
+							<li>
+								<a href="#" onclick="document.logoutForm.submit()">Logout</a>
+							</li>
+						</ul>
+					<li>
+					</li>
+				</ul>
+			</form:form>
 		</security:authorize>
 
 		<%-- If no user is logged in, then provide a mini login form --%>
