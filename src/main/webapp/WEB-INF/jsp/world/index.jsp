@@ -73,14 +73,17 @@
 
 		<%-- If no user is logged in, then provide a mini login form --%>
 		<security:authorize access="!isAuthenticated()">
-			<form:form modelAttribute="userdetails" class="navbar-form navbar-right" role="login">
+			<form:form modelAttribute="userdetails" cssClass="navbar-form navbar-right" role="login">
+				<c:if test="${not empty paramValues['error']}">
+					<span class="text-muted">(Login Failed)</span>
+				</c:if>
 				<div class="form-group">
 					<form:input path="username" type="text" class="form-control" placeholder="e-mail address"/>
-					&nbsp;
-					<form:input path="password" type="password" class="form-control" placeholder="password"/>
-					&nbsp;
-					<form:button type="submit" class="btn btn-default">Login</form:button>
 				</div>
+				<div class="form-group">
+					<form:input path="password" type="password" class="form-control" placeholder="password"/>
+				</div>
+				<form:button type="submit" class="btn btn-default">Login</form:button>
 			</form:form>
 		</security:authorize>
 
