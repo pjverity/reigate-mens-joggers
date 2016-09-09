@@ -1,5 +1,6 @@
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,16 +30,7 @@
 
 <body>
 
-<nav class="navbar navbar-default navbar-fixed-top">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<a href="#" class="navbar-brand">RMJ</a>
-		</div>
-		<form:form modelAttribute="userdetails" action="/rmj/logout" class="navbar-form navbar-right" role="logout">
-			<form:button value="Logout" class="btn">Logout</form:button>
-		</form:form>
-	</div>
-</nav>
+<%@include file="../navigation.jsp"%>
 
 <div class="container">
 	Hi <security:authentication property="principal.username"/>, Super secret admin screen!
