@@ -1,12 +1,19 @@
 <nav class="navbar navbar-default navbar-fixed-top">
 	<div class="container-fluid">
 		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
 			<a href="#" class="navbar-brand">RMJ</a>
 		</div>
 
 		<%-- Display the users name and a way to log out if a user is logged in --%>
 		<security:authorize access="isAuthenticated()">
 			<form:form name="logoutForm" modelAttribute="userdetails" action="/rmj/logout" role="logout">
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
 					<security:authentication property="principal.username" var="username"/>
 					<li class="dropdown">
@@ -36,22 +43,26 @@
 					</li>
 				</ul>
 			</form:form>
+			</div>
 		</security:authorize>
 
 		<%-- If no user is logged in, then provide a mini login form --%>
 		<security:authorize access="!isAuthenticated()">
-			<form:form modelAttribute="userdetails" cssClass="navbar-form navbar-right" role="login">
-				<c:if test="${not empty paramValues['error']}">
-					<span class="text-muted">(Login Failed)</span>
-				</c:if>
-				<div class="form-group">
-					<form:input path="username" type="text" class="form-control" placeholder="e-mail address"/>
-				</div>
-				<div class="form-group">
-					<form:input path="password" type="password" class="form-control" placeholder="password"/>
-				</div>
-				<form:button type="submit" class="btn btn-default">Login</form:button>
-			</form:form>
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+				<form:form modelAttribute="userdetails" cssClass="navbar-form navbar-right" role="login">
+					<c:if test="${not empty paramValues['error']}">
+						<span class="text-muted">(Login Failed)</span>
+					</c:if>
+					<div class="form-group">
+						<form:input path="username" type="text" class="form-control" placeholder="e-mail address"/>
+					</div>
+					<div class="form-group">
+						<form:input path="password" type="password" class="form-control" placeholder="password"/>
+					</div>
+					<form:button type="submit" class="btn btn-default">Login</form:button>
+				</form:form>
+			</div>
 		</security:authorize>
 
 	</div>
