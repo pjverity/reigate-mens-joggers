@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<c:set var="pageTitle" value="RLJ - Account Management" />
+<c:set var="pageTitle" value="RLJ - User Home" />
 
 <%@include file="../head.jsp"%>
 
@@ -16,10 +16,9 @@
 <div class="container">
 	<div class="row">
 		<h1>
-			Account Management
+			Messages and Stuff
 		</h1>
-		<p>Unsubscribe</p>
-		<p>Change Password</p>
+		Some messages...
 	</div>
 </div>
 
@@ -28,6 +27,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
 
-
 </body>
+
 </html>
