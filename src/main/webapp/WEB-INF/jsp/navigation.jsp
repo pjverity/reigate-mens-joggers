@@ -12,9 +12,8 @@
 
 		<%-- Display the users name and a way to log out if a user is logged in --%>
 		<security:authorize access="isAuthenticated()">
-			<form name="logoutForm" action="/rmj/logout" method="post" role="logout">
+			<form name="logoutForm" action="<c:url value="/logout"/>" method="post" role="logout">
 				<security:csrfInput/>
-					<%--<form:form name="logoutForm" modelAttribute="userdetails" action="/rmj/logout" role="logout">--%>
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
 					<security:authentication property="principal.username" var="username"/>
@@ -25,17 +24,14 @@
 						<ul class="dropdown-menu">
 							<li>
 								<security:authorize access="hasAuthority('ADMIN')">
-									<c:url value="/admin/usermanagement" var="adminURL"/>
-									<a href="${adminURL}">Admin</a>
+									<a href="<c:url value="/admin/usermanagement"/>" >Admin</a>
 								</security:authorize>
 								<security:authorize access="hasAuthority('MEMBER')">
-									<c:url value="/member/home" var="memberURL"/>
-									<a href="${memberURL}">Member</a>
+									<a href="<c:url value="/member/home"/>">Member</a>
 								</security:authorize>
 							</li>
 							<li>
-								<c:url value="/user/account" var="accountURL"/>
-								<a href="${accountURL}">My Account</a>
+								<a href="<c:url value="/user/account"/>">My Account</a>
 							</li>
 							<li>
 								<a href="#" onclick="document.logoutForm.submit()">Logout</a>
@@ -50,8 +46,7 @@
 		<security:authorize access="!isAuthenticated()">
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
-				<%--<form:form modelAttribute="userdetails" cssClass="navbar-form navbar-right" role="login">--%>
-				<form class="navbar-form navbar-right" role="login" action="/rmj/login" method="post">
+				<form class="navbar-form navbar-right" role="login" action="<c:url value="/login"/>" method="post">
 					<c:if test="${not empty paramValues['error']}">
 						<span class="text-muted">(Login Failed)</span>
 					</c:if>

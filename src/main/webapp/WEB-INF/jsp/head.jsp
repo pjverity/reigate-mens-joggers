@@ -21,10 +21,7 @@
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
 	      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-	<c:url value="/css/main.css" var="mainCSSURL"/>
-	<c:url value="/font-awesome-4.6.3/css/font-awesome.min.css" var="fontAwesomeURL"/>
-
-	<link href="${mainCSSURL}" rel="stylesheet">
-	<link href="${fontAwesomeURL}" rel="stylesheet">
+	<link href="<c:url value="/css/main.css"/>" rel="stylesheet">
+	<link href="<c:url value="/font-awesome-4.6.3/css/font-awesome.min.css"/>" rel="stylesheet">
 
 </head>
