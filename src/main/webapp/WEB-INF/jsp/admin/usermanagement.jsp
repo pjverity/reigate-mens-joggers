@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<c:set var="pageTitle" value="RLJ - User Management" />
+<c:set var="pageTitleSuffix" value="User Management" />
 
 <%@include file="../head.jsp"%>
 

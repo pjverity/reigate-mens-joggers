@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<c:set var="pageTitle" value="Reigate Mens Joggers" />
+<c:set var="pageTitleSuffix" value="Reigate Mens Joggers" />
 
 <%@include file="../head.jsp"%>
 

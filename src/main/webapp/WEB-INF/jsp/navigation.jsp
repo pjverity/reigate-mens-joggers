@@ -7,7 +7,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a href="#" class="navbar-brand">RMJ</a>
+			<a href="<c:url value="/"/>" class="navbar-brand">RMJ</a>
 		</div>
 
 		<%-- Display the users name and a way to log out if a user is logged in --%>
@@ -18,7 +18,7 @@
 				<ul class="nav navbar-nav navbar-right">
 					<security:authentication property="principal.username" var="username"/>
 					<li class="dropdown">
-						<a href="/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						<a href="<c:url value="/"/>" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 								${username} <span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">

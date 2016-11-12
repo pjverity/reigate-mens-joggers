@@ -5,9 +5,9 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<c:set var="pageTitle" value="RLJ - Account Management" />
+<c:set var="pageTitleSuffix" value="Account Management"/>
 
-<%@include file="../head.jsp"%>
+<%@include file="../head.jsp" %>
 
 <body>
 
@@ -15,11 +15,13 @@
 
 <div class="container">
 	<div class="row">
-		<h1>
-			Account Management
-		</h1>
-		<p>Unsubscribe</p>
-		<p>Change Password</p>
+		<div class="col-md-12">
+			<h1>
+				Account Management
+			</h1>
+			<p>Unsubscribe</p>
+			<p>Change Password</p>
+		</div>
 	</div>
 </div>
 
