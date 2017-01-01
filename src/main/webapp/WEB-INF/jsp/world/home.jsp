@@ -1,17 +1,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <!DOCTYPE html>
 <html lang="en">
 
-<c:set var="pageTitleSuffix" value="Reigate Mens Joggers" />
+<c:set var="pageTitleSuffix" value="Reigate Mens Joggers"/>
 
-<%@include file="../head.jsp"%>
+<%@include file="../head.jsp" %>
 
 <body>
 
-<%@include file="../navigation.jsp"%>
+<%@include file="../navigation.jsp" %>
 
 <div class="jumbotron text-center">
 	<div class="container">
@@ -20,15 +21,26 @@
 				<h1>Reigate Mens Joggers</h1>
 			</div>
 		</div>
-		<%--
-				<div class="row">
-					<div class="col-lg-12">
-						<p>
-							<button type="button" class="btn btn-success btn-lg">SIGN UP!</button>
-						</p>
-					</div>
-				</div>
-		--%>
+		<div class="row">
+			<div class="col-lg-12">
+				<security:authorize access="!isAuthenticated()">
+					<c:choose>
+						<c:when test="${registrationEmail != null}">
+							<h3>
+							<span class="label label-success">
+								<span class="fa fa-envelope" aria-hidden="true"></span> Registration confirmation e-mail sent to ${registrationEmail}
+							</span>
+							</h3>
+						</c:when>
+						<c:otherwise>
+							<p>
+								<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#signupModal">SIGN UP!</button>
+							</p>
+						</c:otherwise>
+					</c:choose>
+				</security:authorize>
+			</div>
+		</div>
 		<div class="row">
 			<div class="col-lg-12">
 				<p>Its got to be better than sitting on the sofa right? Escape that stuffy office and come for a run - you won't regret it!</p>
@@ -88,7 +100,12 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
 
-</body>
+<security:authorize access="!isAuthenticated()">
+	<c:if test="${registrationEmail == null}">
+		<%@include file="../signupDialog.jsp" %>
+	</c:if>
+</security:authorize>
 
+</body>
 
 </html>

@@ -51,10 +51,10 @@
 						<span class="text-muted">(Login Failed)</span>
 					</c:if>
 					<div class="form-group">
-						<input id="username" name="username" type="text" class="form-control" placeholder="e-mail address"/>
+						<input id="username" name="username" autocomplete="username" type="text" class="form-control" placeholder="e-mail address"/>
 					</div>
 					<div class="form-group">
-						<input id="password" name="password" type="password" class="form-control" placeholder="password"/>
+						<input id="password" name="password" autocomplete="current-password" type="password" class="form-control" placeholder="password"/>
 					</div>
 					<button type="submit" class="btn btn-default">Login</button>
 					<security:csrfInput/>

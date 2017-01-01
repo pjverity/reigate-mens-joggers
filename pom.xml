@@ -63,8 +63,6 @@
 			<version>1.2</version>
 		</dependency>
 
-
-
 		<!--
 			A JPA implementation used for persistence. JPA (Java Persistence API) is a standardised interface for O/RM providers.
 			EclipseLink is the reference implementation of the JPA (p550, p564) org.eclipse.persistence:javax.persistence.
@@ -85,6 +83,13 @@
 			<artifactId>spring-orm</artifactId>
 		</dependency>
 
+		<!-- JSON serialisation for working with REST services (reCapture for example) -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.6.4</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
@@ -95,6 +100,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
 		<!--
 			Use Spring's MVC framework for developing the UI. It's Dispatcher Servlet takes care of routing requests
 			too appropriated annotated POJO's
@@ -125,6 +131,30 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.1.0.Final</version>
+		</dependency>
+
+		<!-- Provides the implementation of the javax.validation spec -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.2.2.Final</version>
+			<!--<scope>runtime</scope>-->
+		</dependency>
+
+		<!-- This hooks in to the compiler and catches constraint violations at compile time p.457-->
+		<!-- Marked as optional as it isn't required at runtime -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator-annotation-processor</artifactId>
+			<version>5.2.2.Final</version>
+			<scope>compile</scope>
+			<optional>true</optional>
 		</dependency>
 		<!--
 			Boring logging stuff
@@ -168,7 +198,7 @@
 		<plugins>
 
 			<!--
-				Java 8 is out minimum requirement
+				Java 8 is our minimum requirement
 			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

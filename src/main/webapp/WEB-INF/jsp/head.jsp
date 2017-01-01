@@ -23,5 +23,6 @@
 
 	<link href="<c:url value="/css/main.css"/>" rel="stylesheet">
 	<link href="<c:url value="/font-awesome-4.6.3/css/font-awesome.min.css"/>" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/lodash/4.17.3/lodash.min.js"></script>
 
 </head>
