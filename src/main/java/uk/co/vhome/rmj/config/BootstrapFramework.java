@@ -48,6 +48,7 @@ public class BootstrapFramework implements WebApplicationInitializer
 	private static final String SERVLET_DISPATCHER_NAME = "springDispatcher";
 
 	static final String[] ADDITIONAL_RESOURCE_PATHS = {"/css/*",
+	                                                   "/js/*",
 	                                                   "/font-awesome-4.6.3/*",
 	                                                   "/sitemap.xml"};
 

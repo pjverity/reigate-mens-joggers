@@ -2,6 +2,7 @@ package uk.co.vhome.rmj.config;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,25 +32,34 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
 	private final DataSource springJpaDataSource;
 
+	private UserDetailsManager userDetailsManager;
+
 	@Inject
 	public SecurityConfiguration(DataSource springJpaDataSource)
 	{
 		this.springJpaDataSource = springJpaDataSource;
 	}
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception
+//	@Override
+	protected void configureAuth(AuthenticationManagerBuilder auth) throws Exception
 	{
 		LOGGER.info("Configuring authentication...");
 
 		// Store users in a database using a JDBC datasource to connect to it. So that passwords are not
 		// stored in the database in plain text, they are hashed using the given password encoder
-		auth.jdbcAuthentication()
+		userDetailsManager = auth.jdbcAuthentication()
 				.dataSource(springJpaDataSource)
-				.passwordEncoder(new BCryptPasswordEncoder());
+				.passwordEncoder(new BCryptPasswordEncoder()).getUserDetailsService();
 
 		// If the database is empty, set up a default admin account
 		initialiseAdminUser((UserDetailsManager)auth.getDefaultUserDetailsService());
+	}
+
+	@Bean
+	public UserDetailsManager userDetailsManager(AuthenticationManagerBuilder auth) throws Exception
+	{
+		configureAuth(auth);
+		return userDetailsManager;
 	}
 
 	@Override

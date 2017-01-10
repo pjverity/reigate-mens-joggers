@@ -17,7 +17,7 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-framework-bom</artifactId>
-				<version>4.3.2.RELEASE</version>
+				<version>4.3.5.RELEASE</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
@@ -156,6 +156,19 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
+
+		<!-- Mail support -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.5.6</version>
+		</dependency>
+
 		<!--
 			Boring logging stuff
 		-->

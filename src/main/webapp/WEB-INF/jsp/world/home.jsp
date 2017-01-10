@@ -33,9 +33,18 @@
 							</h3>
 						</c:when>
 						<c:otherwise>
-							<p>
-								<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#signupModal">SIGN UP!</button>
-							</p>
+							<c:choose>
+								<c:when test="${registrationServiceAvailable}">
+									<p>
+										<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#signupModal">SIGN UP!</button>
+									</p>
+								</c:when>
+								<c:otherwise>
+									<p>
+										<span class="label label-warn">New registrations currently unavailable</span>
+									</p>
+								</c:otherwise>
+							</c:choose>
 						</c:otherwise>
 					</c:choose>
 				</security:authorize>
@@ -102,7 +111,7 @@
 
 <security:authorize access="!isAuthenticated()">
 	<c:if test="${registrationEmail == null}">
-		<%@include file="../signupDialog.jsp" %>
+		<%@include file="../signup-dialog.jsp" %>
 	</c:if>
 </security:authorize>
 

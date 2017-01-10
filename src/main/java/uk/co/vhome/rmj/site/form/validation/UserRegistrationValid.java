@@ -15,7 +15,7 @@ import java.lang.annotation.*;
 @ReportAsSingleViolation
 public @interface UserRegistrationValid
 {
-	String message() default "User registration details are invalid";
+	String message() default "{validation.constraint.UserRegistrationValid}";
 
 	Class<?>[] groups() default {};
 

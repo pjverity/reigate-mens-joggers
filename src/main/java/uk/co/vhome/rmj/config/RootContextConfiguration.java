@@ -1,5 +1,6 @@
 package uk.co.vhome.rmj.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -7,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -23,6 +26,7 @@ import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Properties;
 
 @Configuration
 @ComponentScan(
@@ -119,6 +123,7 @@ public class RootContextConfiguration // implements TransactionManagementConfigu
 		validationPostProcessor.setValidator(localValidatorFactoryBean().getValidator());
 		return validationPostProcessor;
 	}
+
 	/**
 	 * Used to validate reCaptcha responses
 	 */
@@ -126,6 +131,29 @@ public class RootContextConfiguration // implements TransactionManagementConfigu
 	public RestTemplate restTemplate()
 	{
 		return new RestTemplate();
+	}
+
+	@Bean
+	public MailSender javaMailSender(@Value("${mailHost}") String mailHost,
+	                                 @Value("${mailUser}") String mailUser,
+	                                 @Value("${mailPassword}") String mailPassword)
+	{
+		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+
+		mailSender.setHost(mailHost);
+		mailSender.setPort(25);
+		mailSender.setUsername(mailUser);
+		mailSender.setPassword(mailPassword);
+		mailSender.setDefaultEncoding("UTF-8");
+
+		Properties properties = new Properties();
+		properties.put("mail.smtp.auth", true);
+		properties.put("mail.smtp.auth.mechanisms", "DIGEST-MD5");
+		properties.put("mail.smtp.localhost", mailHost);
+
+		mailSender.setJavaMailProperties(properties);
+
+		return mailSender;
 	}
 
 	// TODO - Find our why this doesn't work, causes a circular reference
