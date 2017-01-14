@@ -5,7 +5,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.Ordered;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.mail.MailSender;
@@ -20,6 +22,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.client.RestTemplate;
 
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.SharedCacheMode;
 import javax.persistence.ValidationMode;
 import javax.sql.DataSource;
@@ -29,6 +32,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @Configuration
+@EnableTransactionManagement(order = Ordered.LOWEST_PRECEDENCE) //p.607
 @ComponentScan(
 		basePackages = "uk.co.vhome",
 		excludeFilters = @ComponentScan.Filter(Controller.class)
@@ -38,8 +42,7 @@ import java.util.Properties;
 		entityManagerFactoryRef = "entityManagerFactoryBean",
 		transactionManagerRef = "jpaTransactionManager"
 )
-@EnableTransactionManagement //p.607
-public class RootContextConfiguration // implements TransactionManagementConfigurer
+public class RootContextConfiguration //implements TransactionManagementConfigurer
 {
 	private static final String HIBERNATE_DIALECT = "org.hibernate.dialect.PostgreSQL94Dialect";
 
@@ -47,13 +50,13 @@ public class RootContextConfiguration // implements TransactionManagementConfigu
 
 	// Configure our Datasource (ie, the connection to the Database) See p.602
 	@Bean
-	public DataSource springJpaDataSource()
+	public DataSource dataSource()
 	{
 		JndiDataSourceLookup lookup = new JndiDataSourceLookup();
 		return lookup.getDataSource("jdbc/RMJ");
 	}
 
-	// Configure the persistence unit (Which managers our entities and configures the JPA implementation
+	// Configure the persistence unit (Which manages our entities and configures the JPA implementation
 	// (Hibernate O/RM being the chosen JPA implementation) (p604)
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean()
@@ -66,7 +69,7 @@ public class RootContextConfiguration // implements TransactionManagementConfigu
 
 		LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
 		factoryBean.setJpaVendorAdapter(adapter);
-		factoryBean.setDataSource(springJpaDataSource());
+		factoryBean.setDataSource(dataSource());
 		factoryBean.setPackagesToScan("uk.co.vhome.rmj");
 		factoryBean.setSharedCacheMode(SharedCacheMode.ENABLE_SELECTIVE);
 		factoryBean.setValidationMode(ValidationMode.NONE);
@@ -75,10 +78,19 @@ public class RootContextConfiguration // implements TransactionManagementConfigu
 	}
 
 	@Bean
-	public PlatformTransactionManager jpaTransactionManager()
+	@Primary
+	public PlatformTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory)
 	{
-		return new JpaTransactionManager(entityManagerFactoryBean().getObject());
+		return new JpaTransactionManager(entityManagerFactory);
 	}
+
+/*
+	@Bean
+	public PlatformTransactionManager dataSourceTransactionManager()
+	{
+		return new DataSourceTransactionManager(dataSource());
+	}
+*/
 
 	/**
 	 * Used by the validators to supply internationalised error messages
@@ -110,11 +122,11 @@ public class RootContextConfiguration // implements TransactionManagementConfigu
 	/**
 	 * Create a post processor which is used to proxy the execution of validation methods (p.449)
 	 * This will look for methods annotated with @Validated or @ValidateOnExecution and proxies
-	 * them so that validation on annotated parameters and return values are executued at the right time
+	 * them so that validation on annotated parameters and return values are executed at the right time
 	 * (before and after method execution)
 	 *
 	 * Ensure it uses our configured bean validator rather than the default on on the classpath
-	 * whcih isn't configured to use a message source
+	 * which isn't configured to use a message source
 	 */
 	@Bean
 	public MethodValidationPostProcessor methodValidationPostProcessor()
@@ -159,12 +171,15 @@ public class RootContextConfiguration // implements TransactionManagementConfigu
 	// TODO - Find our why this doesn't work, causes a circular reference
 	// Protect against Spring choosing the wrong transaction manager if we create several (p.609)
 /*
+	@Bean
 	@Override
 	public PlatformTransactionManager annotationDrivenTransactionManager()
 	{
 		LOGGER.traceEntry();
-
-		return txManager();
+		return this.jpaTransactionManager();
+		return new JpaTransactionManager(entityManagerFactoryBean().getObject());
+		return this.dataSourceTransactionManager();
+		return jpaTransactionManager;
 	}
 */
 }

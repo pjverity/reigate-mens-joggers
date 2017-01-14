@@ -47,6 +47,8 @@ public class BootstrapFramework implements WebApplicationInitializer
 
 	private static final String SERVLET_DISPATCHER_NAME = "springDispatcher";
 
+	private static final String SERVLET_REST_DISPATCHER_NAME = "springRestDispatcher";
+
 	static final String[] ADDITIONAL_RESOURCE_PATHS = {"/css/*",
 	                                                   "/js/*",
 	                                                   "/font-awesome-4.6.3/*",
@@ -87,5 +89,12 @@ public class BootstrapFramework implements WebApplicationInitializer
 
 		// The dispatcher should respond to requests from the root path (Don't use '/*' See p.335 Pro Java For Web Apps)
 		dispatcher.addMapping("/");
+
+
+		AnnotationConfigWebApplicationContext restContextConfig = new AnnotationConfigWebApplicationContext();
+		restContextConfig.register(RestContextConfiguration.class);
+		dispatcher = servletContext.addServlet(SERVLET_REST_DISPATCHER_NAME, new DispatcherServlet(restContextConfig));
+		dispatcher.setLoadOnStartup(2);
+		dispatcher.addMapping("/rest/*");
 	}
 }

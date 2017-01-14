@@ -53,7 +53,7 @@ public class DefaultMailService implements MailService
 		message.setTo(to);
 		message.setFrom("noreply@rmj.co.uk");
 		message.setSubject("Sign up!");
-		message.setText("Register: " + token + "/" + generatedPassword);
+		message.setText("Confirm: http://localhost:8080/rmj/confirm/" + token + ", or Rescind: http://localhost:8080/rmj/rescind/" + token + " -> " + generatedPassword);
 
 		mailSender.send(message);
 	}

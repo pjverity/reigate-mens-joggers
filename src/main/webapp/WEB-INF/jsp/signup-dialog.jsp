@@ -6,7 +6,7 @@
 			</div>
 			<div class="modal-body">
 
-				<c:url value="/" var="signupUrl"/>
+				<c:url value="/register" var="signupUrl"/>
 				<form:form id="signupForm" modelAttribute="form" action="${signupUrl}" method="post">
 
 					<fieldset name="userdetails" form="signupForm">

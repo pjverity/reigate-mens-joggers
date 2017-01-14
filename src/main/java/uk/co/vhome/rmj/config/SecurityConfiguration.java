@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 
 import javax.inject.Inject;
@@ -30,25 +31,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final DataSource springJpaDataSource;
+	private final DataSource dataSource;
 
-	private UserDetailsManager userDetailsManager;
+	private JdbcUserDetailsManager userDetailsManager;
 
 	@Inject
-	public SecurityConfiguration(DataSource springJpaDataSource)
+	public SecurityConfiguration(DataSource dataSource)
 	{
-		this.springJpaDataSource = springJpaDataSource;
+		this.dataSource = dataSource;
 	}
 
-//	@Override
-	protected void configureAuth(AuthenticationManagerBuilder auth) throws Exception
+	private void configureAuth(AuthenticationManagerBuilder auth) throws Exception
 	{
 		LOGGER.info("Configuring authentication...");
 
 		// Store users in a database using a JDBC datasource to connect to it. So that passwords are not
 		// stored in the database in plain text, they are hashed using the given password encoder
 		userDetailsManager = auth.jdbcAuthentication()
-				.dataSource(springJpaDataSource)
+				.dataSource(dataSource)
 				.passwordEncoder(new BCryptPasswordEncoder()).getUserDetailsService();
 
 		// If the database is empty, set up a default admin account
@@ -56,7 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 	}
 
 	@Bean
-	public UserDetailsManager userDetailsManager(AuthenticationManagerBuilder auth) throws Exception
+	public JdbcUserDetailsManager userDetailsManager(AuthenticationManagerBuilder auth) throws Exception
 	{
 		configureAuth(auth);
 		return userDetailsManager;

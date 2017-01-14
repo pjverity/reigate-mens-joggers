@@ -26,11 +26,19 @@
 				<security:authorize access="!isAuthenticated()">
 					<c:choose>
 						<c:when test="${registrationEmail != null}">
-							<h3>
-							<span class="label label-success">
+							<div class="alert alert-success">
 								<span class="fa fa-envelope" aria-hidden="true"></span> Registration confirmation e-mail sent to ${registrationEmail}
-							</span>
-							</h3>
+							</div>
+						</c:when>
+						<c:when test="${registrationResponseProcessed != null && registrationResponseProcessed}">
+							<div class="alert alert-success">
+								${registrationResponseMessage}
+							</div>
+						</c:when>
+						<c:when test="${registrationResponseProcessed != null && !registrationResponseProcessed}">
+							<div class="alert alert-danger">
+									${registrationResponseMessage}
+							</div>
 						</c:when>
 						<c:otherwise>
 							<c:choose>
