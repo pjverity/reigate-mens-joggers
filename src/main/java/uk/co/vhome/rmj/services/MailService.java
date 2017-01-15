@@ -7,5 +7,5 @@ import java.util.UUID;
  */
 public interface MailService extends ServiceAvailabilityReporter
 {
-	void sendRegistrationMail(String to, UUID token, String generatedPassword);
+	void sendRegistrationMail(String emailAddress, String firstName, UUID token, String generatedPassword);
 }

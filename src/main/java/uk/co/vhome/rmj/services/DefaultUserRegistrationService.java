@@ -68,7 +68,7 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 		userDetailsManager.createUser(user);
 		Registration registration = registrationsRepository.save(new Registration(user.getUsername()));
 
-		mailService.sendRegistrationMail(emailAddress, registration.getUuid(), generatedPassword);
+		mailService.sendRegistrationMail(emailAddress, firstName, registration.getUuid(), generatedPassword);
 	}
 
 	@Override

@@ -10,7 +10,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.Ordered;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
-import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -18,6 +18,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.client.RestTemplate;
@@ -146,9 +147,9 @@ public class RootContextConfiguration //implements TransactionManagementConfigur
 	}
 
 	@Bean
-	public MailSender javaMailSender(@Value("${mailHost}") String mailHost,
-	                                 @Value("${mailUser}") String mailUser,
-	                                 @Value("${mailPassword}") String mailPassword)
+	public JavaMailSender javaMailSender(@Value("${mailHost}") String mailHost,
+	                                     @Value("${mailUser}") String mailUser,
+	                                     @Value("${mailPassword}") String mailPassword)
 	{
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
@@ -166,6 +167,13 @@ public class RootContextConfiguration //implements TransactionManagementConfigur
 		mailSender.setJavaMailProperties(properties);
 
 		return mailSender;
+	}
+
+	@Bean
+	public FreeMarkerConfigurationFactoryBean getFreeMarkerConfiguration() {
+		FreeMarkerConfigurationFactoryBean bean = new FreeMarkerConfigurationFactoryBean();
+		bean.setTemplateLoaderPath("/WEB-INF/fmtemplates");
+		return bean;
 	}
 
 	// TODO - Find our why this doesn't work, causes a circular reference

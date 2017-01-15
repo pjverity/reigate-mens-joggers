@@ -1,0 +1,24 @@
+<html>
+    <body>
+        <p>Hi ${firstName},</p>
+
+        <p>
+            We recently received a request to register with <a href="http://www.reigatemensjoggers.co.uk">Reigate Mens Joggers</a>
+        </p>
+
+        <p>
+            Whether this is right or wrong, just follow the link below and answer "Sign me up!" or "That's not me!" on our site to either
+            get access to our members area, updates on upcoming runs and more, or be removed entirely from our database.
+        </p>
+
+        <p>
+            Click here to <a href="http://localhost:8080/rmj/confirm/${token}">confirm or decline</a>
+        </p>
+
+        <p>
+            We hope to have you run with us soon!
+        </p>
+
+        <h3>The Reigate Mens Joggers</h3>
+    </body>
+</html>
