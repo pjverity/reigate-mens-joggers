@@ -2,6 +2,7 @@ package uk.co.vhome.rmj.site.world;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -14,10 +15,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -33,6 +31,8 @@ public class HomeController
 	private static final String VIEW_NAME = "world/home";
 
 	private final UserRegistrationService registrationService;
+
+	private final MessageSource messageSource;
 
 	private static class ConciseFieldError
 	{
@@ -50,7 +50,6 @@ public class HomeController
 		{
 			return field;
 		}
-
 		public String getDefaultMessage()
 		{
 			return defaultMessage;
@@ -58,9 +57,10 @@ public class HomeController
 	}
 
 	@Inject
-	public HomeController(UserRegistrationService registrationService)
+	public HomeController(UserRegistrationService registrationService, MessageSource messageSource)
 	{
 		this.registrationService = registrationService;
+		this.messageSource = messageSource;
 	}
 
 	@RequestMapping(path = "/", method = RequestMethod.GET)
@@ -87,9 +87,19 @@ public class HomeController
 					.map(ConciseFieldError::new)
 					.collect(Collectors.toList());
 
+			String message;
+
 			ObjectError globalError = errors.getGlobalError();
-			populatePageModelForRegistration(pageModel, false, conciseFieldErrors,
-					globalError == null ? "Some required information is missing or incorrect" : globalError.getDefaultMessage());
+			if ( globalError == null )
+			{
+				message = messageSource.getMessage("validation.constraint.UserRegistrationValid", null, Locale.getDefault());
+			}
+			else
+			{
+				message = globalError.getDefaultMessage();
+			}
+
+			populatePageModelForRegistration(pageModel, false, conciseFieldErrors, message);
 
 			return pageModel;
 		}
@@ -112,15 +122,30 @@ public class HomeController
 		return pageModel;
 	}
 
-	@RequestMapping(path = "/confirm/{uuid}", method = RequestMethod.GET)
-	public String confirmRegistration(@PathVariable UUID uuid, ModelMap model, HttpSession httpSession)
+	@RequestMapping(path = "/registrationConfirmation/{uuid}", method = RequestMethod.GET)
+	public String getRegistrationConfirmation(@PathVariable UUID uuid, ModelMap model)
 	{
-		return doSignUpResponse(registrationService::confirmRegistration, "Your account is enabled and ready to log in to!", uuid, model, httpSession);
+		model.put("registrationConfirmationUuid", uuid);
+
+		// TODO - Persist user name to DB and retrieve
+		model.put("firstName", "Paul");
+		model.put("lastName", "Verity");
+		model.put("emailAddress", "paul.verity@home.com");
+
+		model.put("form", new UserRegistrationFormObject());
+		model.put("registrationServiceAvailable", registrationService.isServiceAvailable());
+
+		return VIEW_NAME;
 	}
 
-	@RequestMapping(path = "/rescind/{uuid}", method = RequestMethod.GET)
-	public String rescindRegistration(@PathVariable UUID uuid, ModelMap model, HttpSession httpSession)
+	@RequestMapping(path = "/processRegistration", method = RequestMethod.POST)
+	public String processRegistration(@RequestParam UUID uuid, @RequestParam Boolean isConfirm, ModelMap model, HttpSession httpSession)
 	{
+		if ( isConfirm )
+		{
+			return doSignUpResponse(registrationService::confirmRegistration, "Your account is enabled and ready to log in to!", uuid, model, httpSession);
+		}
+
 		return doSignUpResponse(registrationService::rescindRegistration, "All trace of your details have been deleted from our database...", uuid, model, httpSession);
 	}
 

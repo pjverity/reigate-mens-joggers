@@ -4,6 +4,7 @@ import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -34,6 +35,9 @@ public class DefaultMailService implements MailService
 	private final Configuration freemarkerConfiguration;
 
 	private boolean serviceAvailable = false;
+
+	@Value("${siteHostAndContext}")
+	private String siteHostAndContext;
 
 	@Inject
 	public DefaultMailService(JavaMailSender javaMailSender, Configuration freemarkerConfiguration)
@@ -94,6 +98,7 @@ public class DefaultMailService implements MailService
 	{
 		Map<String, String> model = new HashMap<>();
 
+		model.put("siteHostAndContext", siteHostAndContext);
 		model.put("firstName", firstName);
 		model.put("token", token.toString());
 

@@ -13,14 +13,16 @@ $signupForm.submit(function (event) {
 
     // Get some values from elements on the page:
     const url = $signupForm.attr("action");
-    $('#signup-cancel').attr('disabled', 'disabled');
-    $(':submit').attr('disabled', 'disabled');
-    $('#signup-spinner').toggle(true);
 
     resetErrors();
 
     // Send the data using post
     var posting = $.post(url, $signupForm.serialize());
+
+    $('#signup-cancel').attr('disabled', 'disabled');
+    $(':submit').attr('disabled', 'disabled');
+    $(':input').attr('disabled', 'disabled');
+    $('#signup-spinner').toggle(true);
 
     posting.done(function (result) {
 
@@ -33,6 +35,7 @@ $signupForm.submit(function (event) {
 
         $('#signup-cancel').removeAttr('disabled');
         $(':submit').removeAttr('disabled');
+        $(':input').removeAttr('disabled');
         $('#signup-spinner').toggle(false);
 
         if (result.fieldErrors !== null) {

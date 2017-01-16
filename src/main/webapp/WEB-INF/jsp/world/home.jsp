@@ -32,12 +32,12 @@
 						</c:when>
 						<c:when test="${registrationResponseProcessed != null && registrationResponseProcessed}">
 							<div class="alert alert-success">
-								${registrationResponseMessage}
+								${registrationResponseMessage}<a href="<c:url value='/'/>"> Ok</a>
 							</div>
 						</c:when>
 						<c:when test="${registrationResponseProcessed != null && !registrationResponseProcessed}">
 							<div class="alert alert-danger">
-									${registrationResponseMessage}
+									${registrationResponseMessage}<a href="<c:url value='/'/>"> Try again</a>
 							</div>
 						</c:when>
 						<c:otherwise>
@@ -120,6 +120,9 @@
 <security:authorize access="!isAuthenticated()">
 	<c:if test="${registrationEmail == null}">
 		<%@include file="../signup-dialog.jsp" %>
+	</c:if>
+	<c:if test="${registrationConfirmationUuid != null}">
+		<%@include file="../registration-confirmation-dialog.jsp" %>
 	</c:if>
 </security:authorize>
 

@@ -12,7 +12,7 @@
         </p>
 
         <p>
-            Click here to <a href="http://localhost:8080/rmj/confirm/${token}">confirm or decline</a>
+            Click here to <a href="http://${siteHostAndContext}/registrationConfirmation/${token}">confirm or decline</a>
         </p>
 
         <p>
