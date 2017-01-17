@@ -7,7 +7,7 @@ import uk.co.vhome.rmj.entities.Registration;
 import java.util.UUID;
 
 /**
- * Repository for maintaining {@see Registration} entities to deal with new user
+ * Repository for maintaining {@link Registration} entities to deal with new user
  * registrations
  */
 @Repository
