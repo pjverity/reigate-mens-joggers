@@ -9,6 +9,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import uk.co.vhome.rmj.entities.Registration;
+import uk.co.vhome.rmj.entities.UserDetail;
+import uk.co.vhome.rmj.repositories.RegistrationsRepository;
+import uk.co.vhome.rmj.repositories.UserDetailsRepository;
 import uk.co.vhome.rmj.services.UserRegistrationService;
 
 import javax.inject.Inject;
@@ -32,6 +36,10 @@ public class HomeController
 
 	private final UserRegistrationService registrationService;
 
+	private final UserDetailsRepository userDetailsRepository;
+
+	private final RegistrationsRepository registrationsRepository;
+
 	private final MessageSource messageSource;
 
 	private static class ConciseFieldError
@@ -50,6 +58,7 @@ public class HomeController
 		{
 			return field;
 		}
+
 		public String getDefaultMessage()
 		{
 			return defaultMessage;
@@ -57,9 +66,11 @@ public class HomeController
 	}
 
 	@Inject
-	public HomeController(UserRegistrationService registrationService, MessageSource messageSource)
+	public HomeController(UserRegistrationService registrationService, UserDetailsRepository userDetailsRepository, RegistrationsRepository registrationsRepository, MessageSource messageSource)
 	{
 		this.registrationService = registrationService;
+		this.userDetailsRepository = userDetailsRepository;
+		this.registrationsRepository = registrationsRepository;
 		this.messageSource = messageSource;
 	}
 
@@ -106,9 +117,10 @@ public class HomeController
 
 		try
 		{
-			registrationService.generateRegistration(userRegistrationFormObject.getFirstName(),
-					userRegistrationFormObject.getLastName(),
-					userRegistrationFormObject.getEmailAddress());
+			registrationService.generateRegistration(userRegistrationFormObject.getEmailAddress(),
+					userRegistrationFormObject.getFirstName(),
+					userRegistrationFormObject.getLastName()
+			);
 
 			model.put("registrationEmail", userRegistrationFormObject.getEmailAddress());
 
@@ -127,10 +139,12 @@ public class HomeController
 	{
 		model.put("registrationConfirmationUuid", uuid);
 
-		// TODO - Persist user name to DB and retrieve
-		model.put("firstName", "Paul");
-		model.put("lastName", "Verity");
-		model.put("emailAddress", "paul.verity@home.com");
+		Registration registration = registrationsRepository.findOne(uuid);
+		UserDetail userDetail = userDetailsRepository.findOne(registration.getUserId());
+
+		model.put("firstName", userDetail.getFirstName());
+		model.put("lastName", userDetail.getLastName());
+		model.put("emailAddress", userDetail.getUserId());
 
 		model.put("form", new UserRegistrationFormObject());
 		model.put("registrationServiceAvailable", registrationService.isServiceAvailable());

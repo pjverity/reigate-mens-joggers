@@ -15,23 +15,23 @@ import java.util.UUID;
 @Table(name = "registrations")
 public class Registration
 {
-
-	private String username;
-
+	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Type(type="pg-uuid")
-	@Id
 	private UUID uuid;
 
-	public String getUsername()
+	@Column(name = "user_id")
+	private String userId;
+
+	public String getUserId()
 	{
-		return username;
+		return userId;
 	}
 
-	public void setUsername(String username)
+	public void setUserId(String userId)
 	{
-		this.username = username;
+		this.userId = userId;
 	}
 
 	public UUID getUuid()
@@ -44,9 +44,9 @@ public class Registration
 		this.uuid = uuid;
 	}
 
-	public Registration(String username)
+	public Registration(String userId)
 	{
-		this.username = username;
+		this.userId = userId;
 	}
 
 	public Registration()

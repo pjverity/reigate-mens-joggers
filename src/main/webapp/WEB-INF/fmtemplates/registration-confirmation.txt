@@ -7,12 +7,12 @@
         </p>
 
         <p>
-            Whether this is right or wrong, just follow the link below and answer "Sign me up!" or "That's not me!" on our site to either
+            Whether this is right or wrong, just follow the link below and answer "Accept" or "Decline" on our site to either
             get access to our members area, updates on upcoming runs and more, or be removed entirely from our database.
         </p>
 
         <p>
-            Click here to <a href="http://${siteHostAndContext}/registrationConfirmation/${token}">confirm or decline</a>
+            Click here to <a href="http://${siteHostAndContext}/registrationConfirmation/${token}">accept or decline</a>
         </p>
 
         <p>

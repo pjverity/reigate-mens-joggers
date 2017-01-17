@@ -2,8 +2,8 @@ package uk.co.vhome.rmj.site.form.validation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.provisioning.UserDetailsManager;
 import uk.co.vhome.rmj.services.ReCaptchaService;
-import uk.co.vhome.rmj.services.UserRegistrationService;
 import uk.co.vhome.rmj.site.world.UserRegistrationFormObject;
 
 import javax.inject.Inject;
@@ -21,13 +21,13 @@ public class UserRegistrationValidator implements ConstraintValidator<UserRegist
 
 	private final ReCaptchaService recaptchaService;
 
-	private final UserRegistrationService userRegistrationService;
+	private final UserDetailsManager userDetailsManager;
 
 	@Inject
-	public UserRegistrationValidator(ReCaptchaService recaptchaService, UserRegistrationService userRegistrationService)
+	public UserRegistrationValidator(ReCaptchaService recaptchaService, UserDetailsManager userDetailsManager)
 	{
 		this.recaptchaService = recaptchaService;
-		this.userRegistrationService = userRegistrationService;
+		this.userDetailsManager = userDetailsManager;
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class UserRegistrationValidator implements ConstraintValidator<UserRegist
 	{
 		boolean registrationValid = true;
 
-		if ( userRegistrationService.isEmailAddressInUse(formObject.getEmailAddress()) )
+		if ( userDetailsManager.userExists(formObject.getEmailAddress()) )
 		{
 			constraintValidatorContext.buildConstraintViolationWithTemplate("{validation.constraint.UserRegistrationValid.emailAddress}")
 					.addPropertyNode("emailAddress")

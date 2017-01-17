@@ -7,11 +7,9 @@ import java.util.UUID;
  */
 public interface UserRegistrationService extends ServiceAvailabilityReporter
 {
-	void generateRegistration(String firstName, String lastName, String emailAddress);
+	void generateRegistration(String userId, String firstName, String lastName);
 
 	void confirmRegistration(UUID uuid);
 
 	void rescindRegistration(UUID uuid);
-
-	boolean isEmailAddressInUse(String emailAddress);
 }

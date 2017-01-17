@@ -27,17 +27,17 @@
 					<c:choose>
 						<c:when test="${registrationEmail != null}">
 							<div class="alert alert-success">
-								<span class="fa fa-envelope" aria-hidden="true"></span> Registration confirmation e-mail sent to ${registrationEmail}
+								<span class="fa fa-envelope" aria-hidden="true"></span> Registration confirmation e-mail sent to ${registrationEmail} (Don't forget to check your spam filters and junk mail!)
 							</div>
 						</c:when>
 						<c:when test="${registrationResponseProcessed != null && registrationResponseProcessed}">
 							<div class="alert alert-success">
-								${registrationResponseMessage}<a href="<c:url value='/'/>"> Ok</a>
+								${registrationResponseMessage} <a href="<c:url value='/'/>">Ok</a>
 							</div>
 						</c:when>
 						<c:when test="${registrationResponseProcessed != null && !registrationResponseProcessed}">
 							<div class="alert alert-danger">
-									${registrationResponseMessage}<a href="<c:url value='/'/>"> Try again</a>
+									${registrationResponseMessage} <a href="<c:url value='/'/>">Try again</a>
 							</div>
 						</c:when>
 						<c:otherwise>

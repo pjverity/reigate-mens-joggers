@@ -2,7 +2,7 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title">Confirm or Decline Registration</h4>
+				<h4 class="modal-title">Registration Confirmation</h4>
 			</div>
 			<div class="modal-body">
 
@@ -21,10 +21,10 @@
 					<div class="modal-footer">
 						<div class="btn-group btn-group-justified" role="group" aria-label="...">
 							<div class="btn-group" role="group">
-								<button id="confirm-registration" type="button" class="btn btn-danger" onclick="decline()">That's not me!</button>
+								<button type="button" class="btn btn-success" onclick="confirm()">Accept</button>
 							</div>
 							<div class="btn-group" role="group">
-								<button id="decline-registration" type="button" class="btn btn-success" onclick="confirm()">Sign me up!</button>
+								<button type="button" class="btn btn-danger" onclick="decline()">Decline</button>
 							</div>
 						</div>
 					</div>

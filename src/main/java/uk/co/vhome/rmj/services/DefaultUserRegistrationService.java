@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import uk.co.vhome.rmj.entities.Registration;
+import uk.co.vhome.rmj.entities.UserDetail;
 import uk.co.vhome.rmj.repositories.RegistrationsRepository;
+import uk.co.vhome.rmj.repositories.UserDetailsRepository;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
@@ -32,15 +34,18 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 
 	private final RegistrationsRepository registrationsRepository;
 
+	private final UserDetailsRepository userDetailsRepository;
+
 	private boolean serviceAvailable = false;
 
 	@Inject
-	public DefaultUserRegistrationService(MailService mailService, JdbcUserDetailsManager userDetailsManager, EntityManagerFactory entityManagerFactory, RegistrationsRepository registrationsRepository)
+	public DefaultUserRegistrationService(MailService mailService, JdbcUserDetailsManager userDetailsManager, EntityManagerFactory entityManagerFactory, RegistrationsRepository registrationsRepository, UserDetailsRepository userDetailsRepository)
 	{
 		this.mailService = mailService;
 		this.userDetailsManager = userDetailsManager;
 		this.entityManagerFactory = entityManagerFactory;
 		this.registrationsRepository = registrationsRepository;
+		this.userDetailsRepository = userDetailsRepository;
 
 		// This service is only usable if it can mail registration confirmations
 		serviceAvailable = this.mailService.isServiceAvailable();
@@ -52,12 +57,12 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 	 */
 	@Override
 	@Transactional(timeout = 15)
-	public void generateRegistration(String firstName, String lastName, String emailAddress)
+	public void generateRegistration(String userId, String firstName, String lastName)
 	{
 		String generatedPassword = "temp";
 
 		SimpleGrantedAuthority authority = new SimpleGrantedAuthority("MEMBER");
-		User user = new User(emailAddress,
+		User user = new User(userId,
 				BCrypt.hashpw(generatedPassword, BCrypt.gensalt()),
 				false,
 				true,
@@ -66,9 +71,10 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 				Collections.singleton(authority));
 
 		userDetailsManager.createUser(user);
-		Registration registration = registrationsRepository.save(new Registration(user.getUsername()));
+		Registration registration = registrationsRepository.save(new Registration(userId));
+		userDetailsRepository.save(new UserDetail(userId, firstName, lastName));
 
-		mailService.sendRegistrationMail(emailAddress, firstName, registration.getUuid(), generatedPassword);
+		mailService.sendRegistrationMail(userId, firstName, registration.getUuid(), generatedPassword);
 	}
 
 	@Override
@@ -82,7 +88,7 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 			throw new RuntimeException("No registration for uuid " + uuid + " exists");
 		}
 
-		UserDetails userDetails = userDetailsManager.loadUserByUsername(registration.getUsername());
+		UserDetails userDetails = userDetailsManager.loadUserByUsername(registration.getUserId());
 		User updatedUser = new User(userDetails.getUsername(),
 				userDetails.getPassword(),
 				true,
@@ -108,16 +114,12 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 
 		// http://stackoverflow.com/questions/41645928/cant-delete-from-two-tables-with-a-relation-in-an-transaction/41648562#41648562
 		registrationsRepository.delete(uuid);
+		userDetailsRepository.delete(registration.getUserId());
+
 		EntityManagerHolder entityManager = (EntityManagerHolder) TransactionSynchronizationManager.getResource(entityManagerFactory);
 		entityManager.getEntityManager().flush();
 
-		userDetailsManager.deleteUser(registration.getUsername());
-	}
-
-	@Override
-	public boolean isEmailAddressInUse(String emailAddress)
-	{
-		return userDetailsManager.userExists(emailAddress);
+		userDetailsManager.deleteUser(registration.getUserId());
 	}
 
 	@Override
