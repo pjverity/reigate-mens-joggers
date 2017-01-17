@@ -74,21 +74,25 @@ function resetErrors() {
     $general.children().remove();
 
     // Remove all error messages
-    const $firstNameErrors = $('#firstName\\.errors');
-    $firstNameErrors.children().remove();
-    $firstNameErrors.parent().removeClass('has-error');
+    var $element = $('#firstName\\.errors');
+    $element.children().remove();
+    $element.parent().removeClass('has-error');
 
-    const $lastNameErrors = $('#lastName\\.errors');
-    $lastNameErrors.children().remove();
-    $lastNameErrors.parent().removeClass('has-error');
+    $element = $('#lastName\\.errors');
+    $element.children().remove();
+    $element.parent().removeClass('has-error');
 
-    const $emailAddressErrors = $('#emailAddress\\.errors');
-    $emailAddressErrors.children().remove();
-    $emailAddressErrors.parent().removeClass('has-error');
+    $element = $('#emailAddress\\.errors');
+    $element.children().remove();
+    $element.parent().removeClass('has-error');
 
-    const $reCaptchaResponse = $('#reCaptchaResponse\\.errors');
-    $reCaptchaResponse.children().remove();
-    $reCaptchaResponse.parent().removeClass('has-error');
+    $element = $('#confirmEmailAddress\\.errors');
+    $element.children().remove();
+    $element.parent().removeClass('has-error');
+
+    $element = $('#reCaptchaResponse\\.errors');
+    $element.children().remove();
+    $element.parent().removeClass('has-error');
 }
 
 function resetForm() {

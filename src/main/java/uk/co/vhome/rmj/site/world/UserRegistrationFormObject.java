@@ -22,6 +22,8 @@ public class UserRegistrationFormObject
 	@Email
 	private String emailAddress;
 
+	private String confirmEmailAddress;
+
 	@NotBlank(message = "{validation.constraint.Blank.firstName}")
 	@Pattern(regexp = "[a-zA-Z- ]+", message = "{validation.constraint.Pattern.invalidName}")
 	private String firstName;
@@ -70,11 +72,22 @@ public class UserRegistrationFormObject
 		this.lastName = lastName;
 	}
 
+	public String getConfirmEmailAddress()
+	{
+		return confirmEmailAddress;
+	}
+
+	public void setConfirmEmailAddress(String confirmEmailAddress)
+	{
+		this.confirmEmailAddress = confirmEmailAddress;
+	}
+
 	@Override
 	public String toString()
 	{
 		return "UserRegistrationFormObject{" +
 				"emailAddress='" + emailAddress + '\'' +
+				"confirmEmailAddress='" + confirmEmailAddress + '\'' +
 				", firstName='" + firstName + '\'' +
 				", lastName='" + lastName + '\'' +
 				'}';

@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.ConstraintViolationException;
+import java.util.Objects;
 
 /**
  * Validates that all the details provided in the submitted registration form object are valid
@@ -50,6 +51,15 @@ public class UserRegistrationValidator implements ConstraintValidator<UserRegist
 			registrationValid = false;
 		}
 
+		if ( !Objects.equals(formObject.getEmailAddress(), formObject.getConfirmEmailAddress()) )
+		{
+			constraintValidatorContext.buildConstraintViolationWithTemplate("{validation.constraint.UserRegistrationValid.confirmEmailAddress}")
+					.addPropertyNode("confirmEmailAddress")
+					.addConstraintViolation();
+
+			registrationValid = false;
+
+		}
 		String reCaptchaResponse = formObject.getReCaptchaResponse();
 		try
 		{

@@ -137,14 +137,25 @@ public class HomeController
 	@RequestMapping(path = "/registrationConfirmation/{uuid}", method = RequestMethod.GET)
 	public String getRegistrationConfirmation(@PathVariable UUID uuid, ModelMap model)
 	{
-		model.put("registrationConfirmationUuid", uuid);
-
 		Registration registration = registrationsRepository.findOne(uuid);
-		UserDetail userDetail = userDetailsRepository.findOne(registration.getUserId());
 
-		model.put("firstName", userDetail.getFirstName());
-		model.put("lastName", userDetail.getLastName());
-		model.put("emailAddress", userDetail.getUserId());
+		if (registration != null)
+		{
+			UserDetail userDetail = userDetailsRepository.findOne(registration.getUserId());
+
+			model.put("firstName", userDetail.getFirstName());
+			model.put("lastName", userDetail.getLastName());
+			model.put("emailAddress", userDetail.getUserId());
+
+			model.put("registrationConfirmationUuid", uuid);
+		}
+		else
+		{
+			LOGGER.info("Received invalid registration request for uuid: {}", uuid);
+
+			model.put("registrationResponseProcessed", false);
+			model.put("registrationResponseMessage", "The registration request is invalid");
+		}
 
 		model.put("form", new UserRegistrationFormObject());
 		model.put("registrationServiceAvailable", registrationService.isServiceAvailable());

@@ -31,6 +31,12 @@
 						</div>
 
 						<div class="form-group">
+							<form:label cssClass="control-label" path="confirmEmailAddress">Confirm Email Address</form:label>
+							<form:input cssClass="form-control" autocomplete="section-userdetails home email" path="confirmEmailAddress" placeholder="ron.further@home.co.uk"/>
+							<div id="confirmEmailAddress.errors"></div>
+						</div>
+
+						<div class="form-group">
 							<div id="g-recaptcha" class="g-recaptcha"></div>
 							<form:hidden id="reCaptchaResponse" path="reCaptchaResponse"/>
 							<div id="reCaptchaResponse.errors"></div>
