@@ -6,16 +6,20 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Created by paulverity on 16/01/2017.
+ * Entity for describing additional information about members
  */
 @Entity
 @Table(name = "user_details")
 public class UserDetail
 {
+	@Id
+	@Column(name = "user_id")
 	private String userId;
 
+	@Column(name = "last_name")
 	private String firstName;
 
+	@Column(name = "first_name")
 	private String lastName;
 
 	public UserDetail(String userId, String firstName, String lastName)
@@ -29,19 +33,16 @@ public class UserDetail
 	{
 	}
 
-	@Id
-	@Column(name = "user_id")
 	public String getUserId()
 	{
 		return userId;
 	}
 
-	public void setUserId(String username)
+	public void setUserId(String userId)
 	{
-		this.userId = username;
+		this.userId = userId;
 	}
 
-	@Column(name = "last_name")
 	public String getFirstName()
 	{
 		return firstName;
@@ -52,7 +53,6 @@ public class UserDetail
 		this.firstName = firstName;
 	}
 
-	@Column(name = "first_name")
 	public String getLastName()
 	{
 		return lastName;

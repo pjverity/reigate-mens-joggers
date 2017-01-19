@@ -12,4 +12,6 @@ public interface UserRegistrationService extends ServiceAvailabilityReporter
 	void confirmRegistration(UUID uuid);
 
 	void rescindRegistration(UUID uuid);
+
+	void changePassword(String userId, String oldPassword, String newPassword);
 }

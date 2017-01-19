@@ -106,7 +106,7 @@
 			<small class="text-muted">Not a man? <a href="http://www.reigateladiesjoggers.co.uk">www.reigateladiesjoggers.co.uk</a></small>
 		</div>
 		<div class="col-sm-6 text-right">
-			<small class="text-muted">Under construction. © Paul Verity (2016) <a href="https://github.com/pjverity/rmj" class="social-buttons small"><i
+			<small class="text-muted">Under construction. © Paul Verity (2017) <a href="https://github.com/pjverity/rmj" class="social-buttons small"><i
 							class="fa fa-github fa-fw"></i></a></small>
 		</div>
 	</div>

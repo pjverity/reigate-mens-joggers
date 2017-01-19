@@ -31,7 +31,7 @@
 								</security:authorize>
 							</li>
 							<li>
-								<a href="<c:url value="/user/account"/>">My Account</a>
+								<a href="<c:url value="/member/account"/>">My Account</a>
 							</li>
 							<li>
 								<a href="#" onclick="document.logoutForm.submit()">Logout</a>

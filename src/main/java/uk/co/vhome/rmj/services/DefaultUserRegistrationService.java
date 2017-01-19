@@ -123,6 +123,13 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 	}
 
 	@Override
+	@Transactional(timeout = 15)
+	public void changePassword(String userId, String oldPassword, String newPassword)
+	{
+		userDetailsManager.changePassword(oldPassword, BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+	}
+
+	@Override
 	public boolean isServiceAvailable()
 	{
 		return serviceAvailable;
