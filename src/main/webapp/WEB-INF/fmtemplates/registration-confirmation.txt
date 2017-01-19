@@ -12,7 +12,18 @@
         </p>
 
         <p>
-            Click here to <a href="http://${siteHostAndContext}/registrationConfirmation/${token}">accept or decline</a>
+            Your login credentials are
+            <div>
+                Login Id: <strong>${userId}</strong>
+                <br/>
+                Password: <strong>${password}</strong>
+            </div>
+        </p>
+
+        <p>
+            Click here to <a href="http://${domain}/registrationConfirmation/${token}">accept or decline</a>. If you accept,
+            you can immediately log in using the above credentials. You can use the top menu to access your account and
+            change your password.
         </p>
 
         <p>

@@ -32,12 +32,12 @@
 						</c:when>
 						<c:when test="${registrationResponseProcessed != null && registrationResponseProcessed}">
 							<div class="alert alert-success">
-								${registrationResponseMessage}.&nbsp;<a href="<c:url value='/'/>">Ok</a>
+								${registrationResponseMessage}&nbsp;<a href="<c:url value='/'/>">Ok</a>
 							</div>
 						</c:when>
 						<c:when test="${registrationResponseProcessed != null && !registrationResponseProcessed}">
 							<div class="alert alert-danger">
-									${registrationResponseMessage}.&nbsp;<a href="<c:url value='/'/>">Ok</a>
+									${registrationResponseMessage}&nbsp;<a href="<c:url value='/'/>">Ok</a>
 							</div>
 						</c:when>
 						<c:otherwise>

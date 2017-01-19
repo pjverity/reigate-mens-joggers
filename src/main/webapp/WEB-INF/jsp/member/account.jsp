@@ -26,7 +26,12 @@
 
 			<c:url value="/changePassword" var="accountUrl"/>
 			<form:form modelAttribute="formObject" action="${accountUrl}" method="post">
-				<h5>Change Password <small>${pwChanged == 'true' ? 'Password Changed' : ''}<form:errors/></small></h5>
+
+				<spring:hasBindErrors name="formObject">
+					<c:set var="formError" value="true" />
+				</spring:hasBindErrors>
+
+				<h5>Change Password <small class="${formError ? 'text-danger' : 'text-success'}">${pwChanged == 'true' ? 'Password Changed' : ''}<form:errors/></small></h5>
 
 				<div class="row">
 					<spring:bind path="oldPassword">

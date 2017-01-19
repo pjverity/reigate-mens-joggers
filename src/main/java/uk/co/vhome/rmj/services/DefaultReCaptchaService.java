@@ -36,10 +36,10 @@ public class DefaultReCaptchaService implements ReCaptchaService
 
 	private final RestTemplate restTemplate;
 
-	@Value("${recaptcha.url}")
+	@Value("${service.recaptcha.url}")
 	private String recaptchaUrl;
 
-	@Value("${recaptcha.secret-key}")
+	@Value("${service.recaptcha.secret-key}")
 	private String recaptchaSecretKey;
 
 	@Inject

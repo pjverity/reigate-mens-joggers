@@ -2,10 +2,7 @@ package uk.co.vhome.rmj.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -43,6 +40,7 @@ import java.util.Properties;
 		entityManagerFactoryRef = "entityManagerFactoryBean",
 		transactionManagerRef = "jpaTransactionManager"
 )
+@PropertySource("file:rmj-${env}.properties")
 public class RootContextConfiguration //implements TransactionManagementConfigurer
 {
 	private static final String HIBERNATE_DIALECT = "org.hibernate.dialect.PostgreSQL94Dialect";
@@ -147,9 +145,9 @@ public class RootContextConfiguration //implements TransactionManagementConfigur
 	}
 
 	@Bean
-	public JavaMailSender javaMailSender(@Value("${mailHost}") String mailHost,
-	                                     @Value("${mailUser}") String mailUser,
-	                                     @Value("${mailPassword}") String mailPassword)
+	public JavaMailSender javaMailSender(@Value("${service.mail.host}") String mailHost,
+	                                     @Value("${service.mail.user}") String mailUser,
+	                                     @Value("${service.mail.password}") String mailPassword)
 	{
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 

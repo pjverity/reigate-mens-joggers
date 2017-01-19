@@ -34,6 +34,11 @@ public class HomeController
 
 	private static final String VIEW_NAME = "world/home";
 
+	private static final String MESSAGE_CODE_REGISTRATION_ACCEPTED_SUCCESS = "registration.accepted.success";
+	private static final String MESSAGE_CODE_REGISTRATION_PROCESSING_FAILED = "registration.processing.failed";
+	private static final String MESSAGE_CODE_REGISTRATION_DECLINED_SUCCESS = "registration.declined.success";
+	private static final String MESSAGE_CODE_VALIDATION_CONSTRAINT_USER_REGISTRATION_VALID = "validation.constraint.UserRegistrationValid";
+
 	private final UserRegistrationService registrationService;
 
 	private final UserDetailsRepository userDetailsRepository;
@@ -103,7 +108,7 @@ public class HomeController
 			ObjectError globalError = errors.getGlobalError();
 			if ( globalError == null )
 			{
-				message = messageSource.getMessage("validation.constraint.UserRegistrationValid", null, Locale.getDefault());
+				message = messageSource.getMessage(MESSAGE_CODE_VALIDATION_CONSTRAINT_USER_REGISTRATION_VALID, null, Locale.getDefault());
 			}
 			else
 			{
@@ -166,12 +171,15 @@ public class HomeController
 	@RequestMapping(path = "/processRegistration", method = RequestMethod.POST)
 	public String processRegistration(@RequestParam UUID uuid, @RequestParam Boolean isConfirm, ModelMap model, HttpSession httpSession)
 	{
+		String message;
 		if ( isConfirm )
 		{
-			return doSignUpResponse(registrationService::confirmRegistration, "Your account is enabled and ready to log in to!", uuid, model, httpSession);
+			message = messageSource.getMessage(MESSAGE_CODE_REGISTRATION_ACCEPTED_SUCCESS, null, Locale.getDefault());
+			return doSignUpResponse(registrationService::confirmRegistration, message, uuid, model, httpSession);
 		}
 
-		return doSignUpResponse(registrationService::rescindRegistration, "All trace of your details have been deleted from our database...", uuid, model, httpSession);
+		message = messageSource.getMessage(MESSAGE_CODE_REGISTRATION_DECLINED_SUCCESS, null, Locale.getDefault());
+		return doSignUpResponse(registrationService::rescindRegistration, message, uuid, model, httpSession);
 	}
 
 	private String doSignUpResponse(Consumer<UUID> serviceMethod, String registrationMessage, UUID uuid, ModelMap model, HttpSession httpSession)
@@ -191,8 +199,10 @@ public class HomeController
 		catch (Exception e)
 		{
 			LOGGER.error("Registration confirmation failed", e);
+
+			String message = messageSource.getMessage(MESSAGE_CODE_REGISTRATION_PROCESSING_FAILED, null, Locale.getDefault());
 			model.put("registrationResponseProcessed", false);
-			model.put("registrationResponseMessage", "Ah... Something went wrong. We'll look in to it.");
+			model.put("registrationResponseMessage", message);
 		}
 
 		return VIEW_NAME;

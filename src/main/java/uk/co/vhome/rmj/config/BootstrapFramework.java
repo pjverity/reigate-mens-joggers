@@ -5,11 +5,11 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
+import javax.servlet.*;
+import java.util.EnumSet;
 
 /**
  * This is called once when the container initialises the application, before any Listeners
@@ -96,5 +96,13 @@ public class BootstrapFramework implements WebApplicationInitializer
 		dispatcher = servletContext.addServlet(SERVLET_REST_DISPATCHER_NAME, new DispatcherServlet(restContextConfig));
 		dispatcher.setLoadOnStartup(2);
 		dispatcher.addMapping("/rest/*");
+
+		// Browsers do not typically set the character encoding so force it to be UTF-8 rather than ISO-8859-1
+		// which seems to be default in some cases. Left unchanged, login's fail where passwords use special characters.
+		CharacterEncodingFilter filter = new CharacterEncodingFilter();
+		filter.setEncoding("UTF-8");
+		filter.setForceEncoding(true);
+		FilterRegistration.Dynamic registration = servletContext.addFilter("encodingFilter", filter);
+		registration.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
 	}
 }

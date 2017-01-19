@@ -36,8 +36,8 @@ public class DefaultMailService implements MailService
 
 	private boolean serviceAvailable = false;
 
-	@Value("${siteHostAndContext}")
-	private String siteHostAndContext;
+	@Value("${service.mail.message-template.site-domain}")
+	private String domain;
 
 	@Inject
 	public DefaultMailService(JavaMailSender javaMailSender, Configuration freemarkerConfiguration)
@@ -70,7 +70,7 @@ public class DefaultMailService implements MailService
 
 		try
 		{
-			String text = getMailContent(firstName, token);
+			String text = getMailContent(emailAddress, generatedPassword, firstName, token);
 
 			javaMailSender.send(mimeMessage ->
 			{
@@ -94,13 +94,15 @@ public class DefaultMailService implements MailService
 		return serviceAvailable;
 	}
 
-	private String getMailContent(String firstName, UUID token) throws IOException, TemplateException
+	private String getMailContent(String userId, String password, String firstName, UUID token) throws IOException, TemplateException
 	{
 		Map<String, String> model = new HashMap<>();
 
-		model.put("siteHostAndContext", siteHostAndContext);
 		model.put("firstName", firstName);
+		model.put("userId", userId);
+		model.put("password", password);
 		model.put("token", token.toString());
+		model.put("domain", domain);
 
 		return FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerConfiguration.getTemplate(EMAIL_TEMPLATE), model);
 	}
