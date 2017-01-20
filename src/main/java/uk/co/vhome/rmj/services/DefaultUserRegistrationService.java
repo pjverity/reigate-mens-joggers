@@ -87,7 +87,7 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 
 		for (int i = 0; i < 10; ++i )
 		{
-			char c = chars[(int)Math.round(Math.random() * chars.length)];
+			char c = chars[(int)Math.round(Math.random() * (chars.length-1))];
 			stringBuilder.append(c);
 		}
 

@@ -133,6 +133,7 @@ public class HomeController
 		}
 		catch (Exception e)
 		{
+			LOGGER.error("Failed to register user", e);
 			populatePageModelForRegistration(pageModel, false, null, "Failed to register new user");
 		}
 
