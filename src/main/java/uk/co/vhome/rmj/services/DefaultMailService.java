@@ -26,7 +26,7 @@ public class DefaultMailService implements MailService
 
 	private static final String EMAIL_TEMPLATE = "registration-confirmation.txt";
 
-	private static final String FROM_ADDRESS = "noreply@rmj.co.uk";
+	private static final String FROM_ADDRESS = "noreply@reigatemensjoggers.co.uk";
 
 	private static final String FROM_NAME = "Reigate Mens Joggers";
 
@@ -77,7 +77,7 @@ public class DefaultMailService implements MailService
 				MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 				message.setFrom(new InternetAddress(FROM_ADDRESS, FROM_NAME));
 				message.setTo(emailAddress);
-				message.setSubject("Confirm Registration to RJM");
+				message.setSubject("Confirm Registration to RMJ");
 				message.setText(text, true);
 			});
 		}
