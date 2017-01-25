@@ -2,6 +2,7 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%--@elvariable id="registrationAction" type="uk.co.vhome.rmj.site.world.HomeController.Action"--%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -27,12 +28,13 @@
 					<c:choose>
 						<c:when test="${registrationEmail != null}">
 							<div class="alert alert-success">
-								<span class="fa fa-envelope" aria-hidden="true"></span> Registration confirmation e-mail sent to ${registrationEmail} (Don't forget to check your spam filters and junk mail!)
+								<span class="fa fa-envelope" aria-hidden="true"></span> Registration confirmation e-mail sent to ${registrationEmail} (Don't forget to check your spam filters and
+								junk mail!)
 							</div>
 						</c:when>
 						<c:when test="${registrationResponseProcessed != null && registrationResponseProcessed}">
 							<div class="alert alert-success">
-								${registrationResponseMessage}&nbsp;<a href="<c:url value='/'/>">Ok</a>
+									${registrationResponseMessage}&nbsp;<a href="<c:url value='/'/>">Ok</a>
 							</div>
 						</c:when>
 						<c:when test="${registrationResponseProcessed != null && !registrationResponseProcessed}">
@@ -60,7 +62,7 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-12">
-				<p>Its got to be better than sitting on the sofa right? Escape that stuffy office and come for a run - you won't regret it!</p>
+				<p>It's got to be better than sitting on the sofa right? Escape that stuffy office and come for a run - you won't regret it!</p>
 			</div>
 		</div>
 		<div class="row">
@@ -75,7 +77,7 @@
 <div class="container">
 	<p>This is a mixed ability session so if you are returning to running, trying running for the first time or wanting to increase your running there is something for
 		everyone.</p>
-	<p>Its a fun, friendly group where no one gets left behind. We will have a real variety of sessions from hills work, speed work, interval training and steady runs. We also will
+	<p>It's a fun, friendly group where no one gets left behind. We will have a real variety of sessions from hills work, speed work, interval training and steady runs. We also will
 		have social events, races and plan special events.</p>
 </div>
 
@@ -112,6 +114,48 @@
 	</div>
 </div>
 
+<c:if test="${registrationAction != null}">
+	<div id="registrationCompleteDialog" class="modal" tabindex="-1" role="dialog" data-backdrop="static">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">${registrationAction.action}</h4>
+				</div>
+				<div class="modal-body">
+					<p>Hi ${firstName},</p>
+					<c:if test="${registrationAction eq 'ACCEPT'}">
+						<p>You're just one click away from joining <strong>Reigate Men's Joggers</strong>!</p>
+						<p>Once activated, you can log in to your account using the details provided in the e-mail. From there you can change the temporary password from the <strong>My Account</strong>
+						menu.</p>
+						<p>Happy running!</p>
+					</c:if>
+					<c:if test="${registrationAction eq 'DECLINE'}">
+						<p>Are sure you want your details removed from our database?</p>
+					</c:if>
+					<c:url value="/registration/complete" var="registrationCompleteUrl"/>
+					<form id="registrationCopmleteForm" action="${registrationCompleteUrl}" method="post">
+
+						<input type="hidden" name="uuid" value="${uuid}">
+						<input type="hidden" name="action" value="${registrationAction}">
+
+						<security:csrfInput/>
+						<div class="modal-footer">
+							<button id="signup-cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+							<button type="submit" class="btn ${registrationAction eq 'ACCEPT' ? 'btn-success' : 'btn-danger'}">${registrationAction.action}</button>
+						</div>
+					</form>
+
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
+	<%--<div class="alert alert-success">
+		Accept Dialog<a href="<c:url value='/'/>">Ok</a>
+	</div--%>
+</c:if>
+
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
@@ -126,6 +170,9 @@
 	</c:if>
 </security:authorize>
 
+<script>
+    $('#registrationCompleteDialog').modal('show');
+</script>
 </body>
 
 </html>

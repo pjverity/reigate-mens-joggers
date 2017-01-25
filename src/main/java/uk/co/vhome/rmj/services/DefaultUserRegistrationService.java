@@ -96,7 +96,7 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 
 	@Override
 	@Transactional(timeout = 15)
-	public void confirmRegistration(UUID uuid)
+	public void acceptRegistration(UUID uuid)
 	{
 		Registration registration = registrationsRepository.findOne(uuid);
 
@@ -120,7 +120,7 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 
 	@Override
 	@Transactional(timeout = 15)
-	public void rescindRegistration(UUID uuid)
+	public void declineRegistration(UUID uuid)
 	{
 		Registration registration = registrationsRepository.findOne(uuid);
 

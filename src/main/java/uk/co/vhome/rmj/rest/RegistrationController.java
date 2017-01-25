@@ -26,7 +26,7 @@ public class RegistrationController
 	{
 		try
 		{
-			userRegistrationService.confirmRegistration(uuid);
+			userRegistrationService.acceptRegistration(uuid);
 			return "success";
 		}
 		catch (Exception e)
@@ -40,7 +40,7 @@ public class RegistrationController
 	{
 		try
 		{
-			userRegistrationService.rescindRegistration(uuid);
+			userRegistrationService.declineRegistration(uuid);
 			return "success";
 		}
 		catch (Exception e)

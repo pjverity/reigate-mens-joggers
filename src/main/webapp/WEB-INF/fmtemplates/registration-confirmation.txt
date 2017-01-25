@@ -3,27 +3,20 @@
         <p>Hi ${firstName},</p>
 
         <p>
-            We recently received a request to register with <a href="http://www.reigatemensjoggers.co.uk">Reigate Mens Joggers</a>
+            We recently received a request to register with <a href="http://www.reigatemensjoggers.co.uk">Reigate Mens Joggers</a>. Your login credentials are:
         </p>
 
         <p>
-            Whether this is right or wrong, just follow the link below and answer "Accept" or "Decline" on our site to either
-            get access to our members area, updates on upcoming runs and more, or be removed entirely from our database.
-        </p>
-
-        <p>
-            Your login credentials are
             <div>
-                Login Id: <strong>${userId}</strong>
+                Login: <strong>${userId}</strong>
                 <br/>
                 Password: <strong>${password}</strong>
             </div>
         </p>
 
         <p>
-            Click here to <a href="http://${domain}/registrationConfirmation/${token}">accept or decline</a>. If you accept,
-            you can immediately log in using the above credentials. You can use the top menu to access your account and
-            change your password.
+            Click here to <a href="http://${domain}/registration/accept/${token}">Activate</a> your account,
+            or here to <a href="http://${domain}/registration/decline/${token}">Delete</a> your details from our database.
         </p>
 
         <p>
