@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import uk.co.vhome.rmj.site.form.validation.UserRegistrationValid;
 
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  * The object that defines the user sign up form, that is validated to ensure
@@ -23,6 +24,11 @@ public class UserRegistrationFormObject
 	private String emailAddress;
 
 	private String confirmEmailAddress;
+
+	@Size(min = 8, message = "{validation.constraint.Min.password}")
+	private String password;
+
+	private String reenteredPassword;
 
 	@NotBlank(message = "{validation.constraint.Blank.firstName}")
 	@Pattern(regexp = "[a-zA-Z- ]+", message = "{validation.constraint.Pattern.invalidName}")
@@ -82,14 +88,24 @@ public class UserRegistrationFormObject
 		this.confirmEmailAddress = confirmEmailAddress;
 	}
 
-	@Override
-	public String toString()
+	public String getPassword()
 	{
-		return "UserRegistrationFormObject{" +
-				"emailAddress='" + emailAddress + '\'' +
-				"confirmEmailAddress='" + confirmEmailAddress + '\'' +
-				", firstName='" + firstName + '\'' +
-				", lastName='" + lastName + '\'' +
-				'}';
+		return password;
 	}
+
+	public void setPassword(String password)
+	{
+		this.password = password;
+	}
+
+	public String getReenteredPassword()
+	{
+		return reenteredPassword;
+	}
+
+	public void setReenteredPassword(String reenteredPassword)
+	{
+		this.reenteredPassword = reenteredPassword;
+	}
+
 }

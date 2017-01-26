@@ -58,8 +58,17 @@ public class UserRegistrationValidator implements ConstraintValidator<UserRegist
 					.addConstraintViolation();
 
 			registrationValid = false;
-
 		}
+
+		if ( !Objects.equals(formObject.getPassword(), formObject.getReenteredPassword()) )
+		{
+			constraintValidatorContext.buildConstraintViolationWithTemplate("{validation.constraint.UserRegistrationValid.confirmPassword}")
+					.addPropertyNode("reenteredPassword")
+					.addConstraintViolation();
+
+			registrationValid = false;
+		}
+
 		String reCaptchaResponse = formObject.getReCaptchaResponse();
 		try
 		{

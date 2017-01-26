@@ -22,6 +22,7 @@ $signupForm.submit(function (event) {
     $('#signup-cancel').attr('disabled', 'disabled');
     $(':submit').attr('disabled', 'disabled');
     $(':input').attr('disabled', 'disabled');
+    $(':password').attr('disabled', 'disabled');
     $('#signup-spinner').toggle(true);
 
     posting.done(function (result) {
@@ -36,6 +37,7 @@ $signupForm.submit(function (event) {
         $('#signup-cancel').removeAttr('disabled');
         $(':submit').removeAttr('disabled');
         $(':input').removeAttr('disabled');
+        $(':password').removeAttr('disabled');
         $('#signup-spinner').toggle(false);
 
         if (result.fieldErrors !== null) {
@@ -87,6 +89,14 @@ function resetErrors() {
     $element.parent().removeClass('has-error');
 
     $element = $('#confirmEmailAddress\\.errors');
+    $element.children().remove();
+    $element.parent().removeClass('has-error');
+
+    $element = $('#password\\.errors');
+    $element.children().remove();
+    $element.parent().removeClass('has-error');
+
+    $element = $('#reenteredPassword\\.errors');
     $element.children().remove();
     $element.parent().removeClass('has-error');
 

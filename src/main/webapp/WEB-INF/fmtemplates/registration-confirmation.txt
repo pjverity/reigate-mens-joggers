@@ -3,20 +3,12 @@
         <p>Hi ${firstName},</p>
 
         <p>
-            We recently received a request to register with <a href="http://www.reigatemensjoggers.co.uk">Reigate Mens Joggers</a>. Your login credentials are:
+            Thank you for registering with <a href="http://www.reigatemensjoggers.co.uk">Reigate Mens Joggers</a>!
         </p>
 
         <p>
-            <div>
-                Login: <strong>${userId}</strong>
-                <br/>
-                Password: <strong>${password}</strong>
-            </div>
-        </p>
-
-        <p>
-            Click here to <a href="http://${domain}/registration/accept/${token}">Activate</a> your account,
-            or here to <a href="http://${domain}/registration/decline/${token}">Delete</a> your details from our database.
+            If you do didn't sign up, then please contact <a href="mailto:administrator@reigatemensjoggers.co.uk">administrator@reigatemensjoggers.co.uk</a>
+            to be removed from our database.
         </p>
 
         <p>

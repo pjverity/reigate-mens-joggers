@@ -2,7 +2,6 @@ package uk.co.vhome.rmj.site.world;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -10,59 +9,31 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-import uk.co.vhome.rmj.entities.Registration;
-import uk.co.vhome.rmj.entities.UserDetail;
-import uk.co.vhome.rmj.repositories.RegistrationsRepository;
-import uk.co.vhome.rmj.repositories.UserDetailsRepository;
 import uk.co.vhome.rmj.services.UserRegistrationService;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * The sites home page that also provides user registration functions
  */
 @Controller
-@SessionAttributes({"registrationEmail"})
 public class HomeController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final String VIEW_NAME = "world/home";
 
-	private static final String MESSAGE_CODE_REGISTRATION_ACCEPTED_SUCCESS = "registration.accepted.success";
-	private static final String MESSAGE_CODE_REGISTRATION_PROCESSING_FAILED = "registration.processing.failed";
-	private static final String MESSAGE_CODE_REGISTRATION_DECLINED_SUCCESS = "registration.declined.success";
 	private static final String MESSAGE_CODE_VALIDATION_CONSTRAINT_USER_REGISTRATION_VALID = "validation.constraint.UserRegistrationValid";
 
-	public enum Action
-	{
-		ACCEPT("Activate Account"),
-		DECLINE("Delete Account");
-
-		private final String action;
-
-		Action(String action)
-		{
-			this.action = action;
-		}
-
-		public String getAction()
-		{
-			return action;
-		}
-	}
-
 	private final UserRegistrationService registrationService;
-
-	private final UserDetailsRepository userDetailsRepository;
-
-	private final RegistrationsRepository registrationsRepository;
 
 	private final MessageSource messageSource;
 
@@ -90,11 +61,9 @@ public class HomeController
 	}
 
 	@Inject
-	public HomeController(UserRegistrationService registrationService, UserDetailsRepository userDetailsRepository, RegistrationsRepository registrationsRepository, MessageSource messageSource)
+	public HomeController(UserRegistrationService registrationService, MessageSource messageSource)
 	{
 		this.registrationService = registrationService;
-		this.userDetailsRepository = userDetailsRepository;
-		this.registrationsRepository = registrationsRepository;
 		this.messageSource = messageSource;
 	}
 
@@ -107,40 +76,10 @@ public class HomeController
 		return VIEW_NAME;
 	}
 
-	@RequestMapping(path = "/registration/{action}/{uuid}", method = RequestMethod.GET)
-	public String registrationAccept(@PathVariable UUID uuid,
-	                                 @PathVariable @NotBlank String action,
-	                                 ModelMap model)
-	{
-		model.put("form", new UserRegistrationFormObject());
-		model.put("registrationServiceAvailable", registrationService.isServiceAvailable());
-
-		try
-		{
-			Action a = Action.valueOf(action.toUpperCase());
-
-			Registration registration = registrationsRepository.findOne(uuid);
-			UserDetail userDetail = userDetailsRepository.findOne(registration.getUserId());
-
-			model.put("firstName", userDetail.getFirstName());
-			model.put("registrationAction", a);
-			model.put("uuid", uuid);
-		}
-		catch (Exception e)
-		{
-			LOGGER.error("Failed to process users registration response", e);
-
-			model.put("registrationResponseProcessed", false);
-			model.put("registrationResponseMessage", "Oops, something went wrong. We're looking in to it.");
-		}
-
-		return VIEW_NAME;
-	}
-
 	@RequestMapping(path = "/register", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> registerNewMember(@ModelAttribute("form") @Valid UserRegistrationFormObject userRegistrationFormObject,
-	                                             BindingResult errors, ModelMap model) throws IOException
+	                                             BindingResult errors, ModelMap model, HttpServletRequest httpServletRequest) throws IOException
 	{
 		Map<String, Object> pageModel = new HashMap<>();
 
@@ -171,12 +110,13 @@ public class HomeController
 
 		try
 		{
-			registrationService.generateRegistration(userRegistrationFormObject.getEmailAddress(),
+			registrationService.registerNewUser(userRegistrationFormObject.getEmailAddress(),
 					userRegistrationFormObject.getFirstName(),
-					userRegistrationFormObject.getLastName()
+					userRegistrationFormObject.getLastName(),
+					userRegistrationFormObject.getPassword()
 			);
 
-			model.put("registrationEmail", userRegistrationFormObject.getEmailAddress());
+			httpServletRequest.login(userRegistrationFormObject.getConfirmEmailAddress(), userRegistrationFormObject.getPassword());
 
 			populatePageModelForRegistration(pageModel, true, null, null);
 		}
@@ -187,45 +127,6 @@ public class HomeController
 		}
 
 		return pageModel;
-	}
-
-	@RequestMapping(path = "/registration/complete", method = RequestMethod.POST)
-	public String registrationComplete(@RequestParam @NotBlank UUID uuid,
-	                                   @RequestParam @NotBlank String action,
-	                                   ModelMap model, HttpSession httpSession)
-	{
-		Action action1 = Action.valueOf(action);
-
-		Consumer<UUID> serviceMethod = action1 == Action.ACCEPT ? registrationService::acceptRegistration : registrationService::declineRegistration;
-		String message = messageSource.getMessage(action1 == Action.ACCEPT ? MESSAGE_CODE_REGISTRATION_ACCEPTED_SUCCESS : MESSAGE_CODE_REGISTRATION_DECLINED_SUCCESS, null, Locale.getDefault());
-
-		return doSignUpResponse(serviceMethod, message, uuid, model, httpSession);
-	}
-
-	private String doSignUpResponse(Consumer<UUID> serviceMethod, String registrationMessage, UUID uuid, ModelMap model, HttpSession httpSession)
-	{
-		model.remove("registrationEmail");
-		httpSession.removeAttribute("registrationEmail");
-
-		model.put("form", new UserRegistrationFormObject());
-		model.put("registrationServiceAvailable", registrationService.isServiceAvailable());
-
-		try
-		{
-			serviceMethod.accept(uuid);
-			model.put("registrationResponseProcessed", true);
-			model.put("registrationResponseMessage", registrationMessage);
-		}
-		catch (Exception e)
-		{
-			LOGGER.error("Registration confirmation failed", e);
-
-			String message = messageSource.getMessage(MESSAGE_CODE_REGISTRATION_PROCESSING_FAILED, null, Locale.getDefault());
-			model.put("registrationResponseProcessed", false);
-			model.put("registrationResponseMessage", message);
-		}
-
-		return VIEW_NAME;
 	}
 
 	private static void populatePageModelForRegistration(Map<String, Object> pageModel, boolean isSuccessful, List<ConciseFieldError> conciseFieldErrors, String generalErrorMessage)

@@ -36,6 +36,20 @@
 							<div id="confirmEmailAddress.errors"></div>
 						</div>
 
+						<div class="row">
+							<div class="form-group col-md-6">
+								<form:label cssClass="control-label" path="password">Password</form:label>
+								<form:password cssClass="form-control" path="password" placeholder="password"/>
+								<div id="password.errors"></div>
+							</div>
+
+							<div class="form-group col-md-6">
+								<form:label cssClass="control-label" path="reenteredPassword">Re-enter Password</form:label>
+								<form:password cssClass="form-control" path="reenteredPassword" placeholder="password"/>
+								<div id="reenteredPassword.errors"></div>
+							</div>
+						</div>
+
 						<div class="form-group">
 							<div id="g-recaptcha" class="g-recaptcha"></div>
 							<form:hidden id="reCaptchaResponse" path="reCaptchaResponse"/>

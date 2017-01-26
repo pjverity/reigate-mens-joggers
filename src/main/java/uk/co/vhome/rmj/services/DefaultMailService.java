@@ -4,7 +4,6 @@ import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -17,7 +16,6 @@ import javax.mail.internet.InternetAddress;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class DefaultMailService implements MailService
@@ -35,9 +33,6 @@ public class DefaultMailService implements MailService
 	private final Configuration freemarkerConfiguration;
 
 	private boolean serviceAvailable = false;
-
-	@Value("${service.mail.message-template.site-domain}")
-	private String domain;
 
 	@Inject
 	public DefaultMailService(JavaMailSender javaMailSender, Configuration freemarkerConfiguration)
@@ -61,7 +56,7 @@ public class DefaultMailService implements MailService
 	}
 
 	@Override
-	public void sendRegistrationMail(String emailAddress, String firstName, UUID token, String generatedPassword)
+	public void sendRegistrationMail(String emailAddress, String firstName)
 	{
 		if (!isServiceAvailable())
 		{
@@ -70,7 +65,7 @@ public class DefaultMailService implements MailService
 
 		try
 		{
-			String text = getMailContent(emailAddress, generatedPassword, firstName, token);
+			String text = getMailContent(firstName);
 
 			javaMailSender.send(mimeMessage ->
 			{
@@ -94,15 +89,11 @@ public class DefaultMailService implements MailService
 		return serviceAvailable;
 	}
 
-	private String getMailContent(String userId, String password, String firstName, UUID token) throws IOException, TemplateException
+	private String getMailContent(String firstName) throws IOException, TemplateException
 	{
 		Map<String, String> model = new HashMap<>();
 
 		model.put("firstName", firstName);
-		model.put("userId", userId);
-		model.put("password", password);
-		model.put("token", token.toString());
-		model.put("domain", domain);
 
 		return FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerConfiguration.getTemplate(EMAIL_TEMPLATE), model);
 	}
