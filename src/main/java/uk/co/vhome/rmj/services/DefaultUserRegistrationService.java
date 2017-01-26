@@ -47,7 +47,7 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 	public void registerNewUser(String userId, String firstName, String lastName, String password)
 	{
 		SimpleGrantedAuthority authority = new SimpleGrantedAuthority("MEMBER");
-		User user = new User(userId,
+		User user = new User(userId.toLowerCase(),
 				BCrypt.hashpw(password, BCrypt.gensalt()),
 				true,
 				true,
@@ -56,9 +56,9 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 				Collections.singleton(authority));
 
 		userDetailsManager.createUser(user);
-		userDetailsRepository.save(new UserDetail(userId, firstName, lastName));
+		userDetailsRepository.save(new UserDetail(user.getUsername(), firstName, lastName));
 
-		mailService.sendRegistrationMail(userId, firstName);
+		mailService.sendRegistrationMail(user.getUsername(), firstName);
 	}
 
 	@Override

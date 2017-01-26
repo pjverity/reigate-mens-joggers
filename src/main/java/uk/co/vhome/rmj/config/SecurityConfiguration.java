@@ -49,6 +49,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 		// stored in the database in plain text, they are hashed using the given password encoder
 		userDetailsManager = auth.jdbcAuthentication()
 				.dataSource(dataSource)
+				.usersByUsernameQuery("select username, password, enabled from users where lower(username) = lower(?)")
 				.passwordEncoder(new BCryptPasswordEncoder()).getUserDetailsService();
 
 		// If the database is empty, set up a default admin account
