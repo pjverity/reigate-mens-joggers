@@ -6,6 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import uk.co.vhome.rmj.entities.UserDetail;
 import uk.co.vhome.rmj.repositories.UserDetailsRepository;
 
@@ -48,15 +49,17 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 	{
 		SimpleGrantedAuthority authority = new SimpleGrantedAuthority("MEMBER");
 		User user = new User(userId.toLowerCase(),
-				BCrypt.hashpw(password, BCrypt.gensalt()),
-				true,
-				true,
-				true,
-				true,
-				Collections.singleton(authority));
+				                    BCrypt.hashpw(password, BCrypt.gensalt()),
+				                    true,
+				                    true,
+				                    true,
+				                    true,
+				                    Collections.singleton(authority));
 
 		userDetailsManager.createUser(user);
-		userDetailsRepository.save(new UserDetail(user.getUsername(), firstName, lastName));
+		userDetailsRepository.save(new UserDetail(user.getUsername(),
+				                                         StringUtils.capitalize(firstName),
+				                                         StringUtils.capitalize(lastName)));
 
 		mailService.sendRegistrationMail(user.getUsername(), firstName);
 	}

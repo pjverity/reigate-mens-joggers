@@ -51,7 +51,7 @@ public class UserRegistrationValidator implements ConstraintValidator<UserRegist
 			registrationValid = false;
 		}
 
-		if ( !Objects.equals(formObject.getEmailAddress(), formObject.getConfirmEmailAddress()) )
+		if ( !formObject.getEmailAddress().equalsIgnoreCase(formObject.getConfirmEmailAddress()) )
 		{
 			constraintValidatorContext.buildConstraintViolationWithTemplate("{validation.constraint.UserRegistrationValid.confirmEmailAddress}")
 					.addPropertyNode("confirmEmailAddress")

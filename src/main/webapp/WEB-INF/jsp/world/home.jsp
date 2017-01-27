@@ -31,9 +31,7 @@
 							</p>
 						</c:when>
 						<c:otherwise>
-							<p>
-								<span class="label label-warn">New registrations currently unavailable</span>
-							</p>
+							<div class="alert alert-danger">New registrations currently unavailable</div>
 						</c:otherwise>
 					</c:choose>
 				</security:authorize>
