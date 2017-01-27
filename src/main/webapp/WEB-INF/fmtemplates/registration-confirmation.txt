@@ -1,20 +1,54 @@
-<html>
-    <body>
-        <p>Hi ${firstName},</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
 
-        <p>
-            Thank you for registering with <a href="http://www.reigatemensjoggers.co.uk">Reigate Mens Joggers</a>!
-        </p>
 
-        <p>
-            If you do didn't sign up, then please contact <a href="mailto:administrator@reigatemensjoggers.co.uk">administrator@reigatemensjoggers.co.uk</a>
-            to be removed from our database.
-        </p>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
+	      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-        <p>
-            We hope to have you run with us soon!
-        </p>
 
-        <h3>The Reigate Mens Joggers</h3>
-    </body>
+</head>
+<body style="padding: 5em">
+<div class="container">
+	<div class="jumbotron">
+		<div class="page-header">
+			<h1>Welcome...</h1>
+			<p>Thanks for joining <a href="http://www.reigatemensjoggers.co.uk"><strong>Reigate Mens Joggers</strong></a></p>
+		</div>
+	</div>
+
+	<div class="container">
+		<p >
+			Hi ${firstName},
+		</p>
+		<p>
+			Thanks for registering on our site!
+		</p>
+		<p>
+			Our site is quite new and still undergoing a lot of work, but we'll be updating it with loads of great new stuff to
+			help you with achieving your running goals...
+		</p>
+		<p>
+			However, if you have no idea who we are, then perhaps someone has been a bit
+			sneaky and used your e-mail address. If this is the case then just contact our site administrator at
+			<a href="mailto:administrator@reigatemensjoggers.co.uk">administrator@reigatemensjoggers.co.uk</a>, and you'll
+			be removed in a jiffy.
+		</p>
+		<p>We look forward to seeing you at our next run!</p>
+		<p>&nbsp;</p>
+		<h4>Chris, and the RMJ team</h4>
+		<p>&nbsp;</p>
+		<div class="text-muted">
+			Pssst... We also have a <a href="http://www.reigateladiesjoggers.co.uk">Reigate Ladies Joggers</a> site
+			if you know any ladies that are keen runners!
+		</div>
+
+	</div>
+</div>
+</body>
 </html>

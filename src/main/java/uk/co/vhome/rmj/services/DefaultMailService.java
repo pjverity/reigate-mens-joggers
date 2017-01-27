@@ -72,7 +72,7 @@ public class DefaultMailService implements MailService
 				MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 				message.setFrom(new InternetAddress(FROM_ADDRESS, FROM_NAME));
 				message.setTo(emailAddress);
-				message.setSubject("Confirm Registration to RMJ");
+				message.setSubject("Welcome to Reigate Mens Joggers!");
 				message.setText(text, true);
 			});
 		}
