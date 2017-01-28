@@ -5,14 +5,20 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import uk.co.vhome.rmj.config.ServletContextConfiguration;
 import uk.co.vhome.rmj.services.UserRegistrationService;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
@@ -116,7 +122,11 @@ public class HomeController
 					userRegistrationFormObject.getPassword()
 			);
 
+			// This appears to by-pass the login handler, so have to duplicate setting the session variables here
 			httpServletRequest.login(userRegistrationFormObject.getConfirmEmailAddress(), userRegistrationFormObject.getPassword());
+			HttpSession httpSession = httpServletRequest.getSession();
+			httpSession.setAttribute(ServletContextConfiguration.USER_FIRST_NAME_SESSION_ATTRIBUTE, StringUtils.capitalize(userRegistrationFormObject.getFirstName()));
+			httpSession.setAttribute(ServletContextConfiguration.USER_LAST_NAME_SESSION_ATTRIBUTE, StringUtils.capitalize(userRegistrationFormObject.getLastName()));
 
 			populatePageModelForRegistration(pageModel, true, null, null);
 		}

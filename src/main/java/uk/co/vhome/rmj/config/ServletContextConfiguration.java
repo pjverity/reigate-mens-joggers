@@ -23,6 +23,10 @@ import javax.inject.Inject;
 @EnableSpringDataWebSupport
 public class ServletContextConfiguration extends WebMvcConfigurerAdapter
 {
+	public static final String USER_FIRST_NAME_SESSION_ATTRIBUTE = "userFirstName";
+
+	public static final String USER_LAST_NAME_SESSION_ATTRIBUTE = "userLastName";
+
 	@Inject
 	private SpringValidatorAdapter springValidatorAdapter;
 

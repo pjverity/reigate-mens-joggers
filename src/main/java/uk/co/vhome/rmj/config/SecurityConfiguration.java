@@ -119,8 +119,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
 				UserDetail userDetail = userDetailsRepository.findOne(authentication.getName());
 				HttpSession httpSession = request.getSession();
-				httpSession.setAttribute("userFirstName", userDetail.getFirstName());
-				httpSession.setAttribute("userLastName", userDetail.getLastName());
+				httpSession.setAttribute(ServletContextConfiguration.USER_FIRST_NAME_SESSION_ATTRIBUTE, userDetail.getFirstName());
+				httpSession.setAttribute(ServletContextConfiguration.USER_LAST_NAME_SESSION_ATTRIBUTE, userDetail.getLastName());
 			}
 		};
 	}

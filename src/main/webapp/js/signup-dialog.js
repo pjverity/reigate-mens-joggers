@@ -29,23 +29,23 @@ $signupForm.submit(function (event) {
 
         if (result.success) {
             window.location.href = $('#signup-script').attr('data-redirectUrl');
-            return;
-        }
-
-        grecaptcha.reset();
-        $('#reCaptchaResponse').val("");
-
-        $('#signup-cancel').removeAttr('disabled');
-        $(':submit').removeAttr('disabled');
-        $(':input').removeAttr('disabled');
-        $(':password').removeAttr('disabled');
-        $('#signup-spinner').toggle(false);
-
-        if (result.fieldErrors !== null) {
-            renderFieldErrors(result.error, result.fieldErrors);
         }
         else {
-            renderGeneralError("Oops! Something went wrong. We'll punish our developers for this...", result.error);
+            grecaptcha.reset();
+            $('#reCaptchaResponse').val("");
+
+            $('#signup-cancel').removeAttr('disabled');
+            $(':submit').removeAttr('disabled');
+            $(':input').removeAttr('disabled');
+            $(':password').removeAttr('disabled');
+            $('#signup-spinner').toggle(false);
+
+            if (result.fieldErrors !== null) {
+                renderFieldErrors(result.error, result.fieldErrors);
+            }
+            else {
+                renderGeneralError("Oops! Something went wrong. We'll punish our developers for this...", result.error);
+            }
         }
     });
 });
