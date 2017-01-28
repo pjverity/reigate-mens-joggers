@@ -35,6 +35,9 @@
 						</c:otherwise>
 					</c:choose>
 				</security:authorize>
+				<security:authorize access="isAuthenticated()">
+					<div class="alert alert-info" role="alert">Welcome back ${userFirstName}</div>
+				</security:authorize>
 			</div>
 		</div>
 		<div class="row">

@@ -9,15 +9,25 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import uk.co.vhome.rmj.entities.UserDetail;
+import uk.co.vhome.rmj.repositories.UserDetailsRepository;
 
 import javax.inject.Inject;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.util.Collections;
 
 import static uk.co.vhome.rmj.config.BootstrapFramework.ADDITIONAL_RESOURCE_PATHS;
@@ -34,6 +44,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 	private final DataSource dataSource;
 
 	private JdbcUserDetailsManager userDetailsManager;
+
+	@Inject
+	private UserDetailsRepository userDetailsRepository;
 
 	@Inject
 	public SecurityConfiguration(DataSource dataSource)
@@ -78,11 +91,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 					.defaultSuccessUrl("/")
 					.failureUrl("/?error")
 					.permitAll()
+					.successHandler(successHandler())
 				.and()
 					.logout()
 					.logoutSuccessUrl("/")
 					.deleteCookies("JSESSIONID");
 	}
+
 
 	@Override
 	public void configure(WebSecurity web) throws Exception
@@ -91,6 +106,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
 		// Bypass the security filters for efficiency
 		web.ignoring().antMatchers(ADDITIONAL_RESOURCE_PATHS);
+	}
+
+	private AuthenticationSuccessHandler successHandler()
+	{
+		return new SavedRequestAwareAuthenticationSuccessHandler()
+		{
+			@Override
+			public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException
+			{
+				super.onAuthenticationSuccess(request, response, authentication);
+
+				UserDetail userDetail = userDetailsRepository.findOne(authentication.getName());
+				HttpSession httpSession = request.getSession();
+				httpSession.setAttribute("userFirstName", userDetail.getFirstName());
+				httpSession.setAttribute("userLastName", userDetail.getLastName());
+			}
+		};
 	}
 
 	private void initialiseAdminUser(UserDetailsManager userDetailsManager)

@@ -29,6 +29,7 @@ $signupForm.submit(function (event) {
 
         if (result.success) {
             window.location.href = $('#signup-script').attr('data-redirectUrl');
+            return;
         }
 
         grecaptcha.reset();
