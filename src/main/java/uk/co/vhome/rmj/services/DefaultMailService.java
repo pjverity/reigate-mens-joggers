@@ -9,6 +9,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import uk.co.vhome.rmj.entities.UserDetail;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
@@ -60,27 +61,26 @@ public class DefaultMailService implements MailService
 	}
 
 	@Override
-	public void sendRegistrationMail(String emailAddress, String firstName)
+	public void sendRegistrationMail(UserDetail userDetail)
 	{
-		Map<String, String> templateProperties = new HashMap<>();
+		Map<String, Object> templateProperties = new HashMap<>();
 
-		templateProperties.put("firstName", firstName);
+		templateProperties.put("firstName", userDetail.getFirstName());
 
-		sendMailUsingTemplate(emailAddress, "Welcome to Reigate Mens Joggers!", templateProperties, EMAIL_REGISTRATION_TEMPLATE);
+		sendMailUsingTemplate(userDetail.getUserId(), "Welcome to Reigate Mens Joggers!", templateProperties, EMAIL_REGISTRATION_TEMPLATE);
 	}
 
 	@Override
-	public void sendAdministratorNotification(String username, String firstName)
+	public void sendAdministratorNotification(UserDetail userDetail)
 	{
-		Map<String, String> templateProperties = new HashMap<>();
+		Map<String, Object> templateProperties = new HashMap<>();
 
-		templateProperties.put("userName", username);
-		templateProperties.put("firstName", firstName);
+		templateProperties.put("userDetail", userDetail);
 
 		sendMailUsingTemplate(ADMIN_ADDRESS, "New User Registered", templateProperties, EMAIL_NOTIFICATION_TEMPLATE);
 	}
 
-	private void sendMailUsingTemplate(String to, String subject, Map<String, String> templateProperties, String templateName)
+	private void sendMailUsingTemplate(String to, String subject, Map<String, Object> templateProperties, String templateName)
 	{
 		try
 		{

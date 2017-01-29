@@ -1,11 +1,13 @@
 package uk.co.vhome.rmj.services;
 
+import uk.co.vhome.rmj.entities.UserDetail;
+
 /**
  * Interface for sending mails of predefined content
  */
 public interface MailService extends ServiceAvailabilityReporter
 {
-	void sendRegistrationMail(String emailAddress, String firstName);
+	void sendRegistrationMail(UserDetail userDetail);
 
-	void sendAdministratorNotification(String username, String firstName);
+	void sendAdministratorNotification(UserDetail userDetail);
 }

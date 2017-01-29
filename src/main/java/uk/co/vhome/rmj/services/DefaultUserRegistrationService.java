@@ -63,8 +63,11 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 		userDetailsManager.createUser(user);
 		userDetailsRepository.save(userDetail);
 
-		mailService.sendRegistrationMail(user.getUsername(), userDetail.getFirstName());
-		mailService.sendAdministratorNotification(user.getUsername(), userDetail.getFirstName());
+		mailService.sendRegistrationMail(userDetail);
+
+		// This is done as a separate call so that it is not part of this transaction. It's not
+		// critical if the site admin doesn't receive the e-mail, so don't roll back if this fails
+		sendAdministratorNotification(userDetail);
 	}
 
 	@Override
@@ -78,5 +81,10 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 	public boolean isServiceAvailable()
 	{
 		return serviceAvailable;
+	}
+
+	private void sendAdministratorNotification(UserDetail userDetail)
+	{
+		mailService.sendAdministratorNotification(userDetail);
 	}
 }
