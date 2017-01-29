@@ -22,7 +22,11 @@ public class DefaultMailService implements MailService
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private static final String EMAIL_TEMPLATE = "registration-confirmation.txt";
+	private static final String EMAIL_REGISTRATION_TEMPLATE = "registration-confirmation.html";
+
+	private static final String EMAIL_NOTIFICATION_TEMPLATE = "registration-notification.html";
+
+	private static final String ADMIN_ADDRESS = "administrator@reigatemensjoggers.co.uk";
 
 	private static final String FROM_ADDRESS = "noreply@reigatemensjoggers.co.uk";
 
@@ -58,23 +62,15 @@ public class DefaultMailService implements MailService
 	@Override
 	public void sendRegistrationMail(String emailAddress, String firstName)
 	{
-		if (!isServiceAvailable())
-		{
-			throw new IllegalStateException("Attempt to send mail when mail service unavailable");
-		}
-
 		try
 		{
-			String text = getMailContent(firstName);
+			Map<String, String> model = new HashMap<>();
 
-			javaMailSender.send(mimeMessage ->
-			{
-				MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-				message.setFrom(new InternetAddress(FROM_ADDRESS, FROM_NAME));
-				message.setTo(emailAddress);
-				message.setSubject("Welcome to Reigate Mens Joggers!");
-				message.setText(text, true);
-			});
+			model.put("firstName", firstName);
+
+			String text = FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerConfiguration.getTemplate(EMAIL_REGISTRATION_TEMPLATE), model);
+
+			sendMail(emailAddress, "Welcome to Reigate Mens Joggers!", text);
 		}
 		catch (IOException | TemplateException e)
 		{
@@ -84,18 +80,48 @@ public class DefaultMailService implements MailService
 	}
 
 	@Override
+	public void sendAdministratorNotification(String username, String firstName)
+	{
+		try
+		{
+			Map<String, String> model = new HashMap<>();
+
+			model.put("userName", username);
+			model.put("firstName", firstName);
+
+			String text = FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerConfiguration.getTemplate(EMAIL_NOTIFICATION_TEMPLATE), model);
+
+			sendMail(ADMIN_ADDRESS, "New User Registered", text);
+		}
+		catch (IOException | TemplateException e)
+		{
+			LOGGER.error("Failed to send registration confirmation mail", e);
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	private void sendMail(String to, String subject, String messageContent)
+	{
+		if (!isServiceAvailable())
+		{
+			throw new IllegalStateException("Attempt to send mail when mail service unavailable");
+		}
+
+		javaMailSender.send(mimeMessage ->
+		{
+			MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+			message.setFrom(new InternetAddress(FROM_ADDRESS, FROM_NAME));
+			message.setTo(to);
+			message.setSubject(subject);
+			message.setText(messageContent, true);
+		});
+	}
+
+	@Override
 	public boolean isServiceAvailable()
 	{
 		return serviceAvailable;
-	}
-
-	private String getMailContent(String firstName) throws IOException, TemplateException
-	{
-		Map<String, String> model = new HashMap<>();
-
-		model.put("firstName", firstName);
-
-		return FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerConfiguration.getTemplate(EMAIL_TEMPLATE), model);
 	}
 
 }

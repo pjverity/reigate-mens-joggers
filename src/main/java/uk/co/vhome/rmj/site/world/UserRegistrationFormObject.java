@@ -7,6 +7,7 @@ import uk.co.vhome.rmj.site.form.validation.UserRegistrationValid;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.StringJoiner;
 
 /**
  * The object that defines the user sign up form, that is validated to ensure
@@ -108,4 +109,15 @@ public class UserRegistrationFormObject
 		this.reenteredPassword = reenteredPassword;
 	}
 
+
+	@Override
+	public String toString()
+	{
+		return new StringJoiner(", ", this.getClass().getSimpleName() + "[", "]")
+				       .add("firstName = " + firstName)
+				       .add("lastName = " + lastName)
+				       .add("emailAddress = " + emailAddress)
+				       .add("confirmEmailAddress = " + confirmEmailAddress)
+				       .toString();
+	}
 }

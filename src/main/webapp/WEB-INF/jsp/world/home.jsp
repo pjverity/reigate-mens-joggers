@@ -27,16 +27,13 @@
 					<c:choose>
 						<c:when test="${registrationServiceAvailable}">
 							<p>
-								<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#signupModal">SIGN UP!</button>
+								<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#signupModal">Sign Up!</button>
 							</p>
 						</c:when>
 						<c:otherwise>
 							<div class="alert alert-danger">New registrations currently unavailable</div>
 						</c:otherwise>
 					</c:choose>
-				</security:authorize>
-				<security:authorize access="isAuthenticated()">
-					<div class="alert alert-info" role="alert">Welcome back ${userFirstName}</div>
 				</security:authorize>
 			</div>
 		</div>

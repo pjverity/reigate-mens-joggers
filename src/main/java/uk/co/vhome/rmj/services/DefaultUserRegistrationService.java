@@ -64,6 +64,7 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 		userDetailsRepository.save(userDetail);
 
 		mailService.sendRegistrationMail(user.getUsername(), userDetail.getFirstName());
+		mailService.sendAdministratorNotification(user.getUsername(), userDetail.getFirstName());
 	}
 
 	@Override

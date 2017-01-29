@@ -16,38 +16,41 @@ $signupForm.submit(function (event) {
 
     resetErrors();
 
-    // Send the data using post
-    var posting = $.post(url, $signupForm.serialize());
-
     $('#signup-cancel').attr('disabled', 'disabled');
     $(':submit').attr('disabled', 'disabled');
     $(':input').attr('disabled', 'disabled');
     $(':password').attr('disabled', 'disabled');
     $('#signup-spinner').toggle(true);
 
-    posting.done(function (result) {
+    // Send the data using post
+    $.post(url, $signupForm.serialize())
+        .done(function (result) {
+            if (result.success) {
+                window.location.href = $('#signup-script').attr('data-redirectUrl');
+            }
+            else {
+                grecaptcha.reset();
+                $('#reCaptchaResponse').val("");
 
-        if (result.success) {
-            window.location.href = $('#signup-script').attr('data-redirectUrl');
-        }
-        else {
-            grecaptcha.reset();
-            $('#reCaptchaResponse').val("");
-
+                if (result.fieldErrors !== null) {
+                    renderFieldErrors(result.error, result.fieldErrors);
+                }
+                else {
+                    renderGeneralError("Oops! Something went wrong. We'll punish our developers for this...", result.error);
+                }
+            }
+        })
+        .fail(function (jqXHR, status, error) {
+            console.error("status=" + status + ", error=" + error);
+            renderGeneralError("Oops! Something went wrong. We'll look in to it", "Please try again");
+        })
+        .always(function () {
             $('#signup-cancel').removeAttr('disabled');
             $(':submit').removeAttr('disabled');
             $(':input').removeAttr('disabled');
             $(':password').removeAttr('disabled');
             $('#signup-spinner').toggle(false);
-
-            if (result.fieldErrors !== null) {
-                renderFieldErrors(result.error, result.fieldErrors);
-            }
-            else {
-                renderGeneralError("Oops! Something went wrong. We'll punish our developers for this...", result.error);
-            }
-        }
-    });
+        });
 });
 
 function renderGeneralError(headerText, error) {

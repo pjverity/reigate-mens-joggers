@@ -6,4 +6,6 @@ package uk.co.vhome.rmj.services;
 public interface MailService extends ServiceAvailabilityReporter
 {
 	void sendRegistrationMail(String emailAddress, String firstName);
+
+	void sendAdministratorNotification(String username, String firstName);
 }

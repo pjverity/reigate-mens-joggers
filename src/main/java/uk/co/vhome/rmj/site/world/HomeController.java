@@ -55,11 +55,13 @@ public class HomeController
 			defaultMessage = fieldError.getDefaultMessage();
 		}
 
+		@SuppressWarnings("unused") // Used via introspection during de/serialisation
 		public String getField()
 		{
 			return field;
 		}
 
+		@SuppressWarnings("unused") // Used via introspection during de/serialisation
 		public String getDefaultMessage()
 		{
 			return defaultMessage;
@@ -84,10 +86,11 @@ public class HomeController
 
 	@RequestMapping(path = "/register", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> registerNewMember(@ModelAttribute("form") @Valid UserRegistrationFormObject userRegistrationFormObject,
-	                                             BindingResult errors, ModelMap model, HttpServletRequest httpServletRequest) throws IOException
+	public ModelMap registerNewMember(@ModelAttribute("form") @Valid UserRegistrationFormObject userRegistrationFormObject,
+	                                             BindingResult errors, HttpServletRequest httpServletRequest) throws IOException
 	{
-		Map<String, Object> pageModel = new HashMap<>();
+
+		ModelMap model = new ModelMap();
 
 		if (errors.hasErrors())
 		{
@@ -109,9 +112,9 @@ public class HomeController
 				message = globalError.getDefaultMessage();
 			}
 
-			populatePageModelForRegistration(pageModel, false, conciseFieldErrors, message);
+			populatePageModelForRegistration(model, false, conciseFieldErrors, message);
 
-			return pageModel;
+			return model;
 		}
 
 		try
@@ -128,15 +131,15 @@ public class HomeController
 			httpSession.setAttribute(ServletContextConfiguration.USER_FIRST_NAME_SESSION_ATTRIBUTE, StringUtils.capitalize(userRegistrationFormObject.getFirstName()));
 			httpSession.setAttribute(ServletContextConfiguration.USER_LAST_NAME_SESSION_ATTRIBUTE, StringUtils.capitalize(userRegistrationFormObject.getLastName()));
 
-			populatePageModelForRegistration(pageModel, true, null, null);
+			populatePageModelForRegistration(model, true, null, null);
 		}
 		catch (Exception e)
 		{
 			LOGGER.error("Failed to register user", e);
-			populatePageModelForRegistration(pageModel, false, null, "Failed to register new user");
+			populatePageModelForRegistration(model, false, null, "Failed to register new user");
 		}
 
-		return pageModel;
+		return model;
 	}
 
 	private static void populatePageModelForRegistration(Map<String, Object> pageModel, boolean isSuccessful, List<ConciseFieldError> conciseFieldErrors, String generalErrorMessage)
