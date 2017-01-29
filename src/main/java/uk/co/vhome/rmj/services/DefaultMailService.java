@@ -62,36 +62,30 @@ public class DefaultMailService implements MailService
 	@Override
 	public void sendRegistrationMail(String emailAddress, String firstName)
 	{
-		try
-		{
-			Map<String, String> model = new HashMap<>();
+		Map<String, String> templateProperties = new HashMap<>();
 
-			model.put("firstName", firstName);
+		templateProperties.put("firstName", firstName);
 
-			String text = FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerConfiguration.getTemplate(EMAIL_REGISTRATION_TEMPLATE), model);
-
-			sendMail(emailAddress, "Welcome to Reigate Mens Joggers!", text);
-		}
-		catch (IOException | TemplateException e)
-		{
-			LOGGER.error("Failed to send registration confirmation mail", e);
-			throw new RuntimeException(e);
-		}
+		sendMailUsingTemplate(emailAddress, "Welcome to Reigate Mens Joggers!", templateProperties, EMAIL_REGISTRATION_TEMPLATE);
 	}
 
 	@Override
 	public void sendAdministratorNotification(String username, String firstName)
 	{
+		Map<String, String> templateProperties = new HashMap<>();
+
+		templateProperties.put("userName", username);
+		templateProperties.put("firstName", firstName);
+
+		sendMailUsingTemplate(ADMIN_ADDRESS, "New User Registered", templateProperties, EMAIL_NOTIFICATION_TEMPLATE);
+	}
+
+	private void sendMailUsingTemplate(String to, String subject, Map<String, String> templateProperties, String templateName)
+	{
 		try
 		{
-			Map<String, String> model = new HashMap<>();
-
-			model.put("userName", username);
-			model.put("firstName", firstName);
-
-			String text = FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerConfiguration.getTemplate(EMAIL_NOTIFICATION_TEMPLATE), model);
-
-			sendMail(ADMIN_ADDRESS, "New User Registered", text);
+			String messageContent = FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerConfiguration.getTemplate(templateName), templateProperties);
+			sendMail(to, subject, messageContent);
 		}
 		catch (IOException | TemplateException e)
 		{
