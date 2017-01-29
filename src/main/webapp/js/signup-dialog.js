@@ -16,6 +16,9 @@ $signupForm.submit(function (event) {
 
     resetErrors();
 
+    // Must serialise the form before disabling controls, otherwise the crsf token will not be sent
+    const $form = $signupForm.serialize();
+
     $('#signup-cancel').attr('disabled', 'disabled');
     $(':submit').attr('disabled', 'disabled');
     $(':input').attr('disabled', 'disabled');
@@ -23,7 +26,7 @@ $signupForm.submit(function (event) {
     $('#signup-spinner').toggle(true);
 
     // Send the data using post
-    $.post(url, $signupForm.serialize())
+    $.post(url, $form)
         .done(function (result) {
             if (result.success) {
                 window.location.href = $('#signup-script').attr('data-redirectUrl');
