@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -130,6 +129,7 @@ public class HomeController
 			HttpSession httpSession = httpServletRequest.getSession();
 			httpSession.setAttribute(ServletContextConfiguration.USER_FIRST_NAME_SESSION_ATTRIBUTE, StringUtils.capitalize(userRegistrationFormObject.getFirstName()));
 			httpSession.setAttribute(ServletContextConfiguration.USER_LAST_NAME_SESSION_ATTRIBUTE, StringUtils.capitalize(userRegistrationFormObject.getLastName()));
+			httpSession.setAttribute("isNewUser", true);
 
 			populatePageModelForRegistration(model, true, null, null);
 		}

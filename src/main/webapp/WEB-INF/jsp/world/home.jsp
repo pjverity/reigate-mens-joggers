@@ -36,6 +36,13 @@
 					</c:choose>
 				</security:authorize>
 			</div>
+			<c:if test="${isNewUser}">
+				<div class="alert alert-success">
+					Hi ${userFirstName}, thanks for registering! We have sent a welcome email to <strong><security:authentication property="principal.username" /></strong>
+					<br/>
+					<span class="text-muted">(Please check your Junk/Spam Mail folder if there is nothing in your Inbox in the next few moments...)</span>
+				</div>
+			</c:if>
 		</div>
 		<div class="row">
 			<div class="col-lg-12">
