@@ -1,9 +1,6 @@
 package uk.co.vhome.rmj.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Entity for describing additional information about members
@@ -13,8 +10,7 @@ import javax.persistence.Table;
 public class UserDetail
 {
 	@Id
-	@Column(name = "user_id")
-	private String userId;
+	private Long id;
 
 	@Column(name = "first_name")
 	private String firstName;
@@ -22,9 +18,9 @@ public class UserDetail
 	@Column(name = "last_name")
 	private String lastName;
 
-	public UserDetail(String userId, String firstName, String lastName)
+	public UserDetail(Long id, String firstName, String lastName)
 	{
-		this.userId = userId;
+		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
@@ -33,14 +29,14 @@ public class UserDetail
 	{
 	}
 
-	public String getUserId()
+	public Long getId()
 	{
-		return userId;
+		return id;
 	}
 
-	public void setUserId(String userId)
+	public void setId(Long id)
 	{
-		this.userId = userId;
+		this.id = id;
 	}
 
 	public String getFirstName()

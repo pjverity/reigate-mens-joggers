@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import uk.co.vhome.rmj.entities.UserDetail;
-import uk.co.vhome.rmj.repositories.UserDetailsRepository;
+import uk.co.vhome.rmj.repositories.UserRepository;
 
 import javax.inject.Inject;
 import java.util.Collections;
@@ -24,16 +24,16 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 
 	private final JdbcUserDetailsManager userDetailsManager;
 
-	private final UserDetailsRepository userDetailsRepository;
+	private final UserRepository userRepository;
 
 	private boolean serviceAvailable = false;
 
 	@Inject
-	public DefaultUserRegistrationService(MailService mailService, JdbcUserDetailsManager userDetailsManager, UserDetailsRepository userDetailsRepository)
+	public DefaultUserRegistrationService(MailService mailService, JdbcUserDetailsManager userDetailsManager, UserRepository userRepository)
 	{
 		this.mailService = mailService;
 		this.userDetailsManager = userDetailsManager;
-		this.userDetailsRepository = userDetailsRepository;
+		this.userRepository = userRepository;
 
 		// This service is only usable if it can mail registration confirmations
 		serviceAvailable = this.mailService.isServiceAvailable();
@@ -57,11 +57,15 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 				                    true,
 				                    Collections.singleton(authority));
 
-		UserDetail userDetail = new UserDetail(user.getUsername(),
+		userDetailsManager.createUser(user);
+
+		uk.co.vhome.rmj.entities.User userEntity = userRepository.findByUsername(user.getUsername());
+
+		UserDetail userDetail = new UserDetail(userEntity.getId(),
 				                                      StringUtils.capitalize(firstName),
 				                                      StringUtils.capitalize(lastName));
-		userDetailsManager.createUser(user);
-		userDetailsRepository.save(userDetail);
+
+		userRepository.save(userEntity);
 
 		mailService.sendRegistrationMail(userDetail);
 

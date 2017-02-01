@@ -18,8 +18,7 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-import uk.co.vhome.rmj.entities.UserDetail;
-import uk.co.vhome.rmj.repositories.UserDetailsRepository;
+import uk.co.vhome.rmj.repositories.UserRepository;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -46,7 +45,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 	private JdbcUserDetailsManager userDetailsManager;
 
 	@Inject
-	private UserDetailsRepository userDetailsRepository;
+	private UserRepository userRepository;
 
 	@Inject
 	public SecurityConfiguration(DataSource dataSource)
@@ -117,10 +116,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 			{
 				super.onAuthenticationSuccess(request, response, authentication);
 
-				UserDetail userDetail = userDetailsRepository.findOne(authentication.getName());
+				uk.co.vhome.rmj.entities.User user = userRepository.findByUsername(authentication.getName());
 				HttpSession httpSession = request.getSession();
-				httpSession.setAttribute(ServletContextConfiguration.USER_FIRST_NAME_SESSION_ATTRIBUTE, userDetail.getFirstName());
-				httpSession.setAttribute(ServletContextConfiguration.USER_LAST_NAME_SESSION_ATTRIBUTE, userDetail.getLastName());
+				httpSession.setAttribute(ServletContextConfiguration.USER_FIRST_NAME_SESSION_ATTRIBUTE, user.getUserDetail().getFirstName());
+				httpSession.setAttribute(ServletContextConfiguration.USER_LAST_NAME_SESSION_ATTRIBUTE, user.getUserDetail().getLastName());
 			}
 		};
 	}

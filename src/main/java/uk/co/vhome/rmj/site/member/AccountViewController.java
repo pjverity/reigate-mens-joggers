@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 import uk.co.vhome.rmj.entities.UserDetail;
-import uk.co.vhome.rmj.repositories.UserDetailsRepository;
+import uk.co.vhome.rmj.repositories.UserRepository;
 import uk.co.vhome.rmj.services.UserRegistrationService;
 
+import javax.inject.Inject;
 import javax.validation.Valid;
 import java.security.Principal;
 
@@ -26,13 +27,14 @@ public class AccountViewController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final UserDetailsRepository userDetailsRepository;
+	private final UserRepository userRepository;
 
 	private final UserRegistrationService userRegistrationService;
 
-	public AccountViewController(UserDetailsRepository userDetailsRepository, UserRegistrationService userRegistrationService)
+	@Inject
+	public AccountViewController(UserRepository userRepository, UserRegistrationService userRegistrationService)
 	{
-		this.userDetailsRepository = userDetailsRepository;
+		this.userRepository = userRepository;
 		this.userRegistrationService = userRegistrationService;
 	}
 
@@ -46,7 +48,7 @@ public class AccountViewController
 	@ModelAttribute("userDetail")
 	public UserDetail userDetail(@AuthenticationPrincipal Principal principal)
 	{
-		return userDetailsRepository.findOne(principal.getName());
+		return userRepository.findByUsername(principal.getName()).getUserDetail();
 	}
 
 	@RequestMapping(value = "/changePassword", method = RequestMethod.POST)

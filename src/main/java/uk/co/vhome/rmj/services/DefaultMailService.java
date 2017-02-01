@@ -67,7 +67,7 @@ public class DefaultMailService implements MailService
 
 		templateProperties.put("firstName", userDetail.getFirstName());
 
-		sendMailUsingTemplate(userDetail.getUserId(), "Welcome to Reigate Mens Joggers!", templateProperties, EMAIL_REGISTRATION_TEMPLATE);
+		sendMailUsingTemplate(userDetail.getFirstName(), "Welcome to Reigate Mens Joggers!", templateProperties, EMAIL_REGISTRATION_TEMPLATE);
 	}
 
 	@Override

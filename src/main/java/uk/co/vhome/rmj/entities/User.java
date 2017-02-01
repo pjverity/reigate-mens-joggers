@@ -1,7 +1,6 @@
 package uk.co.vhome.rmj.entities;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -9,7 +8,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "users")
-public class UserPrincipal
+public class User
 {
 	private Long id;
 
@@ -18,6 +17,8 @@ public class UserPrincipal
 	private String password;
 
 	private boolean enabled;
+
+	private UserDetail userDetail;
 
 	@Id
 	@SequenceGenerator(name="users_id_seq", sequenceName="users_id_seq", allocationSize=1)
@@ -63,6 +64,19 @@ public class UserPrincipal
 		this.enabled = enabled;
 	}
 
+	@OneToOne
+	@MapsId
+	@JoinColumn(name = "id")
+	public UserDetail getUserDetail()
+	{
+		return userDetail;
+	}
+
+	public void setUserDetail(UserDetail userDetail)
+	{
+		this.userDetail = userDetail;
+	}
+
 	@Override
 	public boolean equals(Object o)
 	{
@@ -74,7 +88,7 @@ public class UserPrincipal
 		{
 			return false;
 		}
-		UserPrincipal that = (UserPrincipal) o;
+		User that = (User) o;
 		return enabled == that.enabled &&
 				Objects.equals(id, that.id) &&
 				Objects.equals(username, that.username) &&
