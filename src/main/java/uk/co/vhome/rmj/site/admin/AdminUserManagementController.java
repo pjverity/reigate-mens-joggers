@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import uk.co.vhome.rmj.repositories.UserRepository;
 
 import javax.inject.Inject;
@@ -16,7 +15,6 @@ import javax.inject.Inject;
 @Controller
 @RequestMapping("admin/usermanagement")
 @SuppressWarnings("unused")
-@SessionAttributes("userManagementModel")
 public class AdminUserManagementController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -30,20 +28,20 @@ public class AdminUserManagementController
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	String updateModel(UserManagementModel userManagementModel)
+	String updateModel(UserManagementForm userManagementForm)
 	{
-		LOGGER.debug(userManagementModel);
-
-		userRepository.save(userManagementModel.getUsers());
+		userRepository.save(userManagementForm.getUsers());
 
 		return "redirect:/admin/usermanagement";
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	UserManagementModel getView() {
-		UserManagementModel userManagementModel = new UserManagementModel();
-		userManagementModel.setUsers(userRepository.findAll());
-		return userManagementModel;
+	UserManagementForm getView() {
+		UserManagementForm userManagementForm = new UserManagementForm();
+
+		userManagementForm.setUsers(userRepository.findAllByOrderByUserDetailLastNameAscUserDetailFirstNameAsc());
+
+		return userManagementForm;
 	}
 
 }

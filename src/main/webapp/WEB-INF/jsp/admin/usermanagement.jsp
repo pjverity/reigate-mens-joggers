@@ -19,18 +19,20 @@
 		<h1>User Management</h1>
 	</div>
 
-	<form:form class="well" modelAttribute="userManagementModel">
+	<form:form class="well" modelAttribute="userManagementForm">
 		<table class="table table-condensed">
 			<thead>
 			<tr>
-				<th>User</th>
+				<th>Name</th>
+				<th>Email Address</th>
 				<th>Enabled</th>
 			</tr>
 			</thead>
 			<tbody>
-			<c:forEach var="user" items="${userManagementModel.users}" varStatus="vs">
+			<c:forEach var="user" items="${userManagementForm.users}" varStatus="vs">
 				<tr>
-					<td>${user.username}</td>
+					<td>${user.userDetail.firstName}&nbsp;${user.userDetail.lastName}</td>
+					<td><a href="mailto:${user.username}">${user.username}</a></td>
 					<td>
 						<form:checkbox path="users[${vs.index}].enabled" name="enabled" value="users[${vs.index}].enabled"/>
 					</td>

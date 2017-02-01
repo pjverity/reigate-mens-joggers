@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserManagementModel implements Serializable
+public class UserManagementForm implements Serializable
 {
 	private List<User> users = new ArrayList<>();
 
@@ -15,8 +15,8 @@ public class UserManagementModel implements Serializable
 		return users;
 	}
 
-	public void setUsers(Iterable<User> users)
+	public void setUsers(List<User> users)
 	{
-		users.forEach(this.users::add);
+		this.users = users;
 	}
 }
