@@ -1,12 +1,12 @@
 package uk.co.vhome.rmj.services;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import uk.co.vhome.rmj.entities.User;
 import uk.co.vhome.rmj.entities.UserDetail;
 import uk.co.vhome.rmj.repositories.UserRepository;
 
@@ -49,29 +49,32 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 	{
 		SimpleGrantedAuthority authority = new SimpleGrantedAuthority("MEMBER");
 
-		User user = new User(userId.toLowerCase(),
-				                    BCrypt.hashpw(password, BCrypt.gensalt()),
-				                    true,
-				                    true,
-				                    true,
-				                    true,
-				                    Collections.singleton(authority));
+		// Use Spring's user details manager to create the user and associated authorities for now
+		org.springframework.security.core.userdetails.User user = new org.springframework.security.core.userdetails
+				                                                              .User(userId.toLowerCase(),
+						                                                                   BCrypt.hashpw(password, BCrypt.gensalt()),
+						                                                                   true,
+						                                                                   true,
+						                                                                   true,
+						                                                                   true,
+						                                                                   Collections.singleton(authority));
 
 		userDetailsManager.createUser(user);
 
-		uk.co.vhome.rmj.entities.User userEntity = userRepository.findByUsername(user.getUsername());
+		// Then use our repository to create the addition details that are linked to the user record created above
+		User userEntity = userRepository.findByUsername(user.getUsername());
 
-		UserDetail userDetail = new UserDetail(userEntity.getId(),
-				                                      StringUtils.capitalize(firstName),
-				                                      StringUtils.capitalize(lastName));
+		userEntity.setUserDetail(new UserDetail(userEntity.getId(),
+				                                       StringUtils.capitalize(firstName),
+				                                       StringUtils.capitalize(lastName)));
 
 		userRepository.save(userEntity);
 
-		mailService.sendRegistrationMail(userDetail);
+		mailService.sendRegistrationMail(userEntity);
 
 		// This is done as a separate call so that it is not part of this transaction. It's not
 		// critical if the site admin doesn't receive the e-mail, so don't roll back if this fails
-		sendAdministratorNotification(userDetail);
+		sendAdministratorNotification(userEntity);
 	}
 
 	@Override
@@ -87,8 +90,8 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 		return serviceAvailable;
 	}
 
-	private void sendAdministratorNotification(UserDetail userDetail)
+	private void sendAdministratorNotification(User user)
 	{
-		mailService.sendAdministratorNotification(userDetail);
+		mailService.sendAdministratorNotification(user);
 	}
 }

@@ -64,9 +64,8 @@ public class User
 		this.enabled = enabled;
 	}
 
-	@OneToOne
-	@MapsId
-	@JoinColumn(name = "id")
+	@OneToOne(cascade = CascadeType.ALL)
+	@PrimaryKeyJoinColumn
 	public UserDetail getUserDetail()
 	{
 		return userDetail;
