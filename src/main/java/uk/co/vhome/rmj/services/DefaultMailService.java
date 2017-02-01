@@ -67,7 +67,11 @@ public class DefaultMailService implements MailService
 
 		templateProperties.put("firstName", user.getUserDetail().getFirstName());
 
-		sendMailUsingTemplate(user.getUsername(), "Welcome to Reigate Mens Joggers!", templateProperties, EMAIL_REGISTRATION_TEMPLATE);
+		sendMailUsingTemplate(user.getUsername(),
+				String.join(" ", user.getUserDetail().getFirstName(), user.getUserDetail().getLastName()),
+				"Welcome to Reigate Mens Joggers!",
+				templateProperties,
+				EMAIL_REGISTRATION_TEMPLATE);
 	}
 
 	@Override
@@ -77,15 +81,19 @@ public class DefaultMailService implements MailService
 
 		templateProperties.put("user", user);
 
-		sendMailUsingTemplate(ADMIN_ADDRESS, "New User Registered", templateProperties, EMAIL_NOTIFICATION_TEMPLATE);
+		sendMailUsingTemplate(ADMIN_ADDRESS,
+				"RMJ Admin",
+				"New User Registered",
+				templateProperties,
+				EMAIL_NOTIFICATION_TEMPLATE);
 	}
 
-	private void sendMailUsingTemplate(String to, String subject, Map<String, Object> templateProperties, String templateName)
+	private void sendMailUsingTemplate(String emailAddress, String name, String subject, Map<String, Object> templateProperties, String templateName)
 	{
 		try
 		{
 			String messageContent = FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerConfiguration.getTemplate(templateName), templateProperties);
-			sendMail(to, subject, messageContent);
+			sendMail(emailAddress, name, subject, messageContent);
 		}
 		catch (IOException | TemplateException e)
 		{
@@ -95,7 +103,7 @@ public class DefaultMailService implements MailService
 
 	}
 
-	private void sendMail(String to, String subject, String messageContent)
+	private void sendMail(String emailAddress, String name, String subject, String messageContent)
 	{
 		if (!isServiceAvailable())
 		{
@@ -106,7 +114,7 @@ public class DefaultMailService implements MailService
 		{
 			MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 			message.setFrom(new InternetAddress(FROM_ADDRESS, FROM_NAME));
-			message.setTo(to);
+			message.setTo(new InternetAddress(emailAddress, name));
 			message.setSubject(subject);
 			message.setText(messageContent, true);
 		});
