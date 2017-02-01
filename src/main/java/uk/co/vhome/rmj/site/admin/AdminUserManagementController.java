@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import uk.co.vhome.rmj.repositories.UserRepository;
 
 import javax.inject.Inject;
@@ -14,6 +15,7 @@ import javax.inject.Inject;
  */
 @Controller
 @RequestMapping("admin/usermanagement")
+@SessionAttributes("userManagementForm")
 @SuppressWarnings("unused")
 public class AdminUserManagementController
 {
