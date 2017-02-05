@@ -1,13 +1,13 @@
 package uk.co.vhome.rmj.services;
 
-import uk.co.vhome.rmj.entities.User;
+import uk.co.vhome.rmj.entities.SupplementalUserDetails;
 
 /**
  * Interface for sending mails of predefined content
  */
 public interface MailService extends ServiceAvailabilityReporter
 {
-	void sendRegistrationMail(User user);
+	void sendRegistrationMail(SupplementalUserDetails supplementalUserDetails);
 
-	void sendAdministratorNotification(User user);
+	void sendAdministratorNotification(SupplementalUserDetails supplementalUserDetails);
 }

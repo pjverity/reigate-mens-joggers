@@ -1,14 +1,14 @@
 package uk.co.vhome.rmj.services;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import uk.co.vhome.rmj.entities.User;
-import uk.co.vhome.rmj.entities.UserDetail;
-import uk.co.vhome.rmj.repositories.UserRepository;
+import uk.co.vhome.rmj.entities.SupplementalUserDetails;
+import uk.co.vhome.rmj.repositories.SupplementalUserDetailsRepository;
 
 import javax.inject.Inject;
 import java.util.Collections;
@@ -24,16 +24,16 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 
 	private final JdbcUserDetailsManager userDetailsManager;
 
-	private final UserRepository userRepository;
+	private final SupplementalUserDetailsRepository supplementalUserDetailsRepository;
 
 	private boolean serviceAvailable = false;
 
 	@Inject
-	public DefaultUserRegistrationService(MailService mailService, JdbcUserDetailsManager userDetailsManager, UserRepository userRepository)
+	public DefaultUserRegistrationService(MailService mailService, JdbcUserDetailsManager userDetailsManager, SupplementalUserDetailsRepository supplementalUserDetailsRepository)
 	{
 		this.mailService = mailService;
 		this.userDetailsManager = userDetailsManager;
-		this.userRepository = userRepository;
+		this.supplementalUserDetailsRepository = supplementalUserDetailsRepository;
 
 		// This service is only usable if it can mail registration confirmations
 		serviceAvailable = this.mailService.isServiceAvailable();
@@ -50,31 +50,27 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 		SimpleGrantedAuthority authority = new SimpleGrantedAuthority("MEMBER");
 
 		// Use Spring's user details manager to create the user and associated authorities for now
-		org.springframework.security.core.userdetails.User user = new org.springframework.security.core.userdetails
-				                                                              .User(userId.toLowerCase(),
-						                                                                   BCrypt.hashpw(password, BCrypt.gensalt()),
-						                                                                   true,
-						                                                                   true,
-						                                                                   true,
-						                                                                   true,
-						                                                                   Collections.singleton(authority));
+		User user = new User(userId.toLowerCase(),
+		                     BCrypt.hashpw(password, BCrypt.gensalt()),
+		                     true,
+		                     true,
+		                     true,
+		                     true,
+		                     Collections.singleton(authority));
 
 		userDetailsManager.createUser(user);
 
-		// Then use our repository to create the addition details that are linked to the user record created above
-		User userEntity = userRepository.findByUsername(user.getUsername());
+		SupplementalUserDetails supplementalUserDetails = new SupplementalUserDetails(userId,
+		                                                                              StringUtils.capitalize(firstName),
+		                                                                              StringUtils.capitalize(lastName));
 
-		userEntity.setUserDetail(new UserDetail(userEntity.getId(),
-				                                       StringUtils.capitalize(firstName),
-				                                       StringUtils.capitalize(lastName)));
+		supplementalUserDetailsRepository.save(supplementalUserDetails);
 
-		userRepository.save(userEntity);
-
-		mailService.sendRegistrationMail(userEntity);
+		mailService.sendRegistrationMail(supplementalUserDetails);
 
 		// This is done as a separate call so that it is not part of this transaction. It's not
 		// critical if the site admin doesn't receive the e-mail, so don't roll back if this fails
-		sendAdministratorNotification(userEntity);
+		sendAdministratorNotification(supplementalUserDetails);
 	}
 
 	@Override
@@ -90,8 +86,8 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 		return serviceAvailable;
 	}
 
-	private void sendAdministratorNotification(User user)
+	private void sendAdministratorNotification(SupplementalUserDetails supplementalUserDetails)
 	{
-		mailService.sendAdministratorNotification(user);
+		mailService.sendAdministratorNotification(supplementalUserDetails);
 	}
 }

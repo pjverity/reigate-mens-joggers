@@ -19,28 +19,32 @@
 		<h1>User Management</h1>
 	</div>
 
-	<form:form class="well" modelAttribute="userManagementForm">
-		<table class="table table-condensed">
-			<thead>
+	<table class="table table-condensed">
+		<thead>
+		<tr>
+			<th>Name</th>
+			<th>Email Address</th>
+			<th>Type</th>
+			<th>Enabled</th>
+		</tr>
+		</thead>
+
+		<tbody>
+		<form:form modelAttribute="userManagementForm">
+
+		<c:forEach var="entry" items="${userManagementForm.userSettings}" varStatus="vs">
 			<tr>
-				<th>Name</th>
-				<th>Email Address</th>
-				<th>Enabled</th>
+				<td>${requestScope[entry.key].firstName}&nbsp;${requestScope[entry.key].lastName}</td>
+				<td><a href="mailto:${entry.key}">${entry.key}</a></td>
+				<td>${entry.value.userDetails.authorities.toArray()[0]}</td>
+				<td><form:checkbox path="userSettings[${entry.key}].enabled" name="enabled" value="userSettings[${entry.key}].enabled"/></td>
 			</tr>
-			</thead>
-			<tbody>
-			<c:forEach var="user" items="${userManagementForm.users}" varStatus="vs">
-				<tr>
-					<td>${user.userDetail.firstName}&nbsp;${user.userDetail.lastName}</td>
-					<td><a href="mailto:${user.username}">${user.username}</a></td>
-					<td>
-						<form:checkbox path="users[${vs.index}].enabled" name="enabled" value="users[${vs.index}].enabled"/>
-					</td>
-				</tr>
-			</c:forEach>
-			</tbody>
-		</table>
-		<form:button type="submit" class="btn btn-primary">Update</form:button>
+		</c:forEach>
+		</tbody>
+	</table>
+
+
+	<form:button type="submit" class="btn btn-primary">Update</form:button>
 	</form:form>
 
 </div>

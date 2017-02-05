@@ -7,10 +7,11 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "user_details")
-public class UserDetail
+public class SupplementalUserDetails
 {
 	@Id
-	private Long id;
+	@Column(updatable = false, nullable = false, unique = true, name = "username")
+	private String emailAddress;
 
 	@Column(name = "first_name")
 	private String firstName;
@@ -18,25 +19,25 @@ public class UserDetail
 	@Column(name = "last_name")
 	private String lastName;
 
-	public UserDetail(Long id, String firstName, String lastName)
+	public SupplementalUserDetails(String userId, String firstName, String lastName)
 	{
-		this.id = id;
+		this.emailAddress = userId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
 
-	public UserDetail()
+	public SupplementalUserDetails()
 	{
 	}
 
-	public Long getId()
+	public String getEmailAddress()
 	{
-		return id;
+		return emailAddress;
 	}
 
-	public void setId(Long id)
+	public void setEmailAddress(String emailAddress)
 	{
-		this.id = id;
+		this.emailAddress = emailAddress;
 	}
 
 	public String getFirstName()

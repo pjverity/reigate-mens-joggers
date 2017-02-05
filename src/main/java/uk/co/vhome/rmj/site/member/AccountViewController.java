@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
-import uk.co.vhome.rmj.entities.UserDetail;
-import uk.co.vhome.rmj.repositories.UserRepository;
+import uk.co.vhome.rmj.entities.SupplementalUserDetails;
+import uk.co.vhome.rmj.repositories.SupplementalUserDetailsRepository;
 import uk.co.vhome.rmj.services.UserRegistrationService;
 
 import javax.inject.Inject;
@@ -27,14 +27,14 @@ public class AccountViewController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final UserRepository userRepository;
+	private final SupplementalUserDetailsRepository supplementalUserDetailsRepository;
 
 	private final UserRegistrationService userRegistrationService;
 
 	@Inject
-	public AccountViewController(UserRepository userRepository, UserRegistrationService userRegistrationService)
+	public AccountViewController(SupplementalUserDetailsRepository supplementalUserDetailsRepository, UserRegistrationService userRegistrationService)
 	{
-		this.userRepository = userRepository;
+		this.supplementalUserDetailsRepository = supplementalUserDetailsRepository;
 		this.userRegistrationService = userRegistrationService;
 	}
 
@@ -46,9 +46,9 @@ public class AccountViewController
 	}
 
 	@ModelAttribute("userDetail")
-	public UserDetail userDetail(@AuthenticationPrincipal Principal principal)
+	public SupplementalUserDetails userDetail(@AuthenticationPrincipal Principal principal)
 	{
-		return userRepository.findByUsername(principal.getName()).getUserDetail();
+		return supplementalUserDetailsRepository.findByEmailAddress(principal.getName());
 	}
 
 	@RequestMapping(value = "/changePassword", method = RequestMethod.POST)

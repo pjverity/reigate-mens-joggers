@@ -2,48 +2,71 @@ package uk.co.vhome.rmj.site.admin;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import uk.co.vhome.rmj.repositories.UserRepository;
+import uk.co.vhome.rmj.entities.SupplementalUserDetails;
+import uk.co.vhome.rmj.repositories.SupplementalUserDetailsRepository;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * Secured administration functions
  */
 @Controller
 @RequestMapping("admin/usermanagement")
-@SessionAttributes("userManagementForm")
 @SuppressWarnings("unused")
 public class AdminUserManagementController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final UserRepository userRepository;
+	private final SupplementalUserDetailsRepository supplementalUserDetailsRepository;
+
+	private final JdbcUserDetailsManager userDetailsManager;
 
 	@Inject
-	public AdminUserManagementController(UserRepository userRepository)
+	public AdminUserManagementController(SupplementalUserDetailsRepository supplementalUserDetailsRepository,
+	                                     JdbcUserDetailsManager userDetailsManager)
 	{
-		this.userRepository = userRepository;
+		this.supplementalUserDetailsRepository = supplementalUserDetailsRepository;
+		this.userDetailsManager = userDetailsManager;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	String updateModel(UserManagementForm userManagementForm)
 	{
-		userRepository.save(userManagementForm.getUsers());
+		userManagementForm.getUserSettings().forEach((k, v) ->
+		                                             {
+			                                             UserDetails userDetails = userDetailsManager.loadUserByUsername(k);
+			                                             UserDetails updatedDetails = v.mergeWith(userDetails);
+			                                             userDetailsManager.updateUser(updatedDetails);
+		                                             });
 
 		return "redirect:/admin/usermanagement";
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	UserManagementForm getView() {
+	UserManagementForm getView(ModelMap modelMap)
+	{
 		UserManagementForm userManagementForm = new UserManagementForm();
 
-		userManagementForm.setUsers(userRepository.findAllByOrderByUserDetailLastNameAscUserDetailFirstNameAsc());
+		List<String> users = userDetailsManager.getJdbcTemplate().queryForList("select username from users", String.class);
 
-		return userManagementForm;
+		UserManagementForm form = new UserManagementForm();
+
+		users.forEach(user ->
+		              {
+			              UserDetails userDetails = userDetailsManager.loadUserByUsername(user);
+			              SupplementalUserDetails supplementalUserDetails = supplementalUserDetailsRepository.findByEmailAddress(user);
+			              form.addUserSettings(userDetails.getUsername(), new MutableUser(userDetails));
+			              modelMap.put(userDetails.getUsername(), supplementalUserDetails);
+		              });
+
+		return form;
 	}
 
 }
