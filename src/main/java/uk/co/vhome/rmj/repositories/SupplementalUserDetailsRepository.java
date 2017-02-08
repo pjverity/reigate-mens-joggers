@@ -4,6 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import uk.co.vhome.rmj.entities.SupplementalUserDetails;
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -15,5 +16,5 @@ public interface SupplementalUserDetailsRepository extends CrudRepository<Supple
 {
 	SupplementalUserDetails findByEmailAddress(String emailAddress);
 
-	List<SupplementalUserDetails> findAllByOrderByLastNameAscFirstNameAsc();
+	List<SupplementalUserDetails> findByEmailAddressIn(Collection<String> usersInGroup);
 }

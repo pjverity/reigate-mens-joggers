@@ -24,7 +24,7 @@
 		<tr>
 			<th>Name</th>
 			<th>Email Address</th>
-			<th>Type</th>
+			<th>Role</th>
 			<th>Enabled</th>
 		</tr>
 		</thead>

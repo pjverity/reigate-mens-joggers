@@ -10,12 +10,11 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import uk.co.vhome.rmj.entities.SupplementalUserDetails;
@@ -28,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.util.Collections;
 
 import static uk.co.vhome.rmj.config.BootstrapFramework.ADDITIONAL_RESOURCE_PATHS;
 
@@ -43,15 +41,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
 	private final DataSource dataSource;
 
+	private final SupplementalUserDetailsRepository supplementalUserDetailsRepository;
+
 	private JdbcUserDetailsManager userDetailsManager;
 
 	@Inject
-	private SupplementalUserDetailsRepository supplementalUserDetailsRepository;
-
-	@Inject
-	public SecurityConfiguration(DataSource dataSource)
+	public SecurityConfiguration(DataSource dataSource,
+	                             SupplementalUserDetailsRepository supplementalUserDetailsRepository)
 	{
 		this.dataSource = dataSource;
+		this.supplementalUserDetailsRepository = supplementalUserDetailsRepository;
 	}
 
 	private void configureAuth(AuthenticationManagerBuilder auth) throws Exception
@@ -65,8 +64,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 				.usersByUsernameQuery("select username, password, enabled from users where lower(username) = lower(?)")
 				.passwordEncoder(new BCryptPasswordEncoder()).getUserDetailsService();
 
+		userDetailsManager.setEnableAuthorities(false);
+		userDetailsManager.setEnableGroups(true);
+
 		// If the database is empty, set up a default admin account
-		initialiseAdminUser((UserDetailsManager)auth.getDefaultUserDetailsService());
+		initialiseAdminUser(userDetailsManager);
 	}
 
 	@Bean
@@ -82,8 +84,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 		LOGGER.info("Configuring HTTP security...");
 
 		http.authorizeRequests()
-					.antMatchers("/admin/**").hasAuthority("ADMIN")
-					.antMatchers("/member/**").hasAnyAuthority("MEMBER", "ADMIN")
+					.antMatchers("/admin/**").hasRole("ADMIN")
+					.antMatchers("/member/**").hasAnyRole("MEMBER", "ADMIN")
 					.antMatchers("/**").permitAll()
 				.and()
 					.formLogin()
@@ -127,20 +129,35 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 		};
 	}
 
-	private void initialiseAdminUser(UserDetailsManager userDetailsManager)
+	private void initialiseAdminUser(JdbcUserDetailsManager userDetailsManager)
 	{
-		if ( !userDetailsManager.userExists("admin") )
-		{
-			LOGGER.warn("Generating default admin user. Log in as admin user and change the default password");
 
-			SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ADMIN");
-			userDetailsManager.createUser(new User("admin", BCrypt.hashpw("test", BCrypt.gensalt()), Collections.singleton(authority)));
+		if ( !userDetailsManager.userExists("admin@v-home.co.uk") )
+		{
+			LOGGER.warn("Generating test admin. Log in as admin user and change the default password");
+
+			userDetailsManager.createGroup("ADMIN", AuthorityUtils.createAuthorityList("ROLE_ADMIN"));
+
+			userDetailsManager.createUser(new User("admin@v-home.co.uk",
+			                                       BCrypt.hashpw("test", BCrypt.gensalt()),
+			                                       AuthorityUtils.NO_AUTHORITIES));
+
+			userDetailsManager.addUserToGroup("admin@v-home.co.uk", "ADMIN");
+
 		}
 
-		if ( !userDetailsManager.userExists("member") )
+		if ( !userDetailsManager.userExists("member@v-home.co.uk") )
 		{
-			SimpleGrantedAuthority authority = new SimpleGrantedAuthority("MEMBER");
-			userDetailsManager.createUser(new User("member", BCrypt.hashpw("test", BCrypt.gensalt()), Collections.singleton(authority)));
+			LOGGER.warn("Generating test member");
+
+			userDetailsManager.createGroup("MEMBER", AuthorityUtils.createAuthorityList("ROLE_MEMBER"));
+
+			userDetailsManager.createUser(new User("member@v-home.co.uk",
+			                                       BCrypt.hashpw("test", BCrypt.gensalt()),
+			                                       AuthorityUtils.NO_AUTHORITIES));
+
+			userDetailsManager.addUserToGroup("member@v-home.co.uk", "MEMBER");
+
 		}
 	}
 }

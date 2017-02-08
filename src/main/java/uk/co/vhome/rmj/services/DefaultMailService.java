@@ -15,6 +15,9 @@ import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,8 +29,6 @@ public class DefaultMailService implements MailService
 	private static final String EMAIL_REGISTRATION_TEMPLATE = "registration-confirmation.html";
 
 	private static final String EMAIL_NOTIFICATION_TEMPLATE = "registration-notification.html";
-
-	private static final String ADMIN_ADDRESS = "administrator@reigatemensjoggers.co.uk";
 
 	private static final String FROM_ADDRESS = "noreply@reigatemensjoggers.co.uk";
 
@@ -61,39 +62,39 @@ public class DefaultMailService implements MailService
 	}
 
 	@Override
-	public void sendRegistrationMail(SupplementalUserDetails supplementalUserDetails)
+	public void sendRegistrationMail(SupplementalUserDetails newUserDetails)
 	{
 		Map<String, Object> templateProperties = new HashMap<>();
 
-		templateProperties.put("firstName", supplementalUserDetails.getFirstName());
+		templateProperties.put("firstName", newUserDetails.getFirstName());
 
-		sendMailUsingTemplate(supplementalUserDetails.getEmailAddress(),
-		                      String.join(" ", supplementalUserDetails.getFirstName(), supplementalUserDetails.getLastName()),
+		sendMailUsingTemplate(Collections.singletonList(newUserDetails),
+		                      String.join(" ", newUserDetails.getFirstName(), newUserDetails.getLastName()),
 		                      "Welcome to Reigate Mens Joggers!",
 		                      templateProperties,
 		                      EMAIL_REGISTRATION_TEMPLATE);
 	}
 
 	@Override
-	public void sendAdministratorNotification(SupplementalUserDetails supplementalUserDetails)
+	public void sendAdministratorNotification(Collection<SupplementalUserDetails> administrators, SupplementalUserDetails newUserDetails)
 	{
 		Map<String, Object> templateProperties = new HashMap<>();
 
-		templateProperties.put("user", supplementalUserDetails);
+		templateProperties.put("user", newUserDetails);
 
-		sendMailUsingTemplate(ADMIN_ADDRESS,
-				"RMJ Admin",
-				"New User Registered",
-				templateProperties,
-				EMAIL_NOTIFICATION_TEMPLATE);
+		sendMailUsingTemplate(administrators,
+		                      "RMJ Admin",
+		                      "New User Registered",
+		                      templateProperties,
+		                      EMAIL_NOTIFICATION_TEMPLATE);
 	}
 
-	private void sendMailUsingTemplate(String emailAddress, String name, String subject, Map<String, Object> templateProperties, String templateName)
+	private void sendMailUsingTemplate(Collection<SupplementalUserDetails> supplementalUserDetails, String name, String subject, Map<String, Object> templateProperties, String templateName)
 	{
 		try
 		{
 			String messageContent = FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerConfiguration.getTemplate(templateName), templateProperties);
-			sendMail(emailAddress, name, subject, messageContent);
+			sendMail(supplementalUserDetails, name, subject, messageContent);
 		}
 		catch (IOException | TemplateException e)
 		{
@@ -103,7 +104,7 @@ public class DefaultMailService implements MailService
 
 	}
 
-	private void sendMail(String emailAddress, String name, String subject, String messageContent)
+	private void sendMail(Collection<SupplementalUserDetails> supplementalUserDetails, String name, String subject, String messageContent)
 	{
 		if (!isServiceAvailable())
 		{
@@ -114,7 +115,17 @@ public class DefaultMailService implements MailService
 		{
 			MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 			message.setFrom(new InternetAddress(FROM_ADDRESS, FROM_NAME));
-			message.setTo(new InternetAddress(emailAddress, name));
+			supplementalUserDetails.forEach(details ->
+			                                {
+				                                try
+				                                {
+					                                message.addTo(details.getEmailAddress(), String.join(" ",details.getFirstName(), details.getLastName()));
+				                                }
+				                                catch (MessagingException | UnsupportedEncodingException e)
+				                                {
+					                                LOGGER.error("Failed to add recipient", e);
+				                                }
+			                                });
 			message.setSubject(subject);
 			message.setText(messageContent, true);
 		});

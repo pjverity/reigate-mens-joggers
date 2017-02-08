@@ -1,6 +1,6 @@
 package uk.co.vhome.rmj.services;
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
@@ -11,7 +11,7 @@ import uk.co.vhome.rmj.entities.SupplementalUserDetails;
 import uk.co.vhome.rmj.repositories.SupplementalUserDetailsRepository;
 
 import javax.inject.Inject;
-import java.util.Collections;
+import java.util.List;
 
 /**
  * Handles the process of registering new users by storing new user entities in a
@@ -29,7 +29,9 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 	private boolean serviceAvailable = false;
 
 	@Inject
-	public DefaultUserRegistrationService(MailService mailService, JdbcUserDetailsManager userDetailsManager, SupplementalUserDetailsRepository supplementalUserDetailsRepository)
+	public DefaultUserRegistrationService(MailService mailService,
+	                                      JdbcUserDetailsManager userDetailsManager,
+	                                      SupplementalUserDetailsRepository supplementalUserDetailsRepository)
 	{
 		this.mailService = mailService;
 		this.userDetailsManager = userDetailsManager;
@@ -47,18 +49,14 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 	@Transactional(timeout = 15)
 	public void registerNewUser(String userId, String firstName, String lastName, String password)
 	{
-		SimpleGrantedAuthority authority = new SimpleGrantedAuthority("MEMBER");
-
 		// Use Spring's user details manager to create the user and associated authorities for now
 		User user = new User(userId.toLowerCase(),
 		                     BCrypt.hashpw(password, BCrypt.gensalt()),
-		                     true,
-		                     true,
-		                     true,
-		                     true,
-		                     Collections.singleton(authority));
+		                     AuthorityUtils.NO_AUTHORITIES);
 
 		userDetailsManager.createUser(user);
+
+		userDetailsManager.addUserToGroup(userId, "MEMBER");
 
 		SupplementalUserDetails supplementalUserDetails = new SupplementalUserDetails(userId,
 		                                                                              StringUtils.capitalize(firstName),
@@ -86,8 +84,10 @@ public class DefaultUserRegistrationService implements UserRegistrationService
 		return serviceAvailable;
 	}
 
-	private void sendAdministratorNotification(SupplementalUserDetails supplementalUserDetails)
+	private void sendAdministratorNotification(SupplementalUserDetails newUserDetails)
 	{
-		mailService.sendAdministratorNotification(supplementalUserDetails);
+		List<String> usersInGroup = userDetailsManager.findUsersInGroup("ADMIN");
+		List<SupplementalUserDetails> administrators = supplementalUserDetailsRepository.findByEmailAddressIn(usersInGroup);
+		mailService.sendAdministratorNotification(administrators, newUserDetails);
 	}
 }

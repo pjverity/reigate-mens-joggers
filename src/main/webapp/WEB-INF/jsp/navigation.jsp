@@ -22,10 +22,10 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li>
-								<security:authorize access="hasAuthority('ADMIN')">
-									<a href="<c:url value="/admin/usermanagement"/>" >Admin</a>
+								<security:authorize access="hasRole('ADMIN')">
+									<a href="<c:url value="/admin/usermanagement"/>" >User Management</a>
 								</security:authorize>
-								<security:authorize access="hasAuthority('MEMBER')">
+								<security:authorize access="hasAnyRole('MEMBER','ADMIN')">
 									<a href="<c:url value="/member/home"/>">Member</a>
 								</security:authorize>
 							</li>

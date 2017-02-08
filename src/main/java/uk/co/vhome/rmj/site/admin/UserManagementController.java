@@ -20,7 +20,7 @@ import java.util.List;
 @Controller
 @RequestMapping("admin/usermanagement")
 @SuppressWarnings("unused")
-public class AdminUserManagementController
+public class UserManagementController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
@@ -29,8 +29,8 @@ public class AdminUserManagementController
 	private final JdbcUserDetailsManager userDetailsManager;
 
 	@Inject
-	public AdminUserManagementController(SupplementalUserDetailsRepository supplementalUserDetailsRepository,
-	                                     JdbcUserDetailsManager userDetailsManager)
+	public UserManagementController(SupplementalUserDetailsRepository supplementalUserDetailsRepository,
+	                                JdbcUserDetailsManager userDetailsManager)
 	{
 		this.supplementalUserDetailsRepository = supplementalUserDetailsRepository;
 		this.userDetailsManager = userDetailsManager;
