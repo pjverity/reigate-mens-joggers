@@ -2,6 +2,8 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
+<%--@elvariable id="userAccountDetails" type="uk.co.vhome.rmj.site.admin.MutableUserAccountDetails"--%>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,32 +21,33 @@
 		<h1>User Management</h1>
 	</div>
 
-	<table class="table table-condensed">
-		<thead>
-		<tr>
-			<th>Name</th>
-			<th>Email Address</th>
-			<th>Group</th>
-			<th>Enabled</th>
-		</tr>
-		</thead>
+	<form:form modelAttribute="userManagementForm">
 
-		<tbody>
-		<form:form modelAttribute="userManagementForm">
-
-		<c:forEach var="entry" items="${userManagementForm.userSettings}" varStatus="vs">
+		<table class="table table-condensed">
+			<thead>
 			<tr>
-				<td>${requestScope[entry.key].firstName}&nbsp;${requestScope[entry.key].lastName}</td>
-				<td><a href="mailto:${entry.key}">${entry.key}</a></td>
-				<td>${entry.value.group}</td>
-				<td><form:checkbox path="userSettings[${entry.key}].enabled" name="enabled" value="userSettings[${entry.key}].enabled"/></td>
+				<th>Name</th>
+				<th>Email Address</th>
+				<th>Group</th>
+				<th>Enabled</th>
 			</tr>
-		</c:forEach>
-		</tbody>
-	</table>
+			</thead>
 
+			<tbody>
 
-	<form:button type="submit" class="btn btn-primary">Update</form:button>
+			<c:forEach var="userAccountDetails" items="${userManagementForm.userAccountDetails}" varStatus="vs">
+				<tr>
+					<td>${userAccountDetails.fullName}</td>
+					<td><a href="mailto:${userAccountDetails.emailAddress}">${userAccountDetails.emailAddress}</a></td>
+					<td>${userAccountDetails.group}</td>
+					<td><form:checkbox path="userAccountDetails[${vs.index}].enabled" name="enabled" value="${userAccountDetails.enabled}"/></td>
+				</tr>
+				<form:hidden path="userAccountDetails[${vs.index}].emailAddress" name="emailAddress" value="${userAccountDetails.emailAddress}"/>
+			</c:forEach>
+			</tbody>
+		</table>
+
+		<form:button type="submit" class="btn btn-primary">Update</form:button>
 	</form:form>
 
 </div>

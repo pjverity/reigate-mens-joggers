@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 import uk.co.vhome.rmj.entities.SupplementalUserDetails;
 import uk.co.vhome.rmj.repositories.SupplementalUserDetailsRepository;
-import uk.co.vhome.rmj.services.UserRegistrationService;
+import uk.co.vhome.rmj.services.UserAccountManagementService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -29,13 +29,14 @@ public class AccountViewController
 
 	private final SupplementalUserDetailsRepository supplementalUserDetailsRepository;
 
-	private final UserRegistrationService userRegistrationService;
+	private final UserAccountManagementService userAccountManagementService;
 
 	@Inject
-	public AccountViewController(SupplementalUserDetailsRepository supplementalUserDetailsRepository, UserRegistrationService userRegistrationService)
+	public AccountViewController(SupplementalUserDetailsRepository supplementalUserDetailsRepository,
+	                             UserAccountManagementService userAccountManagementService)
 	{
 		this.supplementalUserDetailsRepository = supplementalUserDetailsRepository;
-		this.userRegistrationService = userRegistrationService;
+		this.userAccountManagementService = userAccountManagementService;
 	}
 
 	@RequestMapping(value = "/member/account", method = RequestMethod.GET)
@@ -65,7 +66,7 @@ public class AccountViewController
 
 		try
 		{
-			userRegistrationService.changePassword(principal.getName(), passwords.getOldPassword(), passwords.getNewPassword());
+			userAccountManagementService.changePassword(principal.getName(), passwords.getOldPassword(), passwords.getNewPassword());
 		}
 		catch (Exception e)
 		{

@@ -4,7 +4,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import uk.co.vhome.rmj.AuthenticatedUser;
-import uk.co.vhome.rmj.services.UserRegistrationService;
+import uk.co.vhome.rmj.services.UserAccountManagementService;
 
 import javax.inject.Inject;
 
@@ -14,12 +14,12 @@ import javax.inject.Inject;
 @Component
 public class ApplicationEventHandler
 {
-	private final UserRegistrationService userRegistrationService;
+	private final UserAccountManagementService userAccountManagementService;
 
 	@Inject
-	public ApplicationEventHandler(UserRegistrationService userRegistrationService)
+	public ApplicationEventHandler(UserAccountManagementService userAccountManagementService)
 	{
-		this.userRegistrationService = userRegistrationService;
+		this.userAccountManagementService = userAccountManagementService;
 	}
 
 	@EventListener
@@ -27,7 +27,7 @@ public class ApplicationEventHandler
 	{
 		if (contextStartedEvent.getApplicationContext().getParent() == null)
 		{
-			AuthenticatedUser.runWithSystemUser(userRegistrationService::initialiseFreshDB);
+			AuthenticatedUser.runWithSystemUser(userAccountManagementService::createBasicDefaultAccounts);
 		}
 	}
 }

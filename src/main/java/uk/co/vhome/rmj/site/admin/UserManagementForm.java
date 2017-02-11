@@ -1,21 +1,23 @@
 package uk.co.vhome.rmj.site.admin;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import uk.co.vhome.rmj.services.UserAccountDetails;
 
-public class UserManagementForm implements Serializable
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+public class UserManagementForm
 {
-	private Map<String, MutableUser> userSettings = new HashMap<>();
+	private List<UserAccountDetails> userAccountDetails = new LinkedList<>();
 
-	public Map<String, MutableUser> getUserSettings()
+	public Collection<UserAccountDetails> getUserAccountDetails()
 	{
-		return userSettings;
+		return userAccountDetails;
 	}
 
-	public void addUserSettings(String userId, MutableUser user)
+	public void setUserAccountDetails(List<UserAccountDetails> userAccountDetails)
 	{
-		userSettings.put(userId, user);
+		this.userAccountDetails = userAccountDetails;
 	}
 
 }

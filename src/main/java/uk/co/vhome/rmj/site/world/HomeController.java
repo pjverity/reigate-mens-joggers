@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uk.co.vhome.rmj.AuthenticatedUser;
 import uk.co.vhome.rmj.config.ServletContextConfiguration;
-import uk.co.vhome.rmj.services.UserRegistrationService;
+import uk.co.vhome.rmj.services.UserAccountManagementService;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +39,7 @@ public class HomeController
 
 	private static final String MESSAGE_CODE_VALIDATION_CONSTRAINT_USER_REGISTRATION_VALID = "validation.constraint.UserRegistrationValid";
 
-	private final UserRegistrationService registrationService;
+	private final UserAccountManagementService registrationService;
 
 	private final MessageSource messageSource;
 
@@ -69,7 +69,7 @@ public class HomeController
 	}
 
 	@Inject
-	public HomeController(UserRegistrationService registrationService, MessageSource messageSource)
+	public HomeController(UserAccountManagementService registrationService, MessageSource messageSource)
 	{
 		this.registrationService = registrationService;
 		this.messageSource = messageSource;

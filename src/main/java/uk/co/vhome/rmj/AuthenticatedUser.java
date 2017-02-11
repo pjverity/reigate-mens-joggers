@@ -15,7 +15,11 @@ public class AuthenticatedUser
 
 	private static final Authentication SYSTEM_USER = new UsernamePasswordAuthenticationToken("system",
 	                                                                                         "",
-	                                                                                         AuthorityUtils.createAuthorityList(Role.SYSTEM));
+	                                                                                         AuthorityUtils.createAuthorityList(Role.SYSTEM,
+	                                                                                                                            Role.ADMIN,
+	                                                                                                                            Role.ORGANISER,
+	                                                                                                                            Role.MEMBER,
+	                                                                                                                            Role.ANON));
 
 	private static final Authentication ANON_USER = new UsernamePasswordAuthenticationToken("anon",
 	                                                                                       "",
