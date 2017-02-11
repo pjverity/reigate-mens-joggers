@@ -3,16 +3,18 @@ package uk.co.vhome.rmj.config;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.intercept.RunAsImplAuthenticationProvider;
+import org.springframework.security.access.intercept.RunAsManager;
+import org.springframework.security.access.intercept.RunAsManagerImpl;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -34,7 +36,6 @@ import static uk.co.vhome.rmj.config.BootstrapFramework.ADDITIONAL_RESOURCE_PATH
  * Configure web security for the site
  */
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(jsr250Enabled = true, order = 0)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -66,9 +67,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
 		userDetailsManager.setEnableAuthorities(false);
 		userDetailsManager.setEnableGroups(true);
-
-		// If the database is empty, set up a default admin account
-		initialiseAdminUser(userDetailsManager);
 	}
 
 	@Bean
@@ -129,35 +127,37 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 		};
 	}
 
-	private void initialiseAdminUser(JdbcUserDetailsManager userDetailsManager)
+	/**
+	 * Configure the Global Method Security to use 'RunAs' authentication, so 'system' level calls
+	 * can be made from user initiated calls. For example, a new user registers, but requires system
+	 * level access for the service to call methods on the e-mail service.
+	 *
+	 * Spring will component scan this as a bean. The alternative is to put it in a top level class
+	 * an @Import it from the outer class.
+	 */
+	@EnableGlobalMethodSecurity(jsr250Enabled = true, securedEnabled = true, order = 0)
+	public class MethodSecurity extends GlobalMethodSecurityConfiguration
 	{
-
-		if ( !userDetailsManager.userExists("admin@v-home.co.uk") )
+		@Override
+		protected RunAsManager runAsManager()
 		{
-			LOGGER.warn("Generating test admin. Log in as admin user and change the default password");
-
-			userDetailsManager.createGroup("ADMIN", AuthorityUtils.createAuthorityList("ROLE_ADMIN"));
-
-			userDetailsManager.createUser(new User("admin@v-home.co.uk",
-			                                       BCrypt.hashpw("test", BCrypt.gensalt()),
-			                                       AuthorityUtils.NO_AUTHORITIES));
-
-			userDetailsManager.addUserToGroup("admin@v-home.co.uk", "ADMIN");
-
+			RunAsManagerImpl runAsManager = new RunAsManagerImpl();
+			runAsManager.setKey("my_key");
+			return runAsManager;
 		}
 
-		if ( !userDetailsManager.userExists("member@v-home.co.uk") )
+		@Override
+		protected void configure(AuthenticationManagerBuilder auth) throws Exception
 		{
-			LOGGER.warn("Generating test member");
+			auth.authenticationProvider(runAsAuthenticationProvider());
+		}
 
-			userDetailsManager.createGroup("MEMBER", AuthorityUtils.createAuthorityList("ROLE_MEMBER"));
-
-			userDetailsManager.createUser(new User("member@v-home.co.uk",
-			                                       BCrypt.hashpw("test", BCrypt.gensalt()),
-			                                       AuthorityUtils.NO_AUTHORITIES));
-
-			userDetailsManager.addUserToGroup("member@v-home.co.uk", "MEMBER");
-
+		@Bean
+		AuthenticationProvider runAsAuthenticationProvider()
+		{
+			RunAsImplAuthenticationProvider authenticationProvider = new RunAsImplAuthenticationProvider();
+			authenticationProvider.setKey("my_key");
+			return authenticationProvider;
 		}
 	}
 }

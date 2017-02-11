@@ -25,7 +25,7 @@
 								<security:authorize access="hasRole('ADMIN')">
 									<a href="<c:url value="/admin/usermanagement"/>" >User Management</a>
 								</security:authorize>
-								<security:authorize access="hasAnyRole('MEMBER','ADMIN')">
+								<security:authorize access="hasRole('MEMBER')">
 									<a href="<c:url value="/member/home"/>">Member</a>
 								</security:authorize>
 							</li>

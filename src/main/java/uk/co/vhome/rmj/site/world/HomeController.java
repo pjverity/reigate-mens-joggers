@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import uk.co.vhome.rmj.AuthenticatedUser;
 import uk.co.vhome.rmj.config.ServletContextConfiguration;
 import uk.co.vhome.rmj.services.UserRegistrationService;
 
@@ -86,7 +87,7 @@ public class HomeController
 	@RequestMapping(path = "/register", method = RequestMethod.POST)
 	@ResponseBody
 	public ModelMap registerNewMember(@ModelAttribute("form") @Valid UserRegistrationFormObject userRegistrationFormObject,
-	                                             BindingResult errors, HttpServletRequest httpServletRequest) throws IOException
+	                                  BindingResult errors, HttpServletRequest httpServletRequest) throws IOException
 	{
 
 		ModelMap model = new ModelMap();
@@ -96,17 +97,16 @@ public class HomeController
 			LOGGER.error("Validation failed for user registration: {}", userRegistrationFormObject);
 
 			List<ConciseFieldError> conciseFieldErrors = errors.getFieldErrors().stream()
-					.map(ConciseFieldError::new)
-					.collect(Collectors.toList());
+					                                             .map(ConciseFieldError::new)
+					                                             .collect(Collectors.toList());
 
 			String message;
 
 			ObjectError globalError = errors.getGlobalError();
-			if ( globalError == null )
+			if (globalError == null)
 			{
 				message = messageSource.getMessage(MESSAGE_CODE_VALIDATION_CONSTRAINT_USER_REGISTRATION_VALID, null, Locale.getDefault());
-			}
-			else
+			} else
 			{
 				message = globalError.getDefaultMessage();
 			}
@@ -118,11 +118,13 @@ public class HomeController
 
 		try
 		{
-			registrationService.registerNewUser(userRegistrationFormObject.getEmailAddress(),
-					userRegistrationFormObject.getFirstName(),
-					userRegistrationFormObject.getLastName(),
-					userRegistrationFormObject.getPassword()
-			);
+			AuthenticatedUser.runWithAnonUser(() ->
+			                                  {
+				                                  registrationService.registerNewUser(userRegistrationFormObject.getEmailAddress(),
+				                                                                      userRegistrationFormObject.getFirstName(),
+				                                                                      userRegistrationFormObject.getLastName(),
+				                                                                      userRegistrationFormObject.getPassword());
+			                                  });
 
 			// This appears to by-pass the login handler, so have to duplicate setting the session variables here
 			httpServletRequest.login(userRegistrationFormObject.getConfirmEmailAddress(), userRegistrationFormObject.getPassword());
