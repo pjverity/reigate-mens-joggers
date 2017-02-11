@@ -10,21 +10,29 @@ public class MutableUser
 {
 	private boolean enabled;
 
+	private String group;
+
 	private UserDetails userDetails;
 
 	public MutableUser()
 	{
 	}
 
-	MutableUser(UserDetails userDetails)
+	MutableUser(UserDetails userDetails, String group)
 	{
 		this.userDetails = userDetails;
 		this.enabled = userDetails.isEnabled();
+		this.group = group;
 	}
 
 	public UserDetails getUserDetails()
 	{
 		return userDetails;
+	}
+
+	public String getGroup()
+	{
+		return group;
 	}
 
 	public boolean isEnabled()

@@ -24,7 +24,7 @@
 		<tr>
 			<th>Name</th>
 			<th>Email Address</th>
-			<th>Role</th>
+			<th>Group</th>
 			<th>Enabled</th>
 		</tr>
 		</thead>
@@ -36,7 +36,7 @@
 			<tr>
 				<td>${requestScope[entry.key].firstName}&nbsp;${requestScope[entry.key].lastName}</td>
 				<td><a href="mailto:${entry.key}">${entry.key}</a></td>
-				<td>${entry.value.userDetails.authorities.toArray()[0]}</td>
+				<td>${entry.value.group}</td>
 				<td><form:checkbox path="userSettings[${entry.key}].enabled" name="enabled" value="userSettings[${entry.key}].enabled"/></td>
 			</tr>
 		</c:forEach>
