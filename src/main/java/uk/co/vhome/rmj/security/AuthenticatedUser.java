@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj;
+package uk.co.vhome.rmj.security;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

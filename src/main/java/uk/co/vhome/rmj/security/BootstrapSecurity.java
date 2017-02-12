@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.config;
+package uk.co.vhome.rmj.security;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

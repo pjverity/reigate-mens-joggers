@@ -2,11 +2,14 @@ package uk.co.vhome.rmj.config;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.DispatcherServlet;
+import uk.co.vhome.rmj.security.SecurityConfiguration;
 
 import javax.servlet.*;
 import java.util.EnumSet;
@@ -37,8 +40,13 @@ import java.util.EnumSet;
  * <p/>
  * And so that is how we get to initialise our Spring app contexts, Servlets, Filters etc
  * programmatically at start-up!
+ *
+ * <p><strong>Bootstrap order</strong>: {@link WebApplicationInitializer}'s must be called
+ * in the corrected order. Without specifying the order, it is possible the Security initialiser
+ * is called before this and subsequently fails</p>
  */
 @SuppressWarnings("unused")
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class BootstrapFramework implements WebApplicationInitializer
 {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -49,10 +57,10 @@ public class BootstrapFramework implements WebApplicationInitializer
 
 	private static final String SERVLET_REST_DISPATCHER_NAME = "springRestDispatcher";
 
-	static final String[] ADDITIONAL_RESOURCE_PATHS = {"/css/*",
-	                                                   "/js/*",
-	                                                   "/font-awesome-4.6.3/*",
-	                                                   "/sitemap.xml"};
+	public static final String[] ADDITIONAL_RESOURCE_PATHS = {"/css/*",
+	                                                          "/js/*",
+	                                                          "/font-awesome-4.6.3/*",
+	                                                          "/sitemap.xml"};
 
 	public void onStartup(ServletContext servletContext) throws ServletException
 	{

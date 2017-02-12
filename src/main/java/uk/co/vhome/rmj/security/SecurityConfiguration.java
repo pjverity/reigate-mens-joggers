@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.config;
+package uk.co.vhome.rmj.security;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import uk.co.vhome.rmj.config.ServletContextConfiguration;
 import uk.co.vhome.rmj.entities.SupplementalUserDetails;
 import uk.co.vhome.rmj.repositories.SupplementalUserDetailsRepository;
 

@@ -1,7 +1,7 @@
 package uk.co.vhome.rmj.services;
 
 import org.springframework.security.access.annotation.Secured;
-import uk.co.vhome.rmj.Role;
+import uk.co.vhome.rmj.security.Role;
 import uk.co.vhome.rmj.entities.SupplementalUserDetails;
 
 import java.util.Collection;

@@ -13,9 +13,9 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import uk.co.vhome.rmj.Group;
-import uk.co.vhome.rmj.Role;
-import uk.co.vhome.rmj.RunAs;
+import uk.co.vhome.rmj.security.Group;
+import uk.co.vhome.rmj.security.Role;
+import uk.co.vhome.rmj.security.RunAs;
 import uk.co.vhome.rmj.entities.SupplementalUserDetails;
 import uk.co.vhome.rmj.repositories.SupplementalUserDetailsRepository;
 

@@ -2,8 +2,8 @@ package uk.co.vhome.rmj.config.filters;
 
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import uk.co.vhome.rmj.security.BootstrapSecurity;
 
 import javax.servlet.*;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.io.IOException;
  * Servlet filter that is added after Springs security filters so that we can place the authenticated users
  * username in the thread context for use in log messages.
  *
- * Filter order defined in {@link uk.co.vhome.rmj.config.BootstrapSecurity}
+ * Filter order defined in {@link BootstrapSecurity}
  */
 public class PostAuthenticationLoggingFilter implements Filter
 {

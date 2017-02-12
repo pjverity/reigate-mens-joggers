@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import uk.co.vhome.rmj.AuthenticatedUser;
+import uk.co.vhome.rmj.security.AuthenticatedUser;
 import uk.co.vhome.rmj.config.ServletContextConfiguration;
 import uk.co.vhome.rmj.services.UserAccountManagementService;
 
