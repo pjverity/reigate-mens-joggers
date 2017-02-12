@@ -41,7 +41,7 @@ public class UserManagementController
 	{
 		UserManagementForm userManagementForm = new UserManagementForm();
 
-		userManagementForm.setUserAccountDetails(userAccountManagementService.getUserDetails());
+		userManagementForm.setUserAccountDetails(userAccountManagementService.findAllUserDetails());
 
 		return userManagementForm;
 	}

@@ -1,6 +1,13 @@
 package uk.co.vhome.rmj.entities;
 
-import javax.persistence.*;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 /**
  * Entity for describing additional information about members
@@ -18,6 +25,10 @@ public class SupplementalUserDetails
 
 	@Column(name = "last_name")
 	private String lastName;
+
+	@Column(name = "last_login")
+	@Generated(GenerationTime.INSERT)
+	private LocalDateTime lastLogin;
 
 	public SupplementalUserDetails(String userId, String firstName, String lastName)
 	{
@@ -58,5 +69,15 @@ public class SupplementalUserDetails
 	public void setLastName(String lastName)
 	{
 		this.lastName = lastName;
+	}
+
+	public LocalDateTime getLastLogin()
+	{
+		return lastLogin;
+	}
+
+	public void setLastLogin(LocalDateTime lastLogin)
+	{
+		this.lastLogin = lastLogin;
 	}
 }

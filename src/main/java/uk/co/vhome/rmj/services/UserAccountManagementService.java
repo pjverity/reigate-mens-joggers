@@ -25,6 +25,8 @@ public interface UserAccountManagementService extends ServiceAvailabilityReporte
 	void setIsUserEnabled(String userId, boolean isEnabled);
 
 	@Secured({Role.ADMIN})
-	List<UserAccountDetails> getUserDetails();
+	List<UserAccountDetails> findAllUserDetails();
 
+	@Secured({Role.SYSTEM})
+	void updateLastLogin(String userId, long timestamp);
 }

@@ -24,7 +24,7 @@
 			<dependency>
 				<groupId>org.springframework.data</groupId>
 				<artifactId>spring-data-releasetrain</artifactId>
-				<version>Hopper-SR2</version>
+				<version>Hopper-SR7</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -58,6 +58,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
+
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
@@ -72,7 +78,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>5.2.1.Final</version>
+			<version>5.2.7.Final</version>
 		</dependency>
 
 		<!--
@@ -238,7 +244,7 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
-					<url>http://server.v-home.co.uk:8080/manager/text</url>
+					<url>http://192.168.1.2:8080/manager/text</url>
 					<server>TomcatServer</server>
 					<path>/rmj</path>
 				</configuration>

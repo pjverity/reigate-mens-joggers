@@ -1,11 +1,8 @@
 package uk.co.vhome.rmj;
 
-import javax.annotation.security.DeclareRoles;
-
 /**
  * Names of Authority roles used in the application
  */
-@DeclareRoles({"SYSTEM","ADMIN","MEMBER","ORGANISER"})
 public interface Role
 {
 	String SYSTEM = "ROLE_SYSTEM";

@@ -2,11 +2,13 @@ package uk.co.vhome.rmj.config;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.intercept.RunAsImplAuthenticationProvider;
 import org.springframework.security.access.intercept.RunAsManager;
 import org.springframework.security.access.intercept.RunAsManagerImpl;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
@@ -70,9 +72,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 	}
 
 	@Bean
-	public JdbcUserDetailsManager userDetailsManager(AuthenticationManagerBuilder auth) throws Exception
+	public JdbcUserDetailsManager userDetailsManager(AuthenticationManagerBuilder auth,
+	                                                 ApplicationEventPublisher applicationEventPublisher) throws Exception
 	{
 		configureAuth(auth);
+
+		auth.authenticationEventPublisher(new DefaultAuthenticationEventPublisher(applicationEventPublisher));
+
 		return userDetailsManager;
 	}
 
@@ -91,7 +97,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 					.defaultSuccessUrl("/")
 					.failureUrl("/?error")
 					.permitAll()
-					.successHandler(successHandler())
+					.successHandler(authenticationSuccessHandler())
 				.and()
 					.logout()
 					.logoutSuccessUrl("/")
@@ -110,7 +116,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 		web.ignoring().antMatchers(ADDITIONAL_RESOURCE_PATHS);
 	}
 
-	private AuthenticationSuccessHandler successHandler()
+	/*
+	 * This seems to be the best place to add session attributes after a successful login. However, it's not
+	 * a suitable place to inject services that have method security annotations as it appears to cause a
+	 * circular bean reference, so use the Authentication event listener instead to interact with any
+	 * injected secured services.
+	 */
+	private AuthenticationSuccessHandler authenticationSuccessHandler()
 	{
 		return new SavedRequestAwareAuthenticationSuccessHandler()
 		{

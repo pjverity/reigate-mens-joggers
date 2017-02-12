@@ -2,6 +2,10 @@ package uk.co.vhome.rmj.services;
 
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+
 /**
  * Aggregated user information, combining core user account information with supplementary user information.
  * This is used by user account management screens.
@@ -16,6 +20,8 @@ public class UserAccountDetails
 
 	private final String group;
 
+	private final LocalDateTime lastLogin;
+
 	private boolean enabled;
 
 	/*
@@ -26,20 +32,32 @@ public class UserAccountDetails
 		firstName = "";
 		lastName = "";
 		group = "";
+		lastLogin = LocalDateTime.now();
 	}
 
-	UserAccountDetails(String emailAddress, String firstName, String lastName, String group, boolean enabled)
+	UserAccountDetails(String emailAddress, String firstName, String lastName, String group, boolean enabled, LocalDateTime lastLogin)
 	{
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailAddress = emailAddress;
 		this.group = StringUtils.capitalize(group.toLowerCase());
 		this.enabled = enabled;
+		this.lastLogin = lastLogin;
 	}
 
 	public String getFullName()
 	{
 		return String.join(" ", firstName, lastName);
+	}
+
+	public String getFirstName()
+	{
+		return firstName;
+	}
+
+	public String getLastName()
+	{
+		return lastName;
 	}
 
 	public String getEmailAddress()
@@ -70,4 +88,8 @@ public class UserAccountDetails
 		this.enabled = enabled;
 	}
 
+	public String getLastLogin()
+	{
+		return lastLogin.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
+	}
 }

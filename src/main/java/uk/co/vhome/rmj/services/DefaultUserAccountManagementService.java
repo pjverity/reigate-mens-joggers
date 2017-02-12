@@ -22,6 +22,8 @@ import uk.co.vhome.rmj.repositories.SupplementalUserDetailsRepository;
 import javax.inject.Inject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 /**
@@ -32,12 +34,12 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private static final String USER_INFO_SQL = "SELECT u.username, ud.first_name, ud.last_name, g.group_name, u.enabled FROM" +
-			                                            " users u, groups g, group_members gm, user_details ud WHERE" +
-			                                            " u.username = gm.username AND" +
-			                                            " u.username = ud.username AND" +
-			                                            " gm.group_id = g.id" +
-			                                            " ORDER BY ud.last_name, ud.first_name";
+	private static final String FIND_ALL_USER_INFO_SQL = "SELECT u.username, ud.first_name, ud.last_name, g.group_name, u.enabled, ud.last_login FROM" +
+			                                                     " users u, groups g, group_members gm, user_details ud WHERE" +
+			                                                     " u.username = gm.username AND" +
+			                                                     " u.username = ud.username AND" +
+			                                                     " gm.group_id = g.id" +
+			                                                     " ORDER BY ud.last_name, ud.first_name";
 
 	private final MailService mailService;
 
@@ -163,11 +165,11 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	}
 
 	@Override
-	public List<UserAccountDetails> getUserDetails()
+	public List<UserAccountDetails> findAllUserDetails()
 	{
 		return userDetailsManager
 				       .getJdbcTemplate()
-				       .query(USER_INFO_SQL,
+				       .query(FIND_ALL_USER_INFO_SQL,
 				              new Object[]{},
 				              new RowMapper<UserAccountDetails>()
 				              {
@@ -178,9 +180,19 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 						                                            rs.getString(2),
 						                                            rs.getString(3),
 						                                            rs.getString(4),
-						                                            rs.getBoolean(5));
+						                                            rs.getBoolean(5),
+						                                            rs.getTimestamp(6).toLocalDateTime());
 					              }
 				              });
+	}
+
+	@Override
+	@Transactional
+	public void updateLastLogin(String userId, long timestamp)
+	{
+		LocalDateTime localDateTime = LocalDateTime.ofEpochSecond(timestamp / 1000, 0, ZoneOffset.UTC);
+
+		supplementalUserDetailsRepository.updateLastLoginFor(localDateTime, userId);
 	}
 
 	@Override

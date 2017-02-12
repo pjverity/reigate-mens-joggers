@@ -2,7 +2,7 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<%--@elvariable id="userAccountDetails" type="uk.co.vhome.rmj.site.admin.MutableUserAccountDetails"--%>
+<%--@elvariable id="userAccountDetails" type="uk.co.vhome.rmj.services.UserAccountDetails"--%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -30,6 +30,7 @@
 				<th>Email Address</th>
 				<th>Group</th>
 				<th>Enabled</th>
+				<th>Last Login</th>
 			</tr>
 			</thead>
 
@@ -41,6 +42,7 @@
 					<td><a href="mailto:${userAccountDetails.emailAddress}">${userAccountDetails.emailAddress}</a></td>
 					<td>${userAccountDetails.group}</td>
 					<td><form:checkbox path="userAccountDetails[${vs.index}].enabled" name="enabled" value="${userAccountDetails.enabled}"/></td>
+					<td>${userAccountDetails.lastLogin}</td>
 				</tr>
 				<form:hidden path="userAccountDetails[${vs.index}].emailAddress" name="emailAddress" value="${userAccountDetails.emailAddress}"/>
 			</c:forEach>
