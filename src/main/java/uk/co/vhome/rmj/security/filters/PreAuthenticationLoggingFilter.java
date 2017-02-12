@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.config.filters;
+package uk.co.vhome.rmj.security.filters;
 
 import org.apache.logging.log4j.CloseableThreadContext;
 import uk.co.vhome.rmj.security.BootstrapSecurity;

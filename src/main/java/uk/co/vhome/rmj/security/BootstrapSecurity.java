@@ -3,8 +3,8 @@ package uk.co.vhome.rmj.security;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
-import uk.co.vhome.rmj.config.filters.PostAuthenticationLoggingFilter;
-import uk.co.vhome.rmj.config.filters.PreAuthenticationLoggingFilter;
+import uk.co.vhome.rmj.security.filters.PostAuthenticationLoggingFilter;
+import uk.co.vhome.rmj.security.filters.PreAuthenticationLoggingFilter;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
