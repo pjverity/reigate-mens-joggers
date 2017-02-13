@@ -15,11 +15,11 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import uk.co.vhome.rmj.entities.SupplementalUserDetails;
+import uk.co.vhome.rmj.repositories.SupplementalUserDetailsRepository;
 import uk.co.vhome.rmj.security.Group;
 import uk.co.vhome.rmj.security.Role;
 import uk.co.vhome.rmj.security.RunAs;
-import uk.co.vhome.rmj.entities.SupplementalUserDetails;
-import uk.co.vhome.rmj.repositories.SupplementalUserDetailsRepository;
 
 import javax.inject.Inject;
 import java.sql.ResultSet;
@@ -42,6 +42,12 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 			                                                     " u.username = ud.username AND" +
 			                                                     " gm.group_id = g.id" +
 			                                                     " ORDER BY ud.last_name, ud.first_name";
+
+	private static final String QUERY_ENABLED_ADMINS = "SELECT u.username FROM users u, group_members gm, groups g WHERE" +
+			                                                                                     " u.enabled = TRUE AND" +
+			                                                                                     " u.username = gm.username AND" +
+			                                                                                     " gm.group_id = g.id AND" +
+			                                                                                     " g.group_name = ?";
 
 	private final MailService mailService;
 
@@ -168,7 +174,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 		// TODO - Remove this once this is called only on rows that have actually changed. Currently
 		// iterates over all rows so kicks out the admin doing the update!
-		if ( !isEnabled )
+		if (!isEnabled)
 		{
 			User user = new User(userId, "", AuthorityUtils.NO_AUTHORITIES);
 			List<SessionInformation> allSessions = sessionRegistry.getAllSessions(user, false);
@@ -228,8 +234,12 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 	private void sendAdministratorNotification(SupplementalUserDetails newUserDetails)
 	{
-		List<String> usersInGroup = userDetailsManager.findUsersInGroup(Group.ADMIN);
-		List<SupplementalUserDetails> administrators = supplementalUserDetailsRepository.findByEmailAddressIn(usersInGroup);
+		// TODO - Create a proper ORM entity model and interfaces to run these queries rather than using JDBC queries
+		List<String> enabledUsersInGroup = userDetailsManager.getJdbcTemplate().queryForList(QUERY_ENABLED_ADMINS,
+		                                                                                     new String[]{Group.ADMIN},
+		                                                                                     String.class);
+
+		List<SupplementalUserDetails> administrators = supplementalUserDetailsRepository.findByEmailAddressIn(enabledUsersInGroup);
 		mailService.sendAdministratorNotification(administrators, newUserDetails);
 	}
 }
