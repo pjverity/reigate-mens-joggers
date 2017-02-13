@@ -17,6 +17,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -104,9 +106,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 					.logoutSuccessUrl("/")
 					.deleteCookies("JSESSIONID")
 				.and()
-					.sessionManagement().invalidSessionUrl("/");
+					.sessionManagement()
+						.invalidSessionUrl("/")
+						.maximumSessions(1)
+						.sessionRegistry(sessionRegistry());
 	}
 
+	/*
+	 * Expose this to other services to use
+	 */
+	@Bean
+	SessionRegistry sessionRegistry()
+	{
+		return new SessionRegistryImpl();
+	}
 
 	@Override
 	public void configure(WebSecurity web) throws Exception

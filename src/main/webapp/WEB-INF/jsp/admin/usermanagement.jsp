@@ -38,10 +38,10 @@
 
 			<c:forEach var="userAccountDetails" items="${userManagementForm.userAccountDetails}" varStatus="vs">
 				<tr>
-					<td>${userAccountDetails.fullName}</td>
+					<td><i class="fa fa-circle" style="color: ${userAccountDetails.activeSession ? 'lightseagreen' : 'indianred'}" aria-hidden="true"></i> ${userAccountDetails.fullName}</td>
 					<td><a href="mailto:${userAccountDetails.emailAddress}">${userAccountDetails.emailAddress}</a></td>
 					<td>${userAccountDetails.group}</td>
-					<td><form:checkbox path="userAccountDetails[${vs.index}].enabled" name="enabled" value="${userAccountDetails.enabled}"/></td>
+					<td><form:checkbox cssClass="checkbox" path="userAccountDetails[${vs.index}].enabled" name="enabled" value="${userAccountDetails.enabled}"/></td>
 					<td>${userAccountDetails.lastLogin}</td>
 				</tr>
 				<form:hidden path="userAccountDetails[${vs.index}].emailAddress" name="emailAddress" value="${userAccountDetails.emailAddress}"/>

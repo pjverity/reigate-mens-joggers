@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -47,6 +49,8 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 	private final SupplementalUserDetailsRepository supplementalUserDetailsRepository;
 
+	private final SessionRegistry sessionRegistry;
+
 	private boolean serviceAvailable = false;
 
 	@Value("${site.default.administrator.userId}")
@@ -64,7 +68,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	@Inject
 	public DefaultUserAccountManagementService(MailService mailService,
 	                                           JdbcUserDetailsManager userDetailsManager,
-	                                           SupplementalUserDetailsRepository supplementalUserDetailsRepository)
+	                                           SupplementalUserDetailsRepository supplementalUserDetailsRepository, SessionRegistry sessionRegistry)
 	{
 		this.mailService = mailService;
 		this.userDetailsManager = userDetailsManager;
@@ -72,6 +76,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 		// This service is only usable if it can mail registration confirmations
 		serviceAvailable = mailService.isServiceAvailable();
+		this.sessionRegistry = sessionRegistry;
 	}
 
 	@Override
@@ -161,6 +166,19 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 		                                   userDetails.isAccountNonLocked(),
 		                                   userDetails.getAuthorities());
 
+		// TODO - Remove this once this is called only on rows that have actually changed. Currently
+		// iterates over all rows so kicks out the admin doing the update!
+		if ( !isEnabled )
+		{
+			User user = new User(userId, "", AuthorityUtils.NO_AUTHORITIES);
+			List<SessionInformation> allSessions = sessionRegistry.getAllSessions(user, false);
+
+			// Only expire the session, don't remove it otherwise the browser will resend the authenticated
+			// session cookie and have access to the site when the account was disabled.
+			// By forcing a new session to be created, authentication is re-evaluated
+			allSessions.forEach(SessionInformation::expireNow);
+		}
+
 		userDetailsManager.updateUser(updatedUserDetails);
 	}
 
@@ -176,12 +194,19 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 					              public UserAccountDetails mapRow(ResultSet rs, int rowNum)
 							              throws SQLException
 					              {
-						              return new UserAccountDetails(rs.getString(1),
+						              String emailAddress = rs.getString(1);
+
+						              // See if the user has an active session
+						              User user = new User(emailAddress, "", AuthorityUtils.NO_AUTHORITIES);
+						              boolean hasActiveSession = !sessionRegistry.getAllSessions(user, false).isEmpty();
+
+						              return new UserAccountDetails(emailAddress,
 						                                            rs.getString(2),
 						                                            rs.getString(3),
 						                                            rs.getString(4),
 						                                            rs.getBoolean(5),
-						                                            rs.getTimestamp(6).toLocalDateTime());
+						                                            rs.getTimestamp(6).toLocalDateTime(),
+						                                            hasActiveSession);
 					              }
 				              });
 	}

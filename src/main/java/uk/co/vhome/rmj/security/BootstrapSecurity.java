@@ -25,6 +25,16 @@ public class BootstrapSecurity extends AbstractSecurityWebApplicationInitializer
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
+	/*
+	 * Enable session events so we can use the SessionRegistry to get information about
+	 * who is logged in, or how many recent connections there have been.
+	 */
+	@Override
+	protected boolean enableHttpSessionEventPublisher()
+	{
+		return true;
+	}
+
 	@Override
 	protected void beforeSpringSecurityFilterChain(ServletContext servletContext)
 	{

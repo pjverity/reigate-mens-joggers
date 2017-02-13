@@ -22,6 +22,8 @@ public class UserAccountDetails
 
 	private final LocalDateTime lastLogin;
 
+	private final boolean activeSession;
+
 	private boolean enabled;
 
 	/*
@@ -33,9 +35,10 @@ public class UserAccountDetails
 		lastName = "";
 		group = "";
 		lastLogin = LocalDateTime.now();
+		activeSession = false;
 	}
 
-	UserAccountDetails(String emailAddress, String firstName, String lastName, String group, boolean enabled, LocalDateTime lastLogin)
+	UserAccountDetails(String emailAddress, String firstName, String lastName, String group, boolean enabled, LocalDateTime lastLogin, boolean activeSession)
 	{
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -43,6 +46,7 @@ public class UserAccountDetails
 		this.group = StringUtils.capitalize(group.toLowerCase());
 		this.enabled = enabled;
 		this.lastLogin = lastLogin;
+		this.activeSession = activeSession;
 	}
 
 	public String getFullName()
@@ -91,5 +95,10 @@ public class UserAccountDetails
 	public String getLastLogin()
 	{
 		return lastLogin.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
+	}
+
+	public boolean isActiveSession()
+	{
+		return activeSession;
 	}
 }

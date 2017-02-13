@@ -30,6 +30,7 @@ public class UserManagementController
 	@RequestMapping(method = RequestMethod.POST)
 	String updateModel(UserManagementForm userManagementForm)
 	{
+		// TODO - Update only rows that have changed
 		userManagementForm.getUserAccountDetails()
 				.forEach(d -> userAccountManagementService.setIsUserEnabled(d.getEmailAddress(), d.isEnabled()));
 
