@@ -22,7 +22,7 @@ public interface UserAccountManagementService extends ServiceAvailabilityReporte
 	void changePassword(String userId, String oldPassword, String newPassword);
 
 	@Secured({Role.ADMIN})
-	void setIsUserEnabled(String userId, boolean isEnabled);
+	void updateUser(String userId, boolean isEnabled, String removeFromGroup, String addToGroup);
 
 	@Secured({Role.ADMIN})
 	List<UserAccountDetails> findAllUserDetails();

@@ -18,7 +18,7 @@ public class UserAccountDetails
 
 	private final String lastName;
 
-	private final String group;
+	private String group;
 
 	private final LocalDateTime lastLogin;
 
@@ -33,7 +33,6 @@ public class UserAccountDetails
 	{
 		firstName = "";
 		lastName = "";
-		group = "";
 		lastLogin = LocalDateTime.now();
 		activeSession = false;
 	}
@@ -43,7 +42,7 @@ public class UserAccountDetails
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailAddress = emailAddress;
-		this.group = StringUtils.capitalize(group.toLowerCase());
+		this.group = group;
 		this.enabled = enabled;
 		this.lastLogin = lastLogin;
 		this.activeSession = activeSession;
@@ -80,6 +79,11 @@ public class UserAccountDetails
 	public String getGroup()
 	{
 		return group;
+	}
+
+	public void setGroup(String group)
+	{
+		this.group = group;
 	}
 
 	public boolean isEnabled()

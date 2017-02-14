@@ -40,7 +40,11 @@
 				<tr>
 					<td><i class="fa fa-circle" style="color: ${userAccountDetails.activeSession ? 'lightseagreen' : 'indianred'}" aria-hidden="true"></i> ${userAccountDetails.fullName}</td>
 					<td><a href="mailto:${userAccountDetails.emailAddress}">${userAccountDetails.emailAddress}</a></td>
-					<td>${userAccountDetails.group}</td>
+					<td>
+						<form:select path="userAccountDetails[${vs.index}].group">
+							<form:options items="${groups}"/>
+						</form:select>
+					</td>
 					<td><form:checkbox cssClass="checkbox" path="userAccountDetails[${vs.index}].enabled" name="enabled" value="${userAccountDetails.enabled}"/></td>
 					<td>${userAccountDetails.lastLogin}</td>
 				</tr>

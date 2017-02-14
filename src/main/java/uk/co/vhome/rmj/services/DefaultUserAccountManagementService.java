@@ -158,7 +158,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	}
 
 	@Override
-	public void setIsUserEnabled(String userId, boolean isEnabled)
+	public void updateUser(String userId, boolean isEnabled, String removeFromGroup, String addToGroup)
 	{
 		LOGGER.info("Amending user {}. Enabled = {}", userId, isEnabled);
 
@@ -172,8 +172,13 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 		                                   userDetails.isAccountNonLocked(),
 		                                   userDetails.getAuthorities());
 
-		// TODO - Remove this once this is called only on rows that have actually changed. Currently
-		// iterates over all rows so kicks out the admin doing the update!
+		userDetailsManager.updateUser(updatedUserDetails);
+
+		if ( !removeFromGroup.equals(addToGroup) )
+		{
+			userDetailsManager.removeUserFromGroup(userId, removeFromGroup);
+			userDetailsManager.addUserToGroup(userId, addToGroup);
+		}
 		if (!isEnabled)
 		{
 			User user = new User(userId, "", AuthorityUtils.NO_AUTHORITIES);
@@ -185,7 +190,6 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 			allSessions.forEach(SessionInformation::expireNow);
 		}
 
-		userDetailsManager.updateUser(updatedUserDetails);
 	}
 
 	@Override
