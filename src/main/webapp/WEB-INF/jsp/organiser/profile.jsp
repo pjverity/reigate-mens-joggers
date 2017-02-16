@@ -18,7 +18,7 @@
 		<h1 style="text-align: center">
 			<img class="media-object" src="/images/Richard.png" alt="Coach Richard" style="display: inline-block"/>
 			<br/>Richard Feist<br/>
-			<small>(RMJ Coach)</small>
+			<small>(Coach)</small>
 		</h1>
 	</div>
 
