@@ -89,7 +89,7 @@
 		<div class="media">
 			<div class="media-left" style="text-align: center;">
 				<a href="<c:url value='/organiser/profile'/>">
-					<img src="/images/Richard.png" alt="Coach Richard">Richard Fiest
+					<img src="/images/Richard.png" alt="Coach Richard">Richard Feist
 				</a>
 			</div>
 			<div class="media-body">
