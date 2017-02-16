@@ -1,13 +1,17 @@
 <nav class="navbar navbar-default navbar-fixed-top">
 	<div class="container-fluid">
 		<div class="navbar-header">
+			<a class="navbar-brand" href="<c:url value='/'/>" style="padding: 0">
+				<img alt="Brand"
+				     src="/images/rmj-brand-logo-small.png"
+				     srcset="/images/rmj-brand-logo-small-HD.png 2x">
+			</a>
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
 				<span class="sr-only">Toggle navigation</span>
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a href="<c:url value="/"/>" class="navbar-brand">RMJ</a>
 		</div>
 
 		<%-- Display the users name and a way to log out if a user is logged in --%>

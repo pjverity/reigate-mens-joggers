@@ -14,7 +14,7 @@
 
 <%@include file="../navigation.jsp" %>
 
-<div class="jumbotron text-center">
+<div class="jumbotron text-center" style="background-color: #bfdbf6">
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-12">
@@ -82,6 +82,28 @@
 			<p>First session FREE! Sessions following are £5 and can be bought in blocks of 10</p>
 		</div>
 	</div>
+
+	<hr/>
+
+	<div class="row">
+		<div class="media">
+			<div class="media-left" style="text-align: center;">
+				<a href="<c:url value='/organiser/profile'/>">
+					<img src="/images/Richard.png" alt="Coach Richard">Richard Fiest
+				</a>
+			</div>
+			<div class="media-body">
+				<h3 class="media-heading">RMJ Coach</h3>
+				<p>With many years of sports coaching, you'll be in good hands with RMJ's experienced coach, Richard.</p>
+
+				<p>Whether you're an absolute newbie needing that kick start to get you on your way to a healthier lifesytle, or
+					a hardened all weather runner, Richard will be able to guide you towards achieving your goals.</p>
+
+				<p>Still not convinced? Read Richards Bio to read find out more...</p>
+			</div>
+		</div>
+	</div>
+
 </div>
 
 <hr/>
