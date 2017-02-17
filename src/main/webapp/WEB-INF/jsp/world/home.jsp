@@ -14,60 +14,40 @@
 
 <%@include file="../navigation.jsp" %>
 
-<div class="jumbotron text-center" style="background-color: #bfdbf6">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-12">
-				<h1>Reigate Mens Joggers</h1>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-12">
-				<security:authorize access="!isAuthenticated()">
-					<c:choose>
-						<c:when test="${registrationServiceAvailable}">
-							<p>
-								<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#signupModal">Sign Up!</button>
-							</p>
-						</c:when>
-						<c:otherwise>
-							<div class="alert alert-danger">New registrations currently unavailable</div>
-						</c:otherwise>
-					</c:choose>
-				</security:authorize>
-			</div>
-			<c:if test="${isNewUser}">
-				<div class="alert alert-success">
-					Hi ${userFirstName}, thanks for registering! We have sent a welcome email to <strong><security:authentication property="principal.username" /></strong>
-					<br/>
-					<span class="text-muted">(Please check your Junk/Spam Mail folder if there is nothing in your Inbox in the next few moments...)</span>
-				</div>
-			</c:if>
-		</div>
-		<div class="row">
-			<div class="col-lg-12">
-				<p>It's got to be better than sitting on the sofa right? Escape that stuffy office and come for a run - you won't regret it!</p>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-12">
-				<a href="https://www.facebook.com/ReigateMensJoggers" class="social-buttons"><i class="fa fa-facebook fa-fw"></i></a>
-				<a href="https://twitter.com/MensJoggers" class="social-buttons"><i class="fa fa-twitter fa-fw"></i></a>
-			</div>
-		</div>
-	</div>
-</div>
-
 <div class="container">
-	<p>This is a mixed ability session so if you are returning to running, trying running for the first time or wanting to increase your running there is something for
-		everyone.</p>
-	<p>It's a fun, friendly group where no one gets left behind. We will have a real variety of sessions from hills work, speed work, interval training and steady runs. We also will
-		have social events, races and plan special events.</p>
+
+	<div class="text-center">
+		<img class="img-responsive center-block" src="/images/rmj-full-logo.jpg" srcset="/images/rmj-full-logo@2x.jpg 2x"/>
+		<p class="lead">
+			It's got to be better than sitting on the sofa right?<br/>Escape that stuffy office and come for a run - you won't regret it!
+		</p>
+		<security:authorize access="!isAuthenticated()">
+		<c:choose>
+			<c:when test="${registrationServiceAvailable}">
+				<p>
+				<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#signupModal">Sign Up!</button>
+				</p>
+			</c:when>
+			<c:otherwise>
+				<div class="alert alert-danger">New registrations currently unavailable</div>
+			</c:otherwise>
+		</c:choose>
+		</security:authorize>
+	</div>
+
 </div>
 
 <hr/>
 
 <div class="container">
+	<div class="row">
+		<div class="col-sm-12">
+		<p>This is a mixed ability session so if you are returning to running, trying running for the first time or wanting to increase your running there is something for
+			everyone.</p>
+		<p>It's a fun, friendly group where no one gets left behind. We will have a real variety of sessions from hills work, speed work, interval training and steady runs. We also will
+			have social events, races and plan special events.</p>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-sm-4">
 			<h3>When?</h3>
@@ -97,14 +77,13 @@
 				<h3 class="media-heading">RMJ Coach</h3>
 				<p>With many years of sports coaching, you'll be in good hands with RMJ's experienced coach, Richard.</p>
 
-				<p>Whether you're an absolute newbie needing that kick start to get you on your way to a healthier lifesytle, or
+				<p>Whether you're an absolute newbie needing that kick start to get you on your way to a healthier lifestyle, or
 					a hardened all weather runner, Richard will be able to guide you towards achieving your goals.</p>
 
 				<p>Still not convinced? Check out Richard's <a href="${organiserProfilelUrl}">profile</a> to find out more.</p>
 			</div>
 		</div>
 	</div>
-
 </div>
 
 <hr/>
