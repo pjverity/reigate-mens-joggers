@@ -59,7 +59,8 @@
 					<div class="form-group">
 						<input id="password" name="password" autocomplete="current-password" type="password" class="form-control" placeholder="password"/>
 					</div>
-					<button type="submit" class="btn btn-default">Login</button>
+					<button type="submit" class="btn btn-default btn-primary">Login</button>
+					<button type="button" class="btn btn-success" data-toggle="modal" data-target="#signupModal">Sign Up</button>
 					<security:csrfInput/>
 				</form>
 			</div>

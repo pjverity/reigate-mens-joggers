@@ -14,25 +14,21 @@
 
 <%@include file="../navigation.jsp" %>
 
-<div class="container">
+<div class="container text-center">
 
-	<div class="text-center">
+	<div class="row">
 		<img class="img-responsive center-block" src="/images/rmj-full-logo.jpg" srcset="/images/rmj-full-logo@2x.jpg 2x"/>
-		<p class="lead">
-			It's got to be better than sitting on the sofa right?<br/>Escape that stuffy office and come for a run - you won't regret it!
-		</p>
-		<security:authorize access="!isAuthenticated()">
-		<c:choose>
-			<c:when test="${registrationServiceAvailable}">
-				<p>
-				<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#signupModal">Sign Up!</button>
-				</p>
-			</c:when>
-			<c:otherwise>
-				<div class="alert alert-danger">New registrations currently unavailable</div>
-			</c:otherwise>
-		</c:choose>
-		</security:authorize>
+	</div>
+
+	<div class="row lead">
+		It's got to be better than sitting on the sofa right?<br/>
+		Escape that stuffy office and come for a run - you won't regret it!
+	</div>
+
+	<div class="row" style="margin: 1em 0 1em 0">
+		<a href="https://www.facebook.com/ReigateMensJoggers" class="glyphicon fa fa-2x fa-facebook-official social-buttons" style="background-color: #3B5998;"></a>
+		<a href="mailto:anna@reigateladiesjoggers.co.uk (Anna),emma@reigateladiesjoggers.co.uk (Emma)?cc=administrator@reigatemensjoggers.co.uk (RMJ Admin)&subject=RMJ%20Enquiry" class="glyphicon fa fa-2x fa-envelope social-buttons larger" style="background-color: #5cb85c" ></a>
+		<a href="https://twitter.com/MensJoggers" class="glyphicon fa fa-2x fa-twitter social-buttons" style="background-color: #55ACEE"></a>
 	</div>
 
 </div>
@@ -40,14 +36,16 @@
 <hr/>
 
 <div class="container">
+
 	<div class="row">
 		<div class="col-sm-12">
-		<p>This is a mixed ability session so if you are returning to running, trying running for the first time or wanting to increase your running there is something for
-			everyone.</p>
-		<p>It's a fun, friendly group where no one gets left behind. We will have a real variety of sessions from hills work, speed work, interval training and steady runs. We also will
-			have social events, races and plan special events.</p>
+			<p>This is a mixed ability session so if you are returning to running, trying running for the first time or wanting to increase your running there is something for
+				everyone.</p>
+			<p>It's a fun, friendly group where no one gets left behind. We will have a real variety of sessions from hills work, speed work, interval training and steady runs. We also
+				will have social events, races and plan special events.</p>
 		</div>
 	</div>
+
 	<div class="row">
 		<div class="col-sm-4">
 			<h3>When?</h3>
