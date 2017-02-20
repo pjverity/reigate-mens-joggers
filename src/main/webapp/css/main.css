@@ -21,10 +21,4 @@ a.social-buttons.larger {
     padding-top: .35em;
 }
 
-a.social-buttons.small {
-    height: 10px;
-    width: 10px;
-    line-height: 10px;
-}
-
 body { padding-top: 50px; }
