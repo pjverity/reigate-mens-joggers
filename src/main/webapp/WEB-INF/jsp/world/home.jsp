@@ -25,7 +25,7 @@
 		Escape that stuffy office and come for a run - you won't regret it!
 	</div>
 
-	<div class="row" style="margin: 1em 0 1em 0">
+	<div class="row">
 		<a href="https://www.facebook.com/ReigateMensJoggers" class="glyphicon fa fa-2x fa-facebook-official social-buttons" style="background-color: #3B5998;"></a>
 		<a href="mailto:anna@reigateladiesjoggers.co.uk (Anna),emma@reigateladiesjoggers.co.uk (Emma)?cc=administrator@reigatemensjoggers.co.uk (RMJ Admin)&subject=RMJ%20Enquiry" class="glyphicon fa fa-2x fa-envelope social-buttons larger" style="background-color: #5cb85c" ></a>
 		<a href="https://twitter.com/MensJoggers" class="glyphicon fa fa-2x fa-twitter social-buttons" style="background-color: #55ACEE"></a>
