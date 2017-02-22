@@ -17,7 +17,7 @@
 <div class="container text-center">
 
 	<div class="row">
-		<img class="img-responsive center-block" src="/images/rmj-full-logo.jpg" srcset="/images/rmj-full-logo@2x.jpg 2x"/>
+		<img class="img-responsive center-block" src="/images/logo-and-name.svg" width="320px"/>
 	</div>
 
 	<div class="row lead">
@@ -68,7 +68,7 @@
 			<div class="media-left" style="text-align: center;">
 				<c:url value="/organiser/profile" var="organiserProfilelUrl"/>
 				<a href="${organiserProfilelUrl}">
-					<img src="/images/Richard.png" alt="Coach Richard">Richard Feist
+					<img src="/images/richard_feist.png" alt="Coach Richard">Richard Feist
 				</a>
 			</div>
 			<div class="media-body">

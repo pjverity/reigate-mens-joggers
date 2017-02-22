@@ -16,7 +16,7 @@
 <div class="container">
 	<div class="page-header">
 		<h1 style="text-align: center">
-			<img class="media-object" src="/images/Richard.png" alt="Coach Richard" style="display: inline-block"/>
+			<img class="media-object" src="/images/richard_feist.png" alt="Coach Richard" style="display: inline-block"/>
 			<br/>Richard Feist<br/>
 			<small>(Coach)</small>
 		</h1>
