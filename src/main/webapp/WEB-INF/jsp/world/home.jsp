@@ -17,7 +17,7 @@
 <div class="container text-center">
 
 	<div class="row">
-		<img class="img-responsive center-block" src="/images/logo-and-name.svg" width="320px"/>
+		<img class="img-responsive center-block" src="<c:url value="/images/logo-and-name.svg"/>" width="320px">
 	</div>
 
 	<div class="row lead">
@@ -68,7 +68,7 @@
 			<div class="media-left" style="text-align: center;">
 				<c:url value="/organiser/profile" var="organiserProfilelUrl"/>
 				<a href="${organiserProfilelUrl}">
-					<img src="/images/richard_feist.png" alt="Coach Richard">Richard Feist
+					<img src="<c:url value="/images/richard_feist.png"/>" alt="Coach Richard">Richard Feist
 				</a>
 			</div>
 			<div class="media-body">
