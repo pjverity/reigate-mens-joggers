@@ -1,14 +1,11 @@
 package uk.co.vhome.rmj.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -27,7 +24,6 @@ import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement(order = Ordered.LOWEST_PRECEDENCE) //p.607
@@ -142,29 +138,6 @@ public class RootContextConfiguration //implements TransactionManagementConfigur
 	public RestTemplate restTemplate()
 	{
 		return new RestTemplate();
-	}
-
-	@Bean
-	public JavaMailSender javaMailSender(@Value("${service.mail.host}") String mailHost,
-	                                     @Value("${service.mail.user}") String mailUser,
-	                                     @Value("${service.mail.password}") String mailPassword)
-	{
-		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-
-		mailSender.setHost(mailHost);
-		mailSender.setPort(25);
-		mailSender.setUsername(mailUser);
-		mailSender.setPassword(mailPassword);
-		mailSender.setDefaultEncoding("UTF-8");
-
-		Properties properties = new Properties();
-		properties.put("mail.smtp.auth", true);
-		properties.put("mail.smtp.auth.mechanisms", "DIGEST-MD5");
-		properties.put("mail.smtp.localhost", mailHost);
-
-		mailSender.setJavaMailProperties(properties);
-
-		return mailSender;
 	}
 
 	@Bean

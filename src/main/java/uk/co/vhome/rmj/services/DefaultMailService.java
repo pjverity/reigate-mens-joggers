@@ -4,6 +4,7 @@ import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.jndi.support.SimpleJndiBeanFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -13,6 +14,7 @@ import uk.co.vhome.rmj.entities.SupplementalUserDetails;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
+import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -41,24 +43,19 @@ public class DefaultMailService implements MailService
 	private boolean serviceAvailable = false;
 
 	@Inject
-	public DefaultMailService(JavaMailSender javaMailSender, Configuration freemarkerConfiguration)
+	public DefaultMailService(Configuration freemarkerConfiguration)
 	{
+		SimpleJndiBeanFactory locator = new SimpleJndiBeanFactory();
+		Session session = ((Session) locator.getBean("mail/Session"));
+
+		JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+		javaMailSender.setSession(session);
+		javaMailSender.setDefaultEncoding("UTF-8");
+
+		serviceAvailable = true;
+
 		this.javaMailSender = javaMailSender;
 		this.freemarkerConfiguration = freemarkerConfiguration;
-
-		try
-		{
-			if (javaMailSender instanceof JavaMailSenderImpl)
-			{
-				((JavaMailSenderImpl) javaMailSender).testConnection();
-				serviceAvailable = true;
-			}
-		}
-		catch (MessagingException e)
-		{
-			serviceAvailable = false;
-			LOGGER.error("Connection to mail server failed. Systems sending e-mail notification will be disabled", e);
-		}
 	}
 
 	@Override
