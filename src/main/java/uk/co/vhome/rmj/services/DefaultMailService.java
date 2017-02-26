@@ -4,9 +4,7 @@ import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.jndi.support.SimpleJndiBeanFactory;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
@@ -14,7 +12,6 @@ import uk.co.vhome.rmj.entities.SupplementalUserDetails;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
-import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -43,15 +40,9 @@ public class DefaultMailService implements MailService
 	private boolean serviceAvailable = false;
 
 	@Inject
-	public DefaultMailService(Configuration freemarkerConfiguration)
+	public DefaultMailService(JavaMailSender javaMailSender, Configuration freemarkerConfiguration)
 	{
-		SimpleJndiBeanFactory locator = new SimpleJndiBeanFactory();
-		Session session = ((Session) locator.getBean("mail/Session"));
-
-		JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
-		javaMailSender.setSession(session);
-		javaMailSender.setDefaultEncoding("UTF-8");
-
+		// TODO - To determine this - perhaps should be a lifecycle bean
 		serviceAvailable = true;
 
 		this.javaMailSender = javaMailSender;
@@ -66,7 +57,6 @@ public class DefaultMailService implements MailService
 		templateProperties.put("firstName", newUserDetails.getFirstName());
 
 		sendMailUsingTemplate(Collections.singletonList(newUserDetails),
-		                      String.join(" ", newUserDetails.getFirstName(), newUserDetails.getLastName()),
 		                      "Welcome to Reigate Mens Joggers!",
 		                      templateProperties,
 		                      EMAIL_REGISTRATION_TEMPLATE);
@@ -80,18 +70,17 @@ public class DefaultMailService implements MailService
 		templateProperties.put("user", newUserDetails);
 
 		sendMailUsingTemplate(administrators,
-		                      "RMJ Admin",
 		                      "New User Registered",
 		                      templateProperties,
 		                      EMAIL_NOTIFICATION_TEMPLATE);
 	}
 
-	private void sendMailUsingTemplate(Collection<SupplementalUserDetails> supplementalUserDetails, String name, String subject, Map<String, Object> templateProperties, String templateName)
+	private void sendMailUsingTemplate(Collection<SupplementalUserDetails> supplementalUserDetails, String subject, Map<String, Object> templateProperties, String templateName)
 	{
 		try
 		{
 			String messageContent = FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerConfiguration.getTemplate(templateName), templateProperties);
-			sendMail(supplementalUserDetails, name, subject, messageContent);
+			sendMail(supplementalUserDetails, subject, messageContent);
 		}
 		catch (IOException | TemplateException e)
 		{
@@ -101,7 +90,7 @@ public class DefaultMailService implements MailService
 
 	}
 
-	private void sendMail(Collection<SupplementalUserDetails> supplementalUserDetails, String name, String subject, String messageContent)
+	private void sendMail(Collection<SupplementalUserDetails> supplementalUserDetails, String subject, String messageContent)
 	{
 		if (!isServiceAvailable())
 		{

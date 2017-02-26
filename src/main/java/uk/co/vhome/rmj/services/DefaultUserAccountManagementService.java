@@ -2,7 +2,6 @@ package uk.co.vhome.rmj.services;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -15,6 +14,7 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import uk.co.vhome.rmj.config.InitialSiteUser;
 import uk.co.vhome.rmj.entities.SupplementalUserDetails;
 import uk.co.vhome.rmj.repositories.SupplementalUserDetailsRepository;
 import uk.co.vhome.rmj.security.Group;
@@ -59,20 +59,11 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 	private boolean serviceAvailable = false;
 
-	@Value("${site.default.administrator.userId}")
-	private String defaultAdminUserId;
-
-	@Value("${site.default.administrator.firstName}")
-	private String defaultAdminFirstName;
-
-	@Value("${site.default.administrator.lastName}")
-	private String defaultAdminLastName;
-
-	@Value("${site.default.administrator.password}")
-	private String defaultAdminPassword;
+	private InitialSiteUser initialSiteUser;
 
 	@Inject
-	public DefaultUserAccountManagementService(MailService mailService,
+	public DefaultUserAccountManagementService(InitialSiteUser initialSiteUser,
+	                                           MailService mailService,
 	                                           JdbcUserDetailsManager userDetailsManager,
 	                                           SupplementalUserDetailsRepository supplementalUserDetailsRepository, SessionRegistry sessionRegistry)
 	{
@@ -83,6 +74,8 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 		// This service is only usable if it can mail registration confirmations
 		serviceAvailable = mailService.isServiceAvailable();
 		this.sessionRegistry = sessionRegistry;
+
+		this.initialSiteUser = initialSiteUser;
 	}
 
 	@Override
@@ -97,10 +90,14 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 			userDetailsManager.createGroup(Group.ORGANISER, AuthorityUtils.createAuthorityList(Role.ORGANISER, Role.MEMBER));
 			userDetailsManager.createGroup(Group.MEMBER, AuthorityUtils.createAuthorityList(Role.MEMBER));
 
-			createUser(defaultAdminUserId, defaultAdminFirstName, defaultAdminLastName, defaultAdminPassword, Group.ADMIN);
+			createUser(initialSiteUser.getId(),
+			           initialSiteUser.getFirstName(),
+			           initialSiteUser.getLastName(),
+			           initialSiteUser.getPassword(),
+			           Group.ADMIN);
 
-			// Erase the password to be security conscious
-			defaultAdminPassword = null;
+			// Erase the details to be security conscious. Should also remove the bean from the context?
+			initialSiteUser = null;
 		}
 	}
 

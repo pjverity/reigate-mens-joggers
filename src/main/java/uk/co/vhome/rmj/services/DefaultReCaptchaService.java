@@ -1,7 +1,6 @@
 package uk.co.vhome.rmj.services;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -36,16 +35,15 @@ public class DefaultReCaptchaService implements ReCaptchaService
 
 	private final RestTemplate restTemplate;
 
-	@Value("${service.recaptcha.url}")
-	private String recaptchaUrl;
+	private static final String RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify";
 
-	@Value("${service.recaptcha.secret-key}")
 	private String recaptchaSecretKey;
 
 	@Inject
-	public DefaultReCaptchaService(RestTemplate restTemplate)
+	public DefaultReCaptchaService(RestTemplate restTemplate, String recaptchaSecretKey)
 	{
 		this.restTemplate = restTemplate;
+		this.recaptchaSecretKey = recaptchaSecretKey;
 	}
 
 	@Override
@@ -59,7 +57,7 @@ public class DefaultReCaptchaService implements ReCaptchaService
 
 		// NOTE: The request is sent by encoding the parameters in the URL, it is NOT a JSON request:
 		// https://groups.google.com/forum/#!msg/recaptcha/yEPN3d9ylT8/j6QW8G-vGgAJ;context-place=searchin/recaptcha/post$20url
-		RecaptchaResponse recaptchaResponse = restTemplate.postForObject(recaptchaUrl, requestParameters, RecaptchaResponse.class);
+		RecaptchaResponse recaptchaResponse = restTemplate.postForObject(RECAPTCHA_URL, requestParameters, RecaptchaResponse.class);
 
 		return recaptchaResponse.success;
 	}

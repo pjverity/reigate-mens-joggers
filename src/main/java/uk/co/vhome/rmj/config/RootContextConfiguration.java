@@ -6,6 +6,9 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.Ordered;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
+import org.springframework.jndi.support.SimpleJndiBeanFactory;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -17,6 +20,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.client.RestTemplate;
 
+import javax.mail.Session;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.SharedCacheMode;
 import javax.persistence.ValidationMode;
@@ -36,7 +40,6 @@ import java.util.Map;
 		entityManagerFactoryRef = "entityManagerFactoryBean",
 		transactionManagerRef = "jpaTransactionManager"
 )
-@PropertySource("file:rmj-${env}.properties")
 public class RootContextConfiguration //implements TransactionManagementConfigurer
 {
 	private static final String HIBERNATE_DIALECT = "org.hibernate.dialect.PostgreSQL94Dialect";
@@ -49,6 +52,33 @@ public class RootContextConfiguration //implements TransactionManagementConfigur
 	{
 		JndiDataSourceLookup lookup = new JndiDataSourceLookup();
 		return lookup.getDataSource("jdbc/RMJ");
+	}
+
+	@Bean
+	public String recaptchaSecretKey()
+	{
+		SimpleJndiBeanFactory simpleJndiBeanFactory = new SimpleJndiBeanFactory();
+		return (String) simpleJndiBeanFactory.getBean("recaptcha/SecretKey");
+	}
+
+	@Bean
+	public InitialSiteUser initialSiteUser()
+	{
+		SimpleJndiBeanFactory simpleJndiBeanFactory = new SimpleJndiBeanFactory();
+		return (InitialSiteUser) simpleJndiBeanFactory.getBean("InitialSiteUser");
+	}
+
+	@Bean
+	public JavaMailSender javaMailSender()
+	{
+		SimpleJndiBeanFactory locator = new SimpleJndiBeanFactory();
+		Session session = ((Session) locator.getBean("mail/Session"));
+
+		JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+		javaMailSender.setSession(session);
+		javaMailSender.setDefaultEncoding("UTF-8");
+
+		return javaMailSender;
 	}
 
 	// Configure the persistence unit (Which manages our entities and configures the JPA implementation
