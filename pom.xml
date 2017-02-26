@@ -173,6 +173,14 @@
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 			<version>1.4.7</version>
+			<!--
+				The container loads this jar to instantiate a javax.mail.Session instance.
+				If the webapp was to place this jar on its classpath it would be loaded
+				by the webapps classloader and couldn't cast or assign a container instance to
+				webapp instance/declaration. To avoid this we use the classes loaded by the
+				containers classloader. The Session object is obtained via a JNDI lookup.
+			-->
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Templating engine, used for generation of HTML mail messages-->
@@ -244,9 +252,10 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
-					<url>http://192.168.1.2:8080/manager/text</url>
+					<!-- Check /etc/hosts if accessing via VPN -->
+					<url>http://server.local:8080/manager/text</url>
 					<server>TomcatServer</server>
-					<path>/rmj</path>
+					<path>/${project.artifactId}</path>
 				</configuration>
 			</plugin>
 
