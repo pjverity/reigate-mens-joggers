@@ -12,6 +12,24 @@
 
 	<url>http://www.reigatemensjoggers.co.uk</url>
 
+	<profiles>
+		<profile>
+			<id>demo</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<tomcat.port>9090</tomcat.port>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<tomcat.port>8080</tomcat.port>
+			</properties>
+		</profile>
+	</profiles>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -253,7 +271,7 @@
 				<version>2.2</version>
 				<configuration>
 					<!-- Check /etc/hosts if accessing via VPN -->
-					<url>http://server.local:8080/manager/text</url>
+					<url>http://server.local:${tomcat.port}/manager/text</url>
 					<server>TomcatServer</server>
 					<path>/${project.artifactId}</path>
 				</configuration>
