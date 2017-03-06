@@ -75,16 +75,6 @@ public class HomeController
 		this.messageSource = messageSource;
 	}
 
-	/*
-	 * TODO - Sometimes we're redirected to the login servlet, but the login form is on the home page
-	 * so redirect the user there. This doesn't feel quite right. What's causing the direction to /login?
-	 */
-	@RequestMapping(path = "/login", method = RequestMethod.GET)
-	public String login()
-	{
-		return "redirect:/";
-	}
-
 	@RequestMapping(path = "/", method = RequestMethod.GET)
 	public String get(ModelMap model)
 	{

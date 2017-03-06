@@ -4,7 +4,7 @@
 
 		<!-- Standard console logging that logs only warnings or above to reduce noise when debugging -->
 		<Console name="Console" target="SYSTEM_OUT">
-			<ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY" />
+			<ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level &lt;%X{id}&gt; (%X{username}) [%t] %C{-3}.%M(%F:%L) %msg%n"/>
 		</Console>
 
@@ -20,18 +20,13 @@
 	</Appenders>
 	<Loggers>
 
-		<!-- For any logging not within uk.co.vhome.rmj, log only messages that are warnings or higher -->
-		<Root level="WARN">
+		<Root level="ALL">
 			<AppenderRef ref="Console"/>
 		</Root>
 
-		<!-- Root package of the application code set to log everything -->
-		<Logger name="uk.co.vhome.rmj" level="ALL">
+		<Logger name="uk.co.vhome.rmj" level="INFO">
 			<Appender-ref ref="rollingFileAppender"/>
 		</Logger>
-
-		<!-- Not too fussed at the moment about logging in this package, inherits the parent loggers, so no need to specify an appender -->
-		<Logger name="uk.co.vhome.rmj.site" level="ALL" />
 
 	</Loggers>
 </Configuration>

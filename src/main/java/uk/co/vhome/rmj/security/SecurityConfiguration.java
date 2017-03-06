@@ -91,12 +91,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 		LOGGER.info("Configuring HTTP security...");
 
 		http.authorizeRequests()
-					.antMatchers("/admin/**").hasRole("ADMIN")
-					.antMatchers("/member/**").hasAnyRole("MEMBER", "ADMIN")
+					.antMatchers("/admin/**").hasAuthority(Role.ADMIN)
+					.antMatchers("/member/**").hasAuthority(Role.MEMBER)
 					.antMatchers("/**").permitAll()
 				.and()
 					.formLogin()
-					.loginPage("/login")
+					.loginPage("/")
+					.loginProcessingUrl("/login")
 					.defaultSuccessUrl("/")
 					.failureUrl("/?error")
 					.permitAll()
@@ -149,6 +150,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 				HttpSession httpSession = request.getSession();
 				httpSession.setAttribute(ServletContextConfiguration.USER_FIRST_NAME_SESSION_ATTRIBUTE, details.getFirstName());
 				httpSession.setAttribute(ServletContextConfiguration.USER_LAST_NAME_SESSION_ATTRIBUTE, details.getLastName());
+
+				LOGGER.info("{} logged in", details.getEmailAddress());
 			}
 		};
 	}

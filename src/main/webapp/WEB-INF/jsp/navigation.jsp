@@ -17,29 +17,30 @@
 			<form name="logoutForm" action="<c:url value="/logout"/>" method="post" role="logout">
 				<security:csrfInput/>
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown">
-						<a href="<c:url value="/"/>" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-								${userFirstName}&nbsp;${userLastName}&nbsp;<span class="caret"></span>
-						</a>
-						<ul class="dropdown-menu">
-							<li>
-								<security:authorize access="hasRole('ADMIN')">
-									<a href="<c:url value="/admin/usermanagement"/>" >User Management</a>
-								</security:authorize>
-								<security:authorize access="hasRole('MEMBER')">
-									<a href="<c:url value="/member/home"/>">Member</a>
-								</security:authorize>
-							</li>
-							<li>
-								<a href="<c:url value="/member/account"/>">My Account</a>
-							</li>
-							<li>
-								<a href="#" onclick="document.logoutForm.submit()">Logout</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li class="dropdown">
+							<a href="<c:url value="/"/>" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+									${userFirstName}&nbsp;${userLastName}&nbsp;<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<security:authorize access="hasRole('ADMIN')">
+										<a href="<c:url value="/admin/usermanagement"/>">User Management</a>
+									</security:authorize>
+									<security:authorize access="hasRole('MEMBER')">
+										<a href="<c:url value="/member/home"/>">Member</a>
+									</security:authorize>
+								</li>
+								<li>
+									<a href="<c:url value="/member/account"/>">My Account</a>
+								</li>
+								<li>
+									<a href="#" onclick="document.logoutForm.submit()">Logout</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
 			</form>
 		</security:authorize>
 
