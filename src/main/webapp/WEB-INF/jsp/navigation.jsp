@@ -1,3 +1,18 @@
+<script>
+	function login() {
+
+	    // Obtain the URL from an HTML attribute which is modified by the proxy to remove the context path
+      const url = $('#login-button').attr('data-csrf-url');
+
+	    $.getJSON(url, function (response) {
+          const $csrf = $('#csrf');
+          $csrf.val(response.token);
+          $csrf.attr('name', response.parameterName);
+          $('#loginForm').submit();
+      });
+  }
+</script>
+
 <nav class="navbar navbar-default navbar-fixed-top">
 	<div class="container-fluid">
 		<div class="navbar-header">
@@ -48,7 +63,7 @@
 		<security:authorize access="!isAuthenticated()">
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
-				<form class="navbar-form navbar-right" role="login" action="<c:url value="/login"/>" method="post">
+				<form id="loginForm" class="navbar-form navbar-right" role="login" action="<c:url value="/login"/>" method="post">
 					<c:if test="${not empty paramValues['error']}">
 						<span class="text-muted">(Login Failed)</span>
 					</c:if>
@@ -58,9 +73,9 @@
 					<div class="form-group">
 						<input id="password" name="password" autocomplete="current-password" type="password" class="form-control" placeholder="password"/>
 					</div>
-					<button type="submit" class="btn btn-default btn-primary">Login</button>
+					<button id="login-button" type="button" class="btn btn-default btn-primary" onclick="login()" data-csrf-url="<c:url value='/rest/csrf'/>">Login</button>
 					<button type="button" class="btn btn-success" data-toggle="modal" data-target="#signupModal">Sign Up</button>
-					<security:csrfInput/>
+					<input id="csrf" type="hidden">
 				</form>
 			</div>
 		</security:authorize>
