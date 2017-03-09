@@ -29,7 +29,7 @@ $signupForm.submit(function (event) {
     $.post(url, $form)
         .done(function (result) {
             if (result.success) {
-                window.location.href = $('#signup-script').attr('data-redirectUrl');
+                window.location.href = $('#signup-script').attr('data-url');
             }
             else {
                 grecaptcha.reset();

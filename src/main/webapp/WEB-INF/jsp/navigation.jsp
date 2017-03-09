@@ -1,8 +1,8 @@
-<script>
+<script id="loginScript" data-url="<c:url value='/rest/csrf'/>">
 	function login() {
 
 	    // Obtain the URL from an HTML attribute which is modified by the proxy to remove the context path
-      const url = $('#login-button').attr('data-csrf-url');
+      const url = $('#loginScript').attr('data-url');
 
 	    $.getJSON(url, function (response) {
           const $csrf = $('#csrf');
@@ -29,7 +29,7 @@
 
 		<%-- Display the users name and a way to log out if a user is logged in --%>
 		<security:authorize access="isAuthenticated()">
-			<form name="logoutForm" action="<c:url value="/logout"/>" method="post" role="logout">
+			<form name="logoutForm" action="<c:url value='/logout'/>" method="post" role="logout">
 				<security:csrfInput/>
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav navbar-right">
@@ -73,7 +73,7 @@
 					<div class="form-group">
 						<input id="password" name="password" autocomplete="current-password" type="password" class="form-control" placeholder="password"/>
 					</div>
-					<button id="login-button" type="button" class="btn btn-default btn-primary" onclick="login()" data-csrf-url="<c:url value='/rest/csrf'/>">Login</button>
+					<button type="button" class="btn btn-default btn-primary" onclick="login()">Login</button>
 					<input id="csrf" type="hidden">
 				</form>
 			</div>

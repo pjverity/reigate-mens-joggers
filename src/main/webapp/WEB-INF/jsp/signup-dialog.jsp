@@ -71,7 +71,7 @@
 </div>
 <!-- /.modal -->
 
-<script id="signup-script" type="text/javascript" src="<c:url value='/js/signup-dialog.js' />" data-redirectUrl="<c:url value='/' />">
+<script id="signup-script" type="text/javascript" src="<c:url value='/js/signup-dialog.js' />" data-url="<c:url value='/'/>">
 </script>
 
 <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
