@@ -74,7 +74,6 @@
 						<input id="password" name="password" autocomplete="current-password" type="password" class="form-control" placeholder="password"/>
 					</div>
 					<button id="login-button" type="button" class="btn btn-default btn-primary" onclick="login()" data-csrf-url="<c:url value='/rest/csrf'/>">Login</button>
-					<button type="button" class="btn btn-success" data-toggle="modal" data-target="#signupModal">Sign Up</button>
 					<input id="csrf" type="hidden">
 				</form>
 			</div>

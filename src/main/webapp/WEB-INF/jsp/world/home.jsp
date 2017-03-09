@@ -47,17 +47,24 @@
 	</div>
 
 	<div class="row">
-		<div class="col-sm-4">
-			<h3>When?</h3>
+		<div class="col-sm-3">
+			<h3><i class="fa fa-calendar-o" style="color: cornflowerblue"></i> When?</h3>
 			<p>Every Tuesday 7.30pm - 8.30pm</p>
 		</div>
-		<div class="col-sm-4">
-			<h3>Where?</h3>
+		<div class="col-sm-3">
+			<h3><i class="fa fa-map-marker" style="color: cornflowerblue"></i> Where?</h3>
 			<p>Our coach Richard will be waiting for you at St Bedes School. Carlton Road, Redhill. Please do come along!</p>
 		</div>
-		<div class="col-sm-4">
-			<h3>How Much?</h3>
+		<div class="col-sm-3">
+			<h3><i class="fa fa-gbp" style="color: cornflowerblue"></i> How Much?</h3>
 			<p>First session FREE! Sessions following are £5 and can be bought in blocks of 10</p>
+		</div>
+		<div class="col-sm-3">
+			<h3><i class="fa fa-group" style="color: cornflowerblue"></i> Join!</h3>
+			<p>As our site grows we will provide more information and updates direct to your inbox. So
+				<strong><a data-toggle="modal" data-target="#signupModal">sign up</a></strong>
+				to keep in the know!
+			</p>
 		</div>
 	</div>
 
