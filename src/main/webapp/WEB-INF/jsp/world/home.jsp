@@ -27,7 +27,8 @@
 
 	<div class="row">
 		<a href="https://www.facebook.com/ReigateMensJoggers" class="glyphicon fa fa-2x fa-facebook-official social-buttons" style="background-color: #3B5998;"></a>
-		<a href="mailto:anna@reigateladiesjoggers.co.uk (Anna),emma@reigateladiesjoggers.co.uk (Emma)?cc=administrator@reigatemensjoggers.co.uk (RMJ Admin)&subject=RMJ%20Enquiry" class="glyphicon fa fa-2x fa-envelope social-buttons larger" style="background-color: #5cb85c" ></a>
+		<a href="mailto:anna@reigateladiesjoggers.co.uk (Anna),emma@reigateladiesjoggers.co.uk (Emma)?cc=administrator@reigatemensjoggers.co.uk (RMJ Admin)&subject=RMJ%20Enquiry"
+		   class="glyphicon fa fa-2x fa-envelope social-buttons larger" style="background-color: #5cb85c"></a>
 		<a href="https://twitter.com/MensJoggers" class="glyphicon fa fa-2x fa-twitter social-buttons" style="background-color: #55ACEE"></a>
 	</div>
 
@@ -53,17 +54,23 @@
 		</div>
 		<div class="col-sm-3">
 			<h3><i class="fa fa-map-marker" style="color: cornflowerblue"></i> Where?</h3>
-			<p>Our coach Richard will be waiting for you at St Bedes School. Carlton Road, Redhill. Please do come along!</p>
+			<address>
+				<strong><a href="https://goo.gl/maps/fTJHKQQqRVK2" target="_blank">St Bedes School</a></strong><br/>
+				Carlton Road<br/>
+				Redhill. RH1 2LQ
+			</address>
+			<p>Our coach Richard will be waiting you. Please do come along!</p>
 		</div>
 		<div class="col-sm-3">
 			<h3><i class="fa fa-gbp" style="color: cornflowerblue"></i> How Much?</h3>
-			<p>First session FREE! Sessions following are £5 and can be bought in blocks of 10</p>
+			<p>First session <strong>FREE!</strong></p>
+			<p>Sessions following are £5 and can be bought in blocks of 10</p>
 		</div>
 		<div class="col-sm-3">
 			<h3><i class="fa fa-group" style="color: cornflowerblue"></i> Join!</h3>
-			<p>As our site grows we will provide more information and updates direct to your inbox. So
-				<strong><a data-toggle="modal" data-target="#signupModal">sign up</a></strong>
-				to keep in the know!
+			<p><strong><a data-toggle="modal" data-target="#signupModal" style="cursor: pointer">Sign up</a></strong>
+				to keep updated as our site grows. We'll deliver information direct to your inbox as we
+				add more tools and information to our site.
 			</p>
 		</div>
 	</div>
@@ -99,7 +106,7 @@
 			<small class="text-muted">Not a man? <a href="http://www.reigateladiesjoggers.co.uk">www.reigateladiesjoggers.co.uk</a></small>
 		</div>
 		<div class="col-sm-6 text-right">
-			<small class="text-muted">Under construction. © Paul Verity (2017) <a href="https://github.com/pjverity/rmj"><i class="fa fa-github"></i></a></small>
+			<small class="text-muted">© Paul Verity (2017) <a href="https://github.com/pjverity/rmj"><i class="fa fa-github"></i></a></small>
 		</div>
 	</div>
 </div>
