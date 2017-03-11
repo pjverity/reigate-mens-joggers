@@ -80,8 +80,8 @@
 	<div class="row">
 		<div class="media">
 			<div class="media-left" style="text-align: center;">
-				<c:url value="/organiser/profile" var="organiserProfilelUrl"/>
-				<a href="${organiserProfilelUrl}">
+				<c:url value="/organiser/profile" var="organiserProfileUrl"/>
+				<a href="${organiserProfileUrl}">
 					<img src="<c:url value="/images/richard_feist.png"/>" alt="Coach Richard">Richard Feist
 				</a>
 			</div>
@@ -92,7 +92,7 @@
 				<p>Whether you're an absolute newbie needing that kick start to get you on your way to a healthier lifestyle, or
 					a hardened all weather runner, Richard will be able to guide you towards achieving your goals.</p>
 
-				<p>Still not convinced? Check out Richard's <a href="${organiserProfilelUrl}">profile</a> to find out more.</p>
+				<p>Still not convinced? Check out Richard's <a href="${organiserProfileUrl}">profile</a> to find out more.</p>
 			</div>
 		</div>
 	</div>
