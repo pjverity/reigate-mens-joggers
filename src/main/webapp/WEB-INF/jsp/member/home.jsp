@@ -16,17 +16,27 @@
 <div class="container">
 	<div class="page-header">
 		<h1>Member Pages
-			<small>(Coming soon)</small>
+			<small>(More Coming Soon)</small>
 		</h1>
 	</div>
+	<p>Hi ${userFirstName}!</p>
 	<p>
-		We will add more information to these pages about upcoming runs, events and your own individual progress as we continue to build out the site. So stay tuned!
+		This is your very own page at Reigate Mens Joggers. It's a little barren at the moment but we hope to fix that soon enough as we start to build
+		up our site.
+	</p>
+	<p>
+		Use the navigation menu on the top bar of any page to access other member areas.
 	</p>
 	<p>
 		If you spot any errors or run in to any difficulties with the site, then please contact us at <a href="mailto:administrator@reigatemensjoggers.co.uk">administrator@reigatemensjoggers.co.uk</a>
 		and we will endeavour to fix it.
 	</p>
-
+	<p>
+		We hope to see you on our the next run!
+	</p>
+	<p>
+		The RMJ Team
+	</p>
 </div>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

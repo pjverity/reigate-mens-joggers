@@ -98,7 +98,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 					.formLogin()
 					.loginPage("/")
 					.loginProcessingUrl("/login")
-					.defaultSuccessUrl("/")
+					//.defaultSuccessUrl("/member/home") -> Overwritten by authenticationSuccessHandler()
 					.failureUrl("/?error")
 					.permitAll()
 					.successHandler(authenticationSuccessHandler())
@@ -144,7 +144,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 			@Override
 			public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException
 			{
-				super.onAuthenticationSuccess(request, response, authentication);
+
+				setDefaultTargetUrl("/member/home");
 
 				SupplementalUserDetails details = supplementalUserDetailsRepository.findByEmailAddress(authentication.getName());
 				HttpSession httpSession = request.getSession();
@@ -152,6 +153,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 				httpSession.setAttribute(ServletContextConfiguration.USER_LAST_NAME_SESSION_ATTRIBUTE, details.getLastName());
 
 				LOGGER.info("{} logged in", details.getEmailAddress());
+
+				super.onAuthenticationSuccess(request, response, authentication);
 			}
 		};
 	}

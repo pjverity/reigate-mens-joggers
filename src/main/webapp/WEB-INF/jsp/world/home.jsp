@@ -102,12 +102,12 @@
 
 <div class="container-fluid small">
 	<div class="row">
-		<div class="col-sm-6">
+		<span class="col-sm-6">
 			<small class="text-muted">Not a man? <a href="http://www.reigateladiesjoggers.co.uk">www.reigateladiesjoggers.co.uk</a></small>
-		</div>
-		<div class="col-sm-6 text-right">
+		</span>
+		<span class="col-sm-6 text-right">
 			<small class="text-muted">© Paul Verity (2017) <a href="https://github.com/pjverity/rmj"><i class="fa fa-github"></i></a></small>
-		</div>
+		</span>
 	</div>
 </div>
 

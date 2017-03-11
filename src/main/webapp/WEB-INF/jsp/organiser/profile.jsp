@@ -22,7 +22,7 @@
 		</h1>
 	</div>
 
-	<div class="clearfix">
+	<main class="clearfix">
 			<p>When at school I was a long distance runner competing for Surrey and Reigate Priory in the 1500M. When at college the running didn't carry on so much, I was more of a casual
 				runner from time to time as it's always been something I have enjoyed.</p>
 
@@ -39,8 +39,14 @@
 				their running abilities.</p>
 
 			<p>I look forward to meeting you and helping you achieve your goals.</p>
+	</main>
 
-	</div>
+	<hr/>
+
+	<h3 class="text-center">
+	<a href="<c:url value="/" />">Home</a>
+	</h3>
+
 </div>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
