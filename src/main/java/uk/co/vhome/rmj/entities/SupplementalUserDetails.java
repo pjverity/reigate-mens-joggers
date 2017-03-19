@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
 public class SupplementalUserDetails
 {
 	@Id
-	@Column(updatable = false, nullable = false, unique = true, name = "username")
-	private String emailAddress;
+	@Column(updatable = false, nullable = false, unique = true)
+	private String username;
 
 	@Column(name = "first_name")
 	private String firstName;
@@ -30,25 +30,28 @@ public class SupplementalUserDetails
 	@Generated(GenerationTime.INSERT)
 	private LocalDateTime lastLogin;
 
-	public SupplementalUserDetails(String userId, String firstName, String lastName)
-	{
-		this.emailAddress = userId;
-		this.firstName = firstName;
-		this.lastName = lastName;
-	}
-
+	/*
+	 * For the benefit of JPA
+	 */
 	public SupplementalUserDetails()
 	{
 	}
 
-	public String getEmailAddress()
+	public SupplementalUserDetails(String username, String firstName, String lastName)
 	{
-		return emailAddress;
+		this.username = username;
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 
-	public void setEmailAddress(String emailAddress)
+	public String getUsername()
 	{
-		this.emailAddress = emailAddress;
+		return username;
+	}
+
+	public void setUsername(String emailAddress)
+	{
+		this.username = emailAddress;
 	}
 
 	public String getFirstName()

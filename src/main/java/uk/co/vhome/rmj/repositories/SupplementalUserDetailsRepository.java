@@ -1,8 +1,8 @@
 package uk.co.vhome.rmj.repositories;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import uk.co.vhome.rmj.entities.SupplementalUserDetails;
@@ -16,13 +16,13 @@ import java.util.List;
  * Basic repository for accessing/modifying supplemental user information in the database
  */
 @Repository
-public interface SupplementalUserDetailsRepository extends CrudRepository<SupplementalUserDetails, Long>
+public interface SupplementalUserDetailsRepository extends JpaRepository<SupplementalUserDetails, Long>
 {
-	SupplementalUserDetails findByEmailAddress(String emailAddress);
+	SupplementalUserDetails findByUsername(String username);
 
-	List<SupplementalUserDetails> findByEmailAddressIn(Collection<String> usersInGroup);
+	List<SupplementalUserDetails> findByUsernameIn(Collection<String> usersInGroup);
 
 	@Modifying
-	@Query("update SupplementalUserDetails u set u.lastLogin = :loginTime where u.emailAddress = :userId")
-	void updateLastLoginFor(@Param("loginTime") LocalDateTime loginTime, @Param("userId") String userId);
+	@Query("update SupplementalUserDetails u set u.lastLogin = :loginTime where u.username = :username")
+	void updateLastLoginFor(@Param("loginTime") LocalDateTime loginTime, @Param("username") String username);
 }

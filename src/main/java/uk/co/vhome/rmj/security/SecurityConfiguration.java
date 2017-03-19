@@ -147,12 +147,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
 				setDefaultTargetUrl("/member/home");
 
-				SupplementalUserDetails details = supplementalUserDetailsRepository.findByEmailAddress(authentication.getName());
+				SupplementalUserDetails details = supplementalUserDetailsRepository.findByUsername(authentication.getName());
 				HttpSession httpSession = request.getSession();
 				httpSession.setAttribute(ServletContextConfiguration.USER_FIRST_NAME_SESSION_ATTRIBUTE, details.getFirstName());
 				httpSession.setAttribute(ServletContextConfiguration.USER_LAST_NAME_SESSION_ATTRIBUTE, details.getLastName());
 
-				LOGGER.info("{} logged in", details.getEmailAddress());
+				LOGGER.info("{} logged in", details.getUsername());
 
 				super.onAuthenticationSuccess(request, response, authentication);
 			}

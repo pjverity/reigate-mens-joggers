@@ -49,7 +49,7 @@ public class AccountViewController
 	@ModelAttribute("userDetail")
 	public SupplementalUserDetails userDetail(@AuthenticationPrincipal Principal principal)
 	{
-		return supplementalUserDetailsRepository.findByEmailAddress(principal.getName());
+		return supplementalUserDetailsRepository.findByUsername(principal.getName());
 	}
 
 	@RequestMapping(value = "/changePassword", method = RequestMethod.POST)

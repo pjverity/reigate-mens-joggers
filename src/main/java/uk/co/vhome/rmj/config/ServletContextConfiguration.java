@@ -39,7 +39,6 @@ public class ServletContextConfiguration extends WebMvcConfigurerAdapter
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry)
 	{
-		registry.addViewController("/member/home").setViewName("member/home");
 		registry.addViewController("/organiser/profile").setViewName("organiser/profile");
 	}
 

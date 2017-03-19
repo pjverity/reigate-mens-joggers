@@ -9,6 +9,7 @@ import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
@@ -65,7 +66,8 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	public DefaultUserAccountManagementService(InitialSiteUser initialSiteUser,
 	                                           MailService mailService,
 	                                           JdbcUserDetailsManager userDetailsManager,
-	                                           SupplementalUserDetailsRepository supplementalUserDetailsRepository, SessionRegistry sessionRegistry)
+	                                           SupplementalUserDetailsRepository supplementalUserDetailsRepository,
+	                                           SessionRegistry sessionRegistry)
 	{
 		this.mailService = mailService;
 		this.userDetailsManager = userDetailsManager;
@@ -111,13 +113,13 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	@Override
 	@Transactional(timeout = 15)
 	@Secured({RunAs.SYSTEM, Role.ANON})
-	public void registerNewUser(String userId, String firstName, String lastName, String password)
+	public void registerNewUser(String username, String firstName, String lastName, String password)
 	{
-		LOGGER.info("Registering new user {}", userId);
+		LOGGER.info("Registering new user {}", username);
 
-		createUser(userId, firstName, lastName, password, Group.MEMBER);
+		createUser(username, firstName, lastName, password, Group.MEMBER);
 
-		SupplementalUserDetails supplementalUserDetails = supplementalUserDetailsRepository.findByEmailAddress(userId);
+		SupplementalUserDetails supplementalUserDetails = supplementalUserDetailsRepository.findByUsername(username);
 
 		mailService.sendRegistrationMail(supplementalUserDetails);
 
@@ -126,40 +128,40 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 	@Override
 	@Transactional(timeout = 15)
-	public void changePassword(String userId, String oldPassword, String newPassword)
+	public void changePassword(String username, String oldPassword, String newPassword)
 	{
-		LOGGER.info("Changing password for user {}", userId);
+		LOGGER.info("Changing password for user {}", username);
 
 		userDetailsManager.changePassword(oldPassword, BCrypt.hashpw(newPassword, BCrypt.gensalt()));
 	}
 
 	@Override
 	@Transactional(timeout = 15)
-	public void createUser(String userId, String firstName, String lastName, String password, String groupName)
+	public void createUser(String username, String firstName, String lastName, String password, String groupName)
 	{
-		LOGGER.info("Creating new user {} in group {}", userId, groupName);
+		LOGGER.info("Creating new user {} in group {}", username, groupName);
 
 		// Use Spring's user details manager to create the user and associated authorities for now
-		User user = new User(userId.toLowerCase(),
+		User user = new User(username.toLowerCase(),
 		                     BCrypt.hashpw(password, BCrypt.gensalt()),
 		                     AuthorityUtils.NO_AUTHORITIES);
 
 		userDetailsManager.createUser(user);
 
-		userDetailsManager.addUserToGroup(userId, groupName);
+		userDetailsManager.addUserToGroup(username, groupName);
 
-		SupplementalUserDetails supplementalUserDetails = new SupplementalUserDetails(userId,
+		SupplementalUserDetails supplementalUserDetails = new SupplementalUserDetails(username,
 		                                                                              StringUtils.capitalize(firstName),
 		                                                                              StringUtils.capitalize(lastName));
 		supplementalUserDetailsRepository.save(supplementalUserDetails);
 	}
 
 	@Override
-	public void updateUser(String userId, boolean isEnabled, String removeFromGroup, String addToGroup)
+	public void updateUser(String username, boolean isEnabled, String removeFromGroup, String addToGroup)
 	{
-		LOGGER.info("Amending user {}. Enabled = {}", userId, isEnabled);
+		LOGGER.info("Amending user {}. Enabled = {}", username, isEnabled);
 
-		UserDetails userDetails = userDetailsManager.loadUserByUsername(userId);
+		UserDetails userDetails = userDetailsManager.loadUserByUsername(username);
 
 		User updatedUserDetails = new User(userDetails.getUsername(),
 		                                   userDetails.getPassword(),
@@ -173,12 +175,12 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 		if ( !removeFromGroup.equals(addToGroup) )
 		{
-			userDetailsManager.removeUserFromGroup(userId, removeFromGroup);
-			userDetailsManager.addUserToGroup(userId, addToGroup);
+			userDetailsManager.removeUserFromGroup(username, removeFromGroup);
+			userDetailsManager.addUserToGroup(username, addToGroup);
 		}
 		if (!isEnabled)
 		{
-			User user = new User(userId, "", AuthorityUtils.NO_AUTHORITIES);
+			User user = new User(username, "", AuthorityUtils.NO_AUTHORITIES);
 			List<SessionInformation> allSessions = sessionRegistry.getAllSessions(user, false);
 
 			// Only expire the session, don't remove it otherwise the browser will resend the authenticated
@@ -219,12 +221,26 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	}
 
 	@Override
+	public UserDetails findUserDetails(String username)
+	{
+		try
+		{
+			return userDetailsManager.loadUserByUsername(username);
+		}
+		catch (UsernameNotFoundException e)
+		{
+			LOGGER.info("User not found: {}", username);
+			return null;
+		}
+	}
+
+	@Override
 	@Transactional
-	public void updateLastLogin(String userId, long timestamp)
+	public void updateLastLogin(String username, long timestamp)
 	{
 		LocalDateTime localDateTime = LocalDateTime.ofEpochSecond(timestamp / 1000, 0, ZoneOffset.UTC);
 
-		supplementalUserDetailsRepository.updateLastLoginFor(localDateTime, userId);
+		supplementalUserDetailsRepository.updateLastLoginFor(localDateTime, username);
 	}
 
 	@Override
@@ -240,7 +256,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 		                                                                                     new String[]{Group.ADMIN},
 		                                                                                     String.class);
 
-		List<SupplementalUserDetails> administrators = supplementalUserDetailsRepository.findByEmailAddressIn(enabledUsersInGroup);
+		List<SupplementalUserDetails> administrators = supplementalUserDetailsRepository.findByUsernameIn(enabledUsersInGroup);
 		mailService.sendAdministratorNotification(administrators, newUserDetails);
 	}
 }

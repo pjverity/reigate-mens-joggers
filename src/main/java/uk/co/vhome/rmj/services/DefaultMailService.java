@@ -105,7 +105,7 @@ public class DefaultMailService implements MailService
 			                                {
 				                                try
 				                                {
-					                                message.addTo(details.getEmailAddress(), String.join(" ",details.getFirstName(), details.getLastName()));
+					                                message.addTo(details.getUsername(), String.join(" ", details.getFirstName(), details.getLastName()));
 				                                }
 				                                catch (MessagingException | UnsupportedEncodingException e)
 				                                {
