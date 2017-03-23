@@ -10,5 +10,5 @@ import uk.co.vhome.rmj.entities.Purchase;
 public interface PurchaseRepository extends JpaRepository<Purchase, Long>
 {
 	@Query("select sum(p.quantity) from Purchase p where p.username = ?1")
-	Long calculateBalanceForUser(String username);
+	Integer calculateBalanceForUser(String username);
 }

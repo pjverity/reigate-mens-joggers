@@ -3,7 +3,6 @@ package uk.co.vhome.rmj.config;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.core.Ordered;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.jndi.support.SimpleJndiBeanFactory;
@@ -30,7 +29,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 @Configuration
-@EnableTransactionManagement(order = Ordered.LOWEST_PRECEDENCE) //p.607
+@EnableTransactionManagement //p.607
 @ComponentScan(
 		basePackages = "uk.co.vhome",
 		excludeFilters = @ComponentScan.Filter(Controller.class)
@@ -40,9 +39,9 @@ import java.util.Map;
 		entityManagerFactoryRef = "entityManagerFactoryBean",
 		transactionManagerRef = "jpaTransactionManager"
 )
-public class RootContextConfiguration //implements TransactionManagementConfigurer
+public class RootContextConfiguration
 {
-	private static final String HIBERNATE_DIALECT = "org.hibernate.dialect.PostgreSQL94Dialect";
+	private static final String POSTGRESQL94_DIALECT = "org.hibernate.dialect.PostgreSQL94Dialect";
 
 	private static final String SCHEMA_GENERATION_KEY = "javax.persistence-schema-generation.database.action";
 
@@ -88,14 +87,15 @@ public class RootContextConfiguration //implements TransactionManagementConfigur
 	{
 		Map<String, Object> properties = new Hashtable<>();
 		properties.put(SCHEMA_GENERATION_KEY, "none");
+		properties.put("hibernate.default_schema", "public");
 
 		HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
-		adapter.setDatabasePlatform(HIBERNATE_DIALECT);
+		adapter.setDatabasePlatform(POSTGRESQL94_DIALECT);
 
 		LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
 		factoryBean.setJpaVendorAdapter(adapter);
 		factoryBean.setDataSource(dataSource());
-		factoryBean.setPackagesToScan("uk.co.vhome.rmj");
+		factoryBean.setPackagesToScan("uk.co.vhome.rmj.entities");
 		factoryBean.setSharedCacheMode(SharedCacheMode.ENABLE_SELECTIVE);
 		factoryBean.setValidationMode(ValidationMode.NONE);
 		factoryBean.setJpaPropertyMap(properties);
@@ -103,19 +103,13 @@ public class RootContextConfiguration //implements TransactionManagementConfigur
 	}
 
 	@Bean
-	@Primary
+	//@Primary - Uncomment if more than one PlatformTransactionManager is present, for example if
+	// a bean creates a DataSourceTransactionManager. This annotation is preferred
+	// vs implementing TransactionManagementConfigurer.
 	public PlatformTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory)
 	{
 		return new JpaTransactionManager(entityManagerFactory);
 	}
-
-/*
-	@Bean
-	public PlatformTransactionManager dataSourceTransactionManager()
-	{
-		return new DataSourceTransactionManager(dataSource());
-	}
-*/
 
 	/**
 	 * Used by the validators to supply internationalised error messages
@@ -177,18 +171,4 @@ public class RootContextConfiguration //implements TransactionManagementConfigur
 		return bean;
 	}
 
-	// TODO - Find our why this doesn't work, causes a circular reference
-	// Protect against Spring choosing the wrong transaction manager if we create several (p.609)
-/*
-	@Bean
-	@Override
-	public PlatformTransactionManager annotationDrivenTransactionManager()
-	{
-		LOGGER.traceEntry();
-		return this.jpaTransactionManager();
-		return new JpaTransactionManager(entityManagerFactoryBean().getObject());
-		return this.dataSourceTransactionManager();
-		return jpaTransactionManager;
-	}
-*/
 }

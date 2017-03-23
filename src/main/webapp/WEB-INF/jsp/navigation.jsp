@@ -42,6 +42,9 @@
 									<security:authorize access="hasRole('ADMIN')">
 										<a href="<c:url value="/admin/usermanagement"/>">User Management</a>
 									</security:authorize>
+									<security:authorize access="hasRole('ORGANISER')">
+										<a href="<c:url value="/organiser/event-registration"/>">Event Registration</a>
+									</security:authorize>
 									<security:authorize access="hasRole('MEMBER')">
 										<a href="<c:url value="/member/home"/>">Member</a>
 									</security:authorize>

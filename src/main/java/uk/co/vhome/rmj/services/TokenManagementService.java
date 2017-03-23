@@ -1,15 +1,18 @@
 package uk.co.vhome.rmj.services;
 
 import uk.co.vhome.rmj.entities.Purchase;
+import uk.co.vhome.rmj.entities.MemberBalance;
+
+import java.util.List;
 
 /**
  * Interface for maintaining member tokens
  */
 public interface TokenManagementService
 {
-	Purchase purchaseTokens(String userId, int tokens);
+	Purchase modifyBalance(String username, int quantity);
 
-	Purchase deductToken(String username);
+	Integer balanceForMember(String username);
 
-	Long tokenBalance(String userId);
+	List<MemberBalance> balanceForAllEnabledMembers();
 }

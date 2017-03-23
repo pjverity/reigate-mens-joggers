@@ -25,6 +25,6 @@ public class HomeViewController
 	@RequestMapping(value = "/member/home", method = RequestMethod.GET)
 	public void home(@AuthenticationPrincipal Principal principal, ModelMap modelMap)
 	{
-		modelMap.put("tokenCount", tokenManagementService.tokenBalance(principal.getName()));
+		modelMap.put("tokenCount", tokenManagementService.balanceForMember(principal.getName()));
 	}
 }
