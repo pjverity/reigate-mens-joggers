@@ -1,5 +1,8 @@
 package uk.co.vhome.rmj.entities;
 
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+
 import javax.persistence.*;
 import java.time.Instant;
 
@@ -11,17 +14,20 @@ import java.time.Instant;
 public class Purchase
 {
 	@Id
-	@GeneratedValue
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-	@Basic
-	@GeneratedValue
-	private Instant purchaseTimestamp;
+	@Basic(optional = false)
+	@Column(name = "purchase_time", nullable = false, updatable = false)
+	@Generated(GenerationTime.INSERT)
+	private Instant purchaseTime;
 
-	@Basic
+	@Basic(optional = false)
+	@Column(nullable = false, updatable = false)
 	private String username;
 
-	@Basic
+	@Basic(optional = false)
+	@Column(nullable = false, updatable = false)
 	private int quantity;
 
 	public Purchase()
@@ -34,24 +40,24 @@ public class Purchase
 		this.quantity = quantity;
 	}
 
-	public Long getId()
+	public Integer getId()
 	{
 		return id;
 	}
 
-	public void setId(Long id)
+	public void setId(Integer id)
 	{
 		this.id = id;
 	}
 
-	public Instant getPurchaseTimestamp()
+	public Instant getPurchaseTime()
 	{
-		return purchaseTimestamp;
+		return purchaseTime;
 	}
 
-	public void setPurchaseTimestamp(Instant purchaseTimestamp)
+	public void setPurchaseTime(Instant purchaseTime)
 	{
-		this.purchaseTimestamp = purchaseTimestamp;
+		this.purchaseTime = purchaseTime;
 	}
 
 	public String getUsername()

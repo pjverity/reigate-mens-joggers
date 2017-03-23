@@ -22,9 +22,18 @@ public class EventRegistrationViewController
 	}
 
 	@RequestMapping(value = "/organiser/event-registration", method = RequestMethod.POST)
-	public String post()
+	public String post(EventRegistrationFormObject eventRegistrationFormObject)
 	{
+		eventRegistrationFormObject.getRows().stream()
+				.filter(EventRegistrationFormRow::isPresent)
+				.forEach(r -> decrementBalance(r.getMemberBalance().getUsername()));
+
 		return "redirect:/organiser/event-registration";
+	}
+
+	private void decrementBalance(String username)
+	{
+		tokenManagementService.modifyBalance(username, -1);
 	}
 
 	@RequestMapping(value = "/organiser/event-registration", method = RequestMethod.GET)
