@@ -28,7 +28,7 @@ public interface UserAccountManagementService extends ServiceAvailabilityReporte
 	@Secured({Role.ADMIN})
 	List<UserAccountDetails> findAllUserDetails();
 
-	@Secured({Role.ADMIN})
+	@Secured({Role.ORGANISER})
 	UserDetails findUserDetails(String username);
 
 	@Secured({Role.SYSTEM})

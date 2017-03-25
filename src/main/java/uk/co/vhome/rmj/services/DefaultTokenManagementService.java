@@ -2,11 +2,10 @@ package uk.co.vhome.rmj.services;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import uk.co.vhome.rmj.entities.Purchase;
 import uk.co.vhome.rmj.entities.MemberBalance;
+import uk.co.vhome.rmj.entities.Purchase;
 import uk.co.vhome.rmj.repositories.PurchaseRepository;
 
 import javax.inject.Inject;
