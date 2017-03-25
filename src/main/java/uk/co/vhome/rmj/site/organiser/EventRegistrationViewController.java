@@ -1,9 +1,7 @@
 package uk.co.vhome.rmj.site.organiser;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import uk.co.vhome.rmj.services.TokenManagementService;
 
 import javax.inject.Inject;
@@ -21,7 +19,7 @@ public class EventRegistrationViewController
 		this.tokenManagementService = tokenManagementService;
 	}
 
-	@RequestMapping(value = "/organiser/event-registration", method = RequestMethod.POST)
+	@PostMapping(value = "/organiser/event-registration")
 	public String post(EventRegistrationFormObject eventRegistrationFormObject)
 	{
 		eventRegistrationFormObject.getRows().stream()
@@ -31,14 +29,14 @@ public class EventRegistrationViewController
 		return "redirect:/organiser/event-registration";
 	}
 
-	private void decrementBalance(String username)
-	{
-		tokenManagementService.modifyBalance(username, -1);
-	}
-
-	@RequestMapping(value = "/organiser/event-registration", method = RequestMethod.GET)
+	@GetMapping(value = "/organiser/event-registration")
 	public void get()
 	{
+	}
+
+	private void decrementBalance(String username)
+	{
+		tokenManagementService.adjustBalance(username, -1);
 	}
 
 	@ModelAttribute

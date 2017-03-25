@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-public class UserManagementForm
+public class UserManagementFormObject
 {
 	private List<UserAccountDetails> userAccountDetails = new LinkedList<>();
 

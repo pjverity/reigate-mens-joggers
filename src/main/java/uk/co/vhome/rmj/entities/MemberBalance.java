@@ -11,7 +11,7 @@ import java.util.Objects;
 		// cast() is required as PostgreSQL sum() function returns a bigint, which translates to a BigDecimal and so doesn't match
 		// the ctor signature. {h-schema} is a Hibernate construct used for native queries, it substitutes in the default schema name
 		// specified by the hibernate.default_schema JPA property. (This is done automatically for normal entity queries (HQL? JQL?))
-		query = "SELECT u.username, ud.first_name, ud.last_name, cast(sum(p.quantity) as INTEGER) as quantity FROM {h-schema}users u, {h-schema}user_details ud, {h-schema}purchases p" +
+		query = "SELECT u.username, ud.first_name, ud.last_name, cast(sum(p.quantity) as INTEGER) as balance FROM {h-schema}users u, {h-schema}user_details ud, {h-schema}purchases p" +
 				        " WHERE ud.username = p.username" +
 				        " AND u.username = p.username" +
 				        " AND u.enabled = TRUE" +
@@ -28,7 +28,7 @@ import java.util.Objects;
 							@ColumnResult(name = "username"),
 							@ColumnResult(name = "first_name"),
 							@ColumnResult(name = "last_name"),
-							@ColumnResult(name = "quantity")
+							@ColumnResult(name = "balance")
 					}
 				)
 		}
@@ -44,14 +44,14 @@ public class MemberBalance
 
 	private final String lastName;
 
-	private final Integer quantity;
+	private final Integer balance;
 
-	public MemberBalance(String username, String firstName, String lastName, Integer quantity)
+	public MemberBalance(String username, String firstName, String lastName, Integer balance)
 	{
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.quantity = quantity;
+		this.balance = balance;
 	}
 
 	public String getUsername()
@@ -69,9 +69,9 @@ public class MemberBalance
 		return lastName;
 	}
 
-	public Integer getQuantity()
+	public Integer getBalance()
 	{
-		return quantity;
+		return balance;
 	}
 
 	@Override

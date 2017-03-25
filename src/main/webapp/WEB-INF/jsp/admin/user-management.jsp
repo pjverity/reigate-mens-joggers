@@ -22,7 +22,7 @@
 		<h1>User Management</h1>
 	</div>
 
-	<form:form modelAttribute="userManagementForm">
+	<form:form modelAttribute="userManagementFormObject">
 
 		<table class="table table-condensed">
 			<thead>
@@ -37,7 +37,7 @@
 
 			<tbody>
 
-			<c:forEach var="userAccountDetails" items="${userManagementForm.userAccountDetails}" varStatus="vs">
+			<c:forEach var="userAccountDetails" items="${userManagementFormObject.userAccountDetails}" varStatus="vs">
 				<tr>
 					<td><i class="fa fa-circle" style="color: ${userAccountDetails.activeSession ? 'lightseagreen' : 'indianred'}" aria-hidden="true"></i> ${userAccountDetails.fullName}</td>
 					<td><a href="mailto:${userAccountDetails.emailAddress}">${userAccountDetails.emailAddress}</a></td>

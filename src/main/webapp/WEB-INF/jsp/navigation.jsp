@@ -1,16 +1,16 @@
 <script id="loginScript" data-url="<c:url value='/rest/csrf'/>">
-	function login() {
+    function login() {
 
-	    // Obtain the URL from an HTML attribute which is modified by the proxy to remove the context path
-      const url = $('#loginScript').attr('data-url');
+        // Obtain the URL from an HTML attribute which is modified by the proxy to remove the context path
+        const url = $('#loginScript').attr('data-url');
 
-	    $.getJSON(url, function (response) {
-          const $csrf = $('#csrf');
-          $csrf.val(response.token);
-          $csrf.attr('name', response.parameterName);
-          $('#loginForm').submit();
-      });
-  }
+        $.getJSON(url, function (response) {
+            const $csrf = $('#csrf');
+            $csrf.val(response.token);
+            $csrf.attr('name', response.parameterName);
+            $('#loginForm').submit();
+        });
+    }
 </script>
 
 <nav class="navbar navbar-default navbar-fixed-top">
@@ -38,17 +38,24 @@
 									${userFirstName}&nbsp;${userLastName}&nbsp;<span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li>
-									<security:authorize access="hasRole('ADMIN')">
-										<a href="<c:url value="/admin/usermanagement"/>">User Management</a>
-									</security:authorize>
-									<security:authorize access="hasRole('ORGANISER')">
+								<security:authorize access="hasRole('ADMIN')">
+									<li>
+										<a href="<c:url value="/admin/user-management"/>">User Management</a>
+									</li>
+									<li>
+										<a href="<c:url value="/admin/token-management"/>">Token Management</a>
+									</li>
+								</security:authorize>
+								<security:authorize access="hasRole('ORGANISER')">
+									<li>
 										<a href="<c:url value="/organiser/event-registration"/>">Event Registration</a>
-									</security:authorize>
-									<security:authorize access="hasRole('MEMBER')">
+									</li>
+								</security:authorize>
+								<security:authorize access="hasRole('MEMBER')">
+									<li>
 										<a href="<c:url value="/member/home"/>">Member</a>
-									</security:authorize>
-								</li>
+									</li>
+								</security:authorize>
 								<li>
 									<a href="<c:url value="/member/account"/>">My Account</a>
 								</li>

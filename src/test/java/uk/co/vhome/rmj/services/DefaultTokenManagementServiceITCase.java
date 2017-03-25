@@ -59,7 +59,7 @@ public class DefaultTokenManagementServiceITCase
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 
-		Purchase purchase = tokenManagementService.modifyBalance(ENABLED_USER_ID, 1);
+		Purchase purchase = tokenManagementService.adjustBalance(ENABLED_USER_ID, 1);
 		assertNotNull(ENABLED_USER_ID + " should be able to purchase 1 token", purchase);
 
 		assertEquals(8L, (long)tokenManagementService.balanceForMember(ENABLED_USER_ID));
@@ -71,7 +71,7 @@ public class DefaultTokenManagementServiceITCase
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 
-		Purchase purchase = tokenManagementService.modifyBalance(ENABLED_USER_ID, -1);
+		Purchase purchase = tokenManagementService.adjustBalance(ENABLED_USER_ID, -1);
 		assertNotNull(ENABLED_USER_ID + " should be able to use 1 token", purchase);
 
 		assertEquals(6L, (long)tokenManagementService.balanceForMember(ENABLED_USER_ID));
@@ -90,7 +90,7 @@ public class DefaultTokenManagementServiceITCase
 		assertEquals(ENABLED_USER_ID, memberBalance.get(0).getUsername());
 		assertEquals("Test", memberBalance.get(0).getFirstName());
 		assertEquals("User (Enabled)", memberBalance.get(0).getLastName());
-		assertEquals(7L, (long) memberBalance.get(0).getQuantity());
+		assertEquals(7L, (long) memberBalance.get(0).getBalance());
 	}
 
 }

@@ -2,14 +2,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<%--@elvariable id="row" type="uk.co.vhome.rmj.site.organiser.EventRegistrationFormRow"--%>
-<%--@elvariable id="eventRegistrationFormObject" type="uk.co.vhome.rmj.site.organiser.EventRegistrationFormObject"--%>
+<%--@elvariable id="tokenManagementFormObject" type="uk.co.vhome.rmj.site.admin.TokenManagementFormObject"--%>
 
 <!DOCTYPE html>
 <html lang="en">
 
-<c:set var="pageTitleSuffix" value="Member Registration"/>
+<c:set var="pageTitleSuffix" value="Token Management"/>
 
 <%@include file="../head.jsp" %>
 
@@ -20,27 +20,40 @@
 <div class="container">
 
 	<div class="page-header">
-		<h1>Member Registration</h1>
+		<h1>Token Management</h1>
 	</div>
 
-	<form:form modelAttribute="eventRegistrationFormObject" >
+	<form:form modelAttribute="tokenManagementFormObject" >
 
 		<table class="table table-condensed">
 			<thead>
 			<tr>
 				<th>Name</th>
-				<th>Tokens</th>
-				<th>Present</th>
+				<th>Balance</th>
+				<th>Quantity</th>
 			</tr>
 			</thead>
 
 			<tbody>
 
-			<c:forEach var="row" items="${eventRegistrationFormObject.rows}" varStatus="vs">
+			<c:forEach var="row" items="${tokenManagementFormObject.rows}" varStatus="vs">
 				<tr>
-					<td class="form-control-static">${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}</td>
-					<td class="form-control-static">${row.memberBalance.balance}</td>
-					<td><form:checkbox cssClass="checkbox" path="rows[${vs.index}].present" name="present" value="${row.present}"/></td>
+					<td class="form-control-static">
+						${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}
+					</td>
+					<td class="form-control-static">
+							${row.memberBalance.balance}
+					</td>
+					<td>
+						<spring:bind path="rows[${vs.index}].quantity">
+						<div class="col-xs-5 ${status.error ? 'has-error':''}">
+
+							<form:input cssClass="form-control input-sm"  path="rows[${vs.index}].quantity" value="${row.quantity}" />
+
+							<form:errors path="rows[${vs.index}].quantity" cssClass="help-block" element="span"/>
+						</div>
+						</spring:bind>
+					</td>
 				</tr>
 			</c:forEach>
 			</tbody>
@@ -50,6 +63,7 @@
 	</form:form>
 
 </div>
+
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

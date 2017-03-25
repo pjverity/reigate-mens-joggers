@@ -1,5 +1,8 @@
 package uk.co.vhome.rmj.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import uk.co.vhome.rmj.entities.Purchase;
@@ -16,6 +19,8 @@ import java.util.List;
 @Service
 public class DefaultTokenManagementService implements TokenManagementService
 {
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	private int balanceUpperLimit;
 
 	private int balanceLowerLimit;
@@ -34,6 +39,10 @@ public class DefaultTokenManagementService implements TokenManagementService
 		this.purchaseRepository = purchaseRepository;
 		this.userAccountManagementService = userAccountManagementService;
 		this.entityManager = entityManager;
+
+		setBalanceLowerLimit(-5);
+		setBalanceUpperLimit(20);
+		setPurchaseLimit(10);
 	}
 
 	public int getBalanceUpperLimit()
@@ -67,7 +76,7 @@ public class DefaultTokenManagementService implements TokenManagementService
 	}
 
 	@Override
-	public Purchase modifyBalance(String username, int quantity)
+	public Purchase adjustBalance(String username, int quantity)
 	{
 		if ( quantity > 0 )
 		{
@@ -95,6 +104,9 @@ public class DefaultTokenManagementService implements TokenManagementService
 
 		Purchase purchase = new Purchase(username, quantity);
 		purchaseRepository.save(purchase);
+
+		LOGGER.info("Purchase complete: {}", purchase);
+
 		return purchase;
 	}
 

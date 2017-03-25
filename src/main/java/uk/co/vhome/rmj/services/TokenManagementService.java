@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface TokenManagementService
 {
-	Purchase modifyBalance(String username, int quantity);
+	Purchase adjustBalance(String username, int quantity);
 
 	Integer balanceForMember(String username);
 

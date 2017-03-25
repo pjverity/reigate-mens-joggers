@@ -19,7 +19,7 @@ import java.util.Map;
  * Secured administration functions
  */
 @Controller
-@RequestMapping("admin/usermanagement")
+@RequestMapping("admin/user-management")
 @SuppressWarnings("unused")
 public class UserManagementController
 {
@@ -34,32 +34,32 @@ public class UserManagementController
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	String updateModel(UserManagementForm userManagementForm)
+	String updateModel(UserManagementFormObject userManagementFormObject)
 	{
 		Map<String, UserAccountDetails> keyedOriginalDetails = new HashMap<>();
 
 		userAccountManagementService.findAllUserDetails()
 				.forEach(details -> keyedOriginalDetails.put(details.getEmailAddress(), details));
 
-		userManagementForm.getUserAccountDetails().stream()
+		userManagementFormObject.getUserAccountDetails().stream()
 				.filter(userDetails -> isModifiedUser(userDetails, keyedOriginalDetails.get(userDetails.getEmailAddress())))
 				.forEach(modifiedUser -> updateModifiedUser(modifiedUser, keyedOriginalDetails.get(modifiedUser.getEmailAddress())));
 
-		return "redirect:/admin/usermanagement";
+		return "redirect:/admin/user-management";
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	UserManagementForm getView(ModelMap modelMap)
+	UserManagementFormObject getView(ModelMap modelMap)
 	{
-		UserManagementForm userManagementForm = new UserManagementForm();
+		UserManagementFormObject userManagementFormObject = new UserManagementFormObject();
 
-		userManagementForm.setUserAccountDetails(userAccountManagementService.findAllUserDetails());
+		userManagementFormObject.setUserAccountDetails(userAccountManagementService.findAllUserDetails());
 
 		modelMap.put("groups", Arrays.asList(Group.ADMIN,
 		                                     Group.ORGANISER,
 		                                     Group.MEMBER));
 
-		return userManagementForm;
+		return userManagementFormObject;
 	}
 
 	private boolean isModifiedUser(UserAccountDetails updatedDetails, UserAccountDetails originalUserDetails)

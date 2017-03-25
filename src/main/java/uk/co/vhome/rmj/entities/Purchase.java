@@ -79,4 +79,15 @@ public class Purchase
 	{
 		this.quantity = quantity;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Purchase{" +
+				       "id=" + id +
+				       ", purchaseTime=" + purchaseTime +
+				       ", username='" + username + '\'' +
+				       ", quantity=" + quantity +
+				       '}';
+	}
 }
