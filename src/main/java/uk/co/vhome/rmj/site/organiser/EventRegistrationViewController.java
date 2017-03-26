@@ -36,7 +36,7 @@ public class EventRegistrationViewController
 
 	private void decrementBalance(String username)
 	{
-		tokenManagementService.adjustBalance(username, -1);
+		tokenManagementService.debitAccount(username, 1);
 	}
 
 	@ModelAttribute

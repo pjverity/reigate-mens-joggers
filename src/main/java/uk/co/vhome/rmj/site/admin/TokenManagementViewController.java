@@ -1,9 +1,10 @@
 package uk.co.vhome.rmj.site.admin;
 
-import org.springframework.beans.TypeMismatchException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import uk.co.vhome.rmj.services.TokenManagementService;
 
 import javax.validation.Valid;
@@ -20,12 +21,6 @@ public class TokenManagementViewController
 		this.tokenManagementService = tokenManagementService;
 	}
 
-	@ExceptionHandler(TypeMismatchException.class)
-	public void typeMismatchExceptionHandler(TypeMismatchException e)
-	{
-
-	}
-
 	@PostMapping(value = "/admin/token-management")
 	String post(@Valid TokenManagementFormObject formObject, BindingResult bindingResult)
 	{
@@ -35,7 +30,7 @@ public class TokenManagementViewController
 		}
 
 		formObject.getRows().stream()
-				.filter(r -> r.getQuantity() != 0)
+				.filter(r -> r.getQuantity() != null)
 				.forEach(r -> adjustBalance(r.getMemberBalance().getUsername(), r.getQuantity()));
 
 		return "redirect:/admin/token-management";
@@ -43,7 +38,7 @@ public class TokenManagementViewController
 
 	private void adjustBalance(String username, int quantity)
 	{
-		tokenManagementService.adjustBalance(username, quantity);
+		tokenManagementService.creditAccount(username, quantity);
 	}
 
 	@GetMapping(value = "/admin/token-management")

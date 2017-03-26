@@ -2,16 +2,14 @@ package uk.co.vhome.rmj.site.admin;
 
 import uk.co.vhome.rmj.entities.MemberBalance;
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Min;
 
 public class TokenManagementFormRow
 {
 	private MemberBalance memberBalance;
 
-	@NotNull
-	@Digits(integer = 2, fraction = 0, message = "Invalid quantity")
-	private int quantity;
+	@Min(value = 1, message = "{validation.constraint.Min.creditBalance}")
+	private Integer quantity;
 
 	public TokenManagementFormRow(MemberBalance memberBalance)
 	{
@@ -28,12 +26,12 @@ public class TokenManagementFormRow
 		this.memberBalance = memberBalance;
 	}
 
-	public int getQuantity()
+	public Integer getQuantity()
 	{
 		return quantity;
 	}
 
-	public void setQuantity(int quantity)
+	public void setQuantity(Integer quantity)
 	{
 		this.quantity = quantity;
 	}

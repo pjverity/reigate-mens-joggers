@@ -35,60 +35,93 @@ public class DefaultTokenManagementServiceTest
 		tokenManagementService = new DefaultTokenManagementService(mockPurchaseRepository, mockUserAccountManagementService, mockEntityManager);
 		tokenManagementService.setBalanceLowerLimit(-5);
 		tokenManagementService.setBalanceUpperLimit(20);
-		tokenManagementService.setPurchaseLimit(10);
+		tokenManagementService.setCreditLimit(10);
+		tokenManagementService.setDebitLimit(1);
 	}
 
-	@Test
-	public void purchaseFailsWithInvalidTokenCount()
+	@Test(expected = AssertionError.class)
+	public void creditZeroTokensFails()
 	{
-		Purchase purchase = tokenManagementService.adjustBalance(ENABLED_USER_ID, 0);
-		assertNull(ENABLED_USER_ID + " should not be able to purchase 0 tokens", purchase);
+		tokenManagementService.creditAccount(ENABLED_USER_ID, 0);
+
+		verifyZeroInteractions(mockPurchaseRepository);
+	}
+
+	@Test(expected = AssertionError.class)
+	public void debitZeroTokensFails()
+	{
+		tokenManagementService.debitAccount(ENABLED_USER_ID, 0);
 
 		verifyZeroInteractions(mockPurchaseRepository);
 	}
 
 	@Test
-	public void purchaseFailsWhenPurchaseLimitExceeded()
+	public void creditFailsWhenPurchaseLimitExceeded()
 	{
-		Purchase purchase = tokenManagementService.adjustBalance(ENABLED_USER_ID, 11);
+		Purchase purchase = tokenManagementService.creditAccount(ENABLED_USER_ID, 11);
 		assertNull(ENABLED_USER_ID + " should not be able to purchase >10 tokens", purchase);
 
 		verifyZeroInteractions(mockPurchaseRepository);
 	}
 
 	@Test
-	public void purchaseFailsWhenBalanceLimitExceeded()
+	public void creditFailsWhenBalanceLimitExceeded()
 	{
 		when(mockPurchaseRepository.calculateBalanceForUser(ENABLED_USER_ID)).thenReturn(16);
 
-		Purchase purchase = tokenManagementService.adjustBalance(ENABLED_USER_ID, 5);
+		Purchase purchase = tokenManagementService.creditAccount(ENABLED_USER_ID, 5);
 		assertNull(ENABLED_USER_ID + " should not be able to purchase tokens that would exceed balance limit", purchase);
 
 		verify(mockPurchaseRepository, never()).save(any(Purchase.class));
 	}
 
 	@Test
-	public void purchaseFailsForInvalidUser()
+	public void debitFailsWhenBelowBalanceThreshold()
 	{
-		// Unknown user
-		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(null);
-		Purchase purchase = tokenManagementService.adjustBalance(ENABLED_USER_ID, 5);
-		assertNull(ENABLED_USER_ID + " should not be able to purchase tokens", purchase);
+		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
+		when(mockPurchaseRepository.calculateBalanceForUser(ENABLED_USER_ID)).thenReturn(-5);
 
-		// Disabled user
-		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(DISABLED_USER);
-		purchase = tokenManagementService.adjustBalance(ENABLED_USER_ID, 5);
-		assertNull(ENABLED_USER_ID + " should not be able to purchase tokens", purchase);
+		Purchase purchase = tokenManagementService.debitAccount(ENABLED_USER_ID, 1);
+		assertNull(ENABLED_USER_ID + " should not be able to use tokens", purchase);
 
 		verify(mockPurchaseRepository, never()).save(any(Purchase.class));
 	}
 
 	@Test
-	public void purchaseSucceedsWithValidTokenCount()
+	public void creditOrDebitFailsForInvalidUser()
+	{
+		String randomUserId = "random";
+
+		// Unknown user - Credit
+		when(mockUserAccountManagementService.findUserDetails(randomUserId)).thenReturn(null);
+		Purchase purchase = tokenManagementService.creditAccount(randomUserId, 5);
+		assertNull(randomUserId + " should not be able to purchase tokens", purchase);
+
+		// Unknown user - Debit
+		when(mockUserAccountManagementService.findUserDetails("random")).thenReturn(null);
+		purchase = tokenManagementService.debitAccount(randomUserId, 1);
+		assertNull(randomUserId + " should not be able to purchase tokens", purchase);
+
+		// Disabled user - Credit
+		when(mockUserAccountManagementService.findUserDetails(DISABLED_USER_ID)).thenReturn(DISABLED_USER);
+		purchase = tokenManagementService.creditAccount(DISABLED_USER_ID, 5);
+		assertNull(DISABLED_USER_ID + " should not be able to purchase tokens", purchase);
+
+		// Disabled user - Debit
+		when(mockUserAccountManagementService.findUserDetails(DISABLED_USER_ID)).thenReturn(DISABLED_USER);
+		purchase = tokenManagementService.debitAccount(DISABLED_USER_ID, 1);
+		assertNull(DISABLED_USER_ID + " should not be able to purchase tokens", purchase);
+
+		verify(mockPurchaseRepository, never()).save(any(Purchase.class));
+	}
+
+	@Test
+	public void creditSucceeds()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
+		when(mockPurchaseRepository.calculateBalanceForUser(ENABLED_USER_ID)).thenReturn(5);
 
-		Purchase purchase = tokenManagementService.adjustBalance(ENABLED_USER_ID, 1);
+		Purchase purchase = tokenManagementService.creditAccount(ENABLED_USER_ID, 1);
 		assertNotNull(ENABLED_USER_ID + " should be able to purchase 1 token", purchase);
 
 		assertEquals(1, purchase.getQuantity());
@@ -97,38 +130,15 @@ public class DefaultTokenManagementServiceTest
 	}
 
 	@Test
-	public void deductTokenForDisabledUserFails()
-	{
-		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(DISABLED_USER);
-
-		Purchase purchase = tokenManagementService.adjustBalance(ENABLED_USER_ID, -1);
-		assertNull(ENABLED_USER_ID + " should not be able to use tokens", purchase);
-
-		verify(mockPurchaseRepository, never()).save(any(Purchase.class));
-	}
-
-	@Test
-	public void deductTokenForUserBelowBalanceThresholdFails()
+	public void debitSucceeds()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
-		when(mockPurchaseRepository.calculateBalanceForUser(ENABLED_USER_ID)).thenReturn(-5);
+		when(mockPurchaseRepository.calculateBalanceForUser(ENABLED_USER_ID)).thenReturn(5);
 
-		Purchase purchase = tokenManagementService.adjustBalance(ENABLED_USER_ID, -1);
-		assertNull(ENABLED_USER_ID + " should not be able to use tokens", purchase);
+		Purchase purchase = tokenManagementService.debitAccount(ENABLED_USER_ID, 1);
+		assertNotNull(ENABLED_USER_ID + " should be able to spend 1 token", purchase);
 
-		verify(mockPurchaseRepository, never()).save(any(Purchase.class));
-	}
-
-	@Test
-	public void deductTokenForUserSucceeds()
-	{
-		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
-		when(mockPurchaseRepository.calculateBalanceForUser(ENABLED_USER_ID)).thenReturn(1);
-
-		Purchase purchase = tokenManagementService.adjustBalance(ENABLED_USER_ID, -1);
-
-		assertNotNull(ENABLED_USER_ID + " should be able to use 1 token", purchase);
-		assertEquals(ENABLED_USER_ID + " should have had 1 token deducted", -1, purchase.getQuantity());
+		assertEquals(-1, purchase.getQuantity());
 
 		verify(mockPurchaseRepository).save(purchase);
 	}

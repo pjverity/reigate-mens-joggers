@@ -3,7 +3,6 @@ package uk.co.vhome.rmj.services;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -13,10 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.co.vhome.rmj.IntegrationTestConfiguration;
 import uk.co.vhome.rmj.entities.MemberBalance;
 import uk.co.vhome.rmj.entities.Purchase;
-import uk.co.vhome.rmj.repositories.PurchaseRepository;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -27,39 +25,29 @@ import static uk.co.vhome.rmj.UserConfigurations.ENABLED_USER_ID;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles({"integration-test"})
-@ContextConfiguration(classes = {IntegrationTestConfiguration.class})
+@ContextConfiguration(classes = {IntegrationTestConfiguration.class, DefaultTokenManagementService.class})
 @Transactional
 public class DefaultTokenManagementServiceITCase
 {
-	@Mock
+	@Inject
 	private UserAccountManagementService mockUserAccountManagementService;
 
 	@Inject
-	private PurchaseRepository purchaseRepository;
-
-	@Inject
-	private EntityManager entityManager;
-
-	private DefaultTokenManagementService tokenManagementService;
+	private TokenManagementService tokenManagementService;
 
 	@Before
-	public void init()
+	public void setup()
 	{
 		MockitoAnnotations.initMocks(this);
-
-		tokenManagementService = new DefaultTokenManagementService(purchaseRepository, mockUserAccountManagementService, entityManager);
-		tokenManagementService.setBalanceLowerLimit(-5);
-		tokenManagementService.setBalanceUpperLimit(20);
-		tokenManagementService.setPurchaseLimit(10);
 	}
 
 	@Test
 	@Sql({"/schema.sql", "/data.sql"})
-	public void positiveBalanceAdjustmentSucceeds()
+	public void returnsCorrectBalanceForCredit()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 
-		Purchase purchase = tokenManagementService.adjustBalance(ENABLED_USER_ID, 1);
+		Purchase purchase = tokenManagementService.creditAccount(ENABLED_USER_ID, 1);
 		assertNotNull(ENABLED_USER_ID + " should be able to purchase 1 token", purchase);
 
 		assertEquals(8L, (long)tokenManagementService.balanceForMember(ENABLED_USER_ID));
@@ -67,19 +55,35 @@ public class DefaultTokenManagementServiceITCase
 
 	@Test
 	@Sql({"/schema.sql", "/data.sql"})
-	public void negativeBalanceAdjustmentSucceeds()
+	public void returnsCorrectBalanceForDebit()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 
-		Purchase purchase = tokenManagementService.adjustBalance(ENABLED_USER_ID, -1);
+		Purchase purchase = tokenManagementService.debitAccount(ENABLED_USER_ID, 1);
 		assertNotNull(ENABLED_USER_ID + " should be able to use 1 token", purchase);
 
 		assertEquals(6L, (long)tokenManagementService.balanceForMember(ENABLED_USER_ID));
 	}
 
+	@Test(expected = ConstraintViolationException.class)
+	public void throwsCreditConstraintViolationWhenCreditQuantityIsZero()
+	{
+		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
+
+		tokenManagementService.creditAccount(ENABLED_USER_ID, 0);
+	}
+
+	@Test(expected = ConstraintViolationException.class)
+	public void throwsCreditConstraintViolationWhenDebitQuantityIsZero()
+	{
+		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
+
+		tokenManagementService.debitAccount(ENABLED_USER_ID, 0);
+	}
+
 	@Test
 	@Sql({"/schema.sql", "/data.sql"})
-	public void balanceForAllEnabledMembers()
+	public void returnsExpectedBalanceForAllEnabledMembers()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 

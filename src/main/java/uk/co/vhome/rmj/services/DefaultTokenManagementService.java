@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import uk.co.vhome.rmj.entities.MemberBalance;
 import uk.co.vhome.rmj.entities.Purchase;
 import uk.co.vhome.rmj.repositories.PurchaseRepository;
@@ -16,6 +17,7 @@ import java.util.List;
  * Default implementation for the {@link TokenManagementService}
  */
 @Service
+@Validated
 public class DefaultTokenManagementService implements TokenManagementService
 {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -24,7 +26,9 @@ public class DefaultTokenManagementService implements TokenManagementService
 
 	private int balanceLowerLimit;
 
-	private int purchaseLimit;
+	private int creditLimit;
+
+	private int debitLimit;
 
 	private final EntityManager entityManager;
 
@@ -41,7 +45,9 @@ public class DefaultTokenManagementService implements TokenManagementService
 
 		setBalanceLowerLimit(-5);
 		setBalanceUpperLimit(20);
-		setPurchaseLimit(10);
+
+		setCreditLimit(10);
+		setDebitLimit(1);
 	}
 
 	public int getBalanceUpperLimit()
@@ -64,38 +70,60 @@ public class DefaultTokenManagementService implements TokenManagementService
 		this.balanceLowerLimit = balanceLowerLimit;
 	}
 
-	public int getPurchaseLimit()
+	public int getCreditLimit()
 	{
-		return purchaseLimit;
+		return creditLimit;
 	}
 
-	public void setPurchaseLimit(int purchaseLimit)
+	public void setCreditLimit(int creditLimit)
 	{
-		this.purchaseLimit = purchaseLimit;
+		this.creditLimit = creditLimit;
+	}
+
+	public int getDebitLimit()
+	{
+		return debitLimit;
+	}
+
+	public void setDebitLimit(int debitLimit)
+	{
+		this.debitLimit = debitLimit;
 	}
 
 	@Override
-	public Purchase adjustBalance(String username, int quantity)
+	public Purchase creditAccount(String username, int quantity)
 	{
-		if ( quantity > 0 )
-		{
-			if ( !requestedQuantityValid(quantity) || !balanceBelowUpperLimit(username, quantity) )
-			{
-				return null;
-			}
-		}
-		else if ( quantity < 0 )
-		{
-			if ( !balanceAboveLowerLimit(username, quantity) )
-			{
-				return null;
-			}
-		}
-		else
+		assert quantity > 0;
+
+		if ( !creditWithLimit(quantity) || !creditWithinBalanceLimit(username, quantity) )
 		{
 			return null;
 		}
 
+		return doTransaction(username, quantity);
+	}
+
+	@Override
+	public Purchase debitAccount(String username, int quantity)
+	{
+		assert quantity > 0;
+
+		if ( !debitWithLimit(quantity) || !debitWithinBalanceLimit(username, quantity) )
+		{
+			return null;
+		}
+
+		return doTransaction(username, -quantity);
+	}
+
+	@Override
+	public Integer balanceForMember(String username)
+	{
+		return purchaseRepository.calculateBalanceForUser(username);
+	}
+
+	private Purchase doTransaction(String username, int quantity)
+	{
 		if (!isUserEnabled(username))
 		{
 			return null;
@@ -107,12 +135,6 @@ public class DefaultTokenManagementService implements TokenManagementService
 		LOGGER.info("Purchase complete: {}", purchase);
 
 		return purchase;
-	}
-
-	@Override
-	public Integer balanceForMember(String username)
-	{
-		return purchaseRepository.calculateBalanceForUser(username);
 	}
 
 	@Override
@@ -128,22 +150,27 @@ public class DefaultTokenManagementService implements TokenManagementService
 		return userDetails != null && userDetails.isEnabled();
 	}
 
-	private boolean balanceBelowUpperLimit(String username, int quantity)
+	private boolean creditWithinBalanceLimit(String username, int quantity)
 	{
-		Integer balance = purchaseRepository.calculateBalanceForUser(username);
+		Integer currentBalance = balanceForMember(username);
 
-		return balance + quantity <= getBalanceUpperLimit();
+		return currentBalance + quantity <= getBalanceUpperLimit();
 	}
 
-	private boolean balanceAboveLowerLimit(String username, int quantity)
+	private boolean debitWithinBalanceLimit(String username, int quantity)
 	{
-		Integer balance = purchaseRepository.calculateBalanceForUser(username);
+		Integer currentBalance = balanceForMember(username);
 
-		return balance + quantity >= getBalanceLowerLimit();
+		return currentBalance - quantity >= getBalanceLowerLimit();
 	}
 
-	private boolean requestedQuantityValid(int quantity)
+	private boolean creditWithLimit(int quantity)
 	{
-		return quantity <= purchaseLimit;
+		return quantity <= creditLimit;
+	}
+
+	private boolean debitWithLimit(int quantity)
+	{
+		return quantity <= debitLimit;
 	}
 }
