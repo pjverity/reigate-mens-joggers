@@ -24,8 +24,8 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import uk.co.vhome.rmj.config.ServletContextConfiguration;
-import uk.co.vhome.rmj.entities.SupplementalUserDetails;
-import uk.co.vhome.rmj.repositories.SupplementalUserDetailsRepository;
+import uk.co.vhome.rmj.entities.UserDetailsEntity;
+import uk.co.vhome.rmj.repositories.UserDetailsRepository;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -47,16 +47,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
 	private final DataSource dataSource;
 
-	private final SupplementalUserDetailsRepository supplementalUserDetailsRepository;
+	private final UserDetailsRepository userDetailsRepository;
 
 	private JdbcUserDetailsManager userDetailsManager;
 
 	@Inject
 	public SecurityConfiguration(DataSource dataSource,
-	                             SupplementalUserDetailsRepository supplementalUserDetailsRepository)
+	                             UserDetailsRepository userDetailsRepository)
 	{
 		this.dataSource = dataSource;
-		this.supplementalUserDetailsRepository = supplementalUserDetailsRepository;
+		this.userDetailsRepository = userDetailsRepository;
 	}
 
 	private void configureAuth(AuthenticationManagerBuilder auth) throws Exception
@@ -147,12 +147,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
 				setDefaultTargetUrl("/member/home");
 
-				SupplementalUserDetails details = supplementalUserDetailsRepository.findByEmailAddress(authentication.getName());
+				UserDetailsEntity details = userDetailsRepository.findByUsername(authentication.getName());
 				HttpSession httpSession = request.getSession();
 				httpSession.setAttribute(ServletContextConfiguration.USER_FIRST_NAME_SESSION_ATTRIBUTE, details.getFirstName());
 				httpSession.setAttribute(ServletContextConfiguration.USER_LAST_NAME_SESSION_ATTRIBUTE, details.getLastName());
 
-				LOGGER.info("{} logged in", details.getEmailAddress());
+				LOGGER.info("{} logged in", details.getUsername());
 
 				super.onAuthenticationSuccess(request, response, authentication);
 			}

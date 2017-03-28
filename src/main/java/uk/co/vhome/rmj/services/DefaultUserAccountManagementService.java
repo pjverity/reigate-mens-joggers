@@ -2,30 +2,25 @@ package uk.co.vhome.rmj.services;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import uk.co.vhome.rmj.config.InitialSiteUser;
-import uk.co.vhome.rmj.entities.SupplementalUserDetails;
-import uk.co.vhome.rmj.repositories.SupplementalUserDetailsRepository;
+import uk.co.vhome.rmj.entities.UserDetailsEntity;
+import uk.co.vhome.rmj.repositories.UserDetailsRepository;
 import uk.co.vhome.rmj.security.Group;
 import uk.co.vhome.rmj.security.Role;
 import uk.co.vhome.rmj.security.RunAs;
 
 import javax.inject.Inject;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -35,13 +30,6 @@ import java.util.List;
 public class DefaultUserAccountManagementService implements UserAccountManagementService
 {
 	private static final Logger LOGGER = LogManager.getLogger();
-
-	private static final String FIND_ALL_USER_INFO_SQL = "SELECT u.username, ud.first_name, ud.last_name, g.group_name, u.enabled, ud.last_login FROM" +
-			                                                     " users u, groups g, group_members gm, user_details ud WHERE" +
-			                                                     " u.username = gm.username AND" +
-			                                                     " u.username = ud.username AND" +
-			                                                     " gm.group_id = g.id" +
-			                                                     " ORDER BY ud.last_name, ud.first_name";
 
 	private static final String QUERY_ENABLED_ADMINS = "SELECT u.username FROM users u, group_members gm, groups g WHERE" +
 			                                                                                     " u.enabled = TRUE AND" +
@@ -53,7 +41,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 	private final JdbcUserDetailsManager userDetailsManager;
 
-	private final SupplementalUserDetailsRepository supplementalUserDetailsRepository;
+	private final UserDetailsRepository userDetailsRepository;
 
 	private final SessionRegistry sessionRegistry;
 
@@ -65,11 +53,11 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	public DefaultUserAccountManagementService(InitialSiteUser initialSiteUser,
 	                                           MailService mailService,
 	                                           JdbcUserDetailsManager userDetailsManager,
-	                                           SupplementalUserDetailsRepository supplementalUserDetailsRepository, SessionRegistry sessionRegistry)
+	                                           UserDetailsRepository userDetailsRepository, SessionRegistry sessionRegistry)
 	{
 		this.mailService = mailService;
 		this.userDetailsManager = userDetailsManager;
-		this.supplementalUserDetailsRepository = supplementalUserDetailsRepository;
+		this.userDetailsRepository = userDetailsRepository;
 
 		// This service is only usable if it can mail registration confirmations
 		serviceAvailable = mailService.isServiceAvailable();
@@ -111,120 +99,84 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	@Override
 	@Transactional(timeout = 15)
 	@Secured({RunAs.SYSTEM, Role.ANON})
-	public void registerNewUser(String userId, String firstName, String lastName, String password)
+	public void registerNewUser(String username, String firstName, String lastName, String password)
 	{
-		LOGGER.info("Registering new user {}", userId);
+		LOGGER.info("Registering new user {}", username);
 
-		createUser(userId, firstName, lastName, password, Group.MEMBER);
+		createUser(username, firstName, lastName, password, Group.MEMBER);
 
-		SupplementalUserDetails supplementalUserDetails = supplementalUserDetailsRepository.findByEmailAddress(userId);
+		UserDetailsEntity userDetailsEntity = userDetailsRepository.findByUsername(username);
 
-		mailService.sendRegistrationMail(supplementalUserDetails);
+		mailService.sendRegistrationMail(userDetailsEntity);
 
-		sendAdministratorNotification(supplementalUserDetails);
+		// TODO - Don't put this in the same transaction. If the notification sends to the
+		// user Ok and fails to sent to the admin, then whole thing rolls back leaving the
+		// user wondering why they can't log in to their account!
+		sendAdministratorNotification(userDetailsEntity);
 	}
 
 	@Override
-	@Transactional(timeout = 15)
-	public void changePassword(String userId, String oldPassword, String newPassword)
+	public void changePassword(String username, String oldPassword, String newPassword)
 	{
-		LOGGER.info("Changing password for user {}", userId);
+		LOGGER.info("Changing password for user {}", username);
 
 		userDetailsManager.changePassword(oldPassword, BCrypt.hashpw(newPassword, BCrypt.gensalt()));
 	}
 
 	@Override
 	@Transactional(timeout = 15)
-	public void createUser(String userId, String firstName, String lastName, String password, String groupName)
+	public void createUser(String username, String firstName, String lastName, String password, String groupName)
 	{
-		LOGGER.info("Creating new user {} in group {}", userId, groupName);
+		LOGGER.info("Creating new user {} in group {}", username, groupName);
 
 		// Use Spring's user details manager to create the user and associated authorities for now
-		User user = new User(userId.toLowerCase(),
+		User user = new User(username.toLowerCase(),
 		                     BCrypt.hashpw(password, BCrypt.gensalt()),
 		                     AuthorityUtils.NO_AUTHORITIES);
 
 		userDetailsManager.createUser(user);
 
-		userDetailsManager.addUserToGroup(userId, groupName);
+		userDetailsManager.addUserToGroup(username, groupName);
 
-		SupplementalUserDetails supplementalUserDetails = new SupplementalUserDetails(userId,
-		                                                                              StringUtils.capitalize(firstName),
-		                                                                              StringUtils.capitalize(lastName));
-		supplementalUserDetailsRepository.save(supplementalUserDetails);
+		updateUserDetails(username, firstName, lastName);
 	}
 
 	@Override
-	public void updateUser(String userId, boolean isEnabled, String removeFromGroup, String addToGroup)
+	public void setUserEnabled(Long id, boolean enable)
 	{
-		LOGGER.info("Amending user {}. Enabled = {}", userId, isEnabled);
+		UserDetailsEntity user = userDetailsRepository.findOne(id);
 
-		UserDetails userDetails = userDetailsManager.loadUserByUsername(userId);
-
-		User updatedUserDetails = new User(userDetails.getUsername(),
-		                                   userDetails.getPassword(),
-		                                   isEnabled,
-		                                   userDetails.isAccountNonExpired(),
-		                                   userDetails.isCredentialsNonExpired(),
-		                                   userDetails.isAccountNonLocked(),
-		                                   userDetails.getAuthorities());
-
-		userDetailsManager.updateUser(updatedUserDetails);
-
-		if ( !removeFromGroup.equals(addToGroup) )
+		if ( user.isEnabled() == enable )
 		{
-			userDetailsManager.removeUserFromGroup(userId, removeFromGroup);
-			userDetailsManager.addUserToGroup(userId, addToGroup);
-		}
-		if (!isEnabled)
-		{
-			User user = new User(userId, "", AuthorityUtils.NO_AUTHORITIES);
-			List<SessionInformation> allSessions = sessionRegistry.getAllSessions(user, false);
-
-			// Only expire the session, don't remove it otherwise the browser will resend the authenticated
-			// session cookie and have access to the site when the account was disabled.
-			// By forcing a new session to be created, authentication is re-evaluated
-			allSessions.forEach(SessionInformation::expireNow);
+			return;
 		}
 
+		user.setEnabled(enable);
+
+		userDetailsRepository.save(user);
+
+		if ( !enable )
+		{
+			invalidateSession(user.getUsername());
+		}
 	}
 
 	@Override
-	public List<UserAccountDetails> findAllUserDetails()
+	public List<UserDetailsEntity> findAllUserDetails()
 	{
-		return userDetailsManager
-				       .getJdbcTemplate()
-				       .query(FIND_ALL_USER_INFO_SQL,
-				              new Object[]{},
-				              new RowMapper<UserAccountDetails>()
-				              {
-					              public UserAccountDetails mapRow(ResultSet rs, int rowNum)
-							              throws SQLException
-					              {
-						              String emailAddress = rs.getString(1);
-
-						              // See if the user has an active session
-						              User user = new User(emailAddress, "", AuthorityUtils.NO_AUTHORITIES);
-						              boolean hasActiveSession = !sessionRegistry.getAllSessions(user, false).isEmpty();
-
-						              return new UserAccountDetails(emailAddress,
-						                                            rs.getString(2),
-						                                            rs.getString(3),
-						                                            rs.getString(4),
-						                                            rs.getBoolean(5),
-						                                            rs.getTimestamp(6).toLocalDateTime(),
-						                                            hasActiveSession);
-					              }
-				              });
+		return userDetailsRepository.findAll();
 	}
 
 	@Override
-	@Transactional
-	public void updateLastLogin(String userId, long timestamp)
+	public UserDetailsEntity findUserDetails(String username)
 	{
-		LocalDateTime localDateTime = LocalDateTime.ofEpochSecond(timestamp / 1000, 0, ZoneOffset.UTC);
+		return userDetailsRepository.findByUsername(username);
+	}
 
-		supplementalUserDetailsRepository.updateLastLoginFor(localDateTime, userId);
+	@Override
+	public void updateLastLogin(String username, long timestamp)
+	{
+		userDetailsRepository.updateLastLogin(username, Instant.ofEpochMilli(timestamp));
 	}
 
 	@Override
@@ -233,14 +185,35 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 		return serviceAvailable;
 	}
 
-	private void sendAdministratorNotification(SupplementalUserDetails newUserDetails)
+	private void updateUserDetails(String username, String firstName, String lastName)
+	{
+		UserDetailsEntity userDetailsEntity = userDetailsRepository.findByUsername(username);
+
+		userDetailsEntity.setFirstName(StringUtils.capitalize(firstName));
+		userDetailsEntity.setLastName(StringUtils.capitalize(lastName));
+
+		userDetailsRepository.save(userDetailsEntity);
+	}
+
+	private void sendAdministratorNotification(UserDetailsEntity newUserDetails)
 	{
 		// TODO - Create a proper ORM entity model and interfaces to run these queries rather than using JDBC queries
 		List<String> enabledUsersInGroup = userDetailsManager.getJdbcTemplate().queryForList(QUERY_ENABLED_ADMINS,
 		                                                                                     new String[]{Group.ADMIN},
 		                                                                                     String.class);
 
-		List<SupplementalUserDetails> administrators = supplementalUserDetailsRepository.findByEmailAddressIn(enabledUsersInGroup);
+		List<UserDetailsEntity> administrators = userDetailsRepository.findByUsernameIn(enabledUsersInGroup);
 		mailService.sendAdministratorNotification(administrators, newUserDetails);
+	}
+
+	private void invalidateSession(String username)
+	{
+		User user = new User(username, "", AuthorityUtils.NO_AUTHORITIES);
+		List<SessionInformation> allSessions = sessionRegistry.getAllSessions(user, false);
+
+		// Only expire the session, don't remove it otherwise the browser will resend the authenticated
+		// session cookie and have access to the site when the account was disabled.
+		// By forcing a new session to be created, authentication is re-evaluated
+		allSessions.forEach(SessionInformation::expireNow);
 	}
 }

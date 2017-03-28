@@ -8,7 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-import uk.co.vhome.rmj.entities.SupplementalUserDetails;
+import uk.co.vhome.rmj.entities.UserDetailsEntity;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
@@ -50,7 +50,7 @@ public class DefaultMailService implements MailService
 	}
 
 	@Override
-	public void sendRegistrationMail(SupplementalUserDetails newUserDetails)
+	public void sendRegistrationMail(UserDetailsEntity newUserDetails)
 	{
 		Map<String, Object> templateProperties = new HashMap<>();
 
@@ -63,7 +63,7 @@ public class DefaultMailService implements MailService
 	}
 
 	@Override
-	public void sendAdministratorNotification(Collection<SupplementalUserDetails> administrators, SupplementalUserDetails newUserDetails)
+	public void sendAdministratorNotification(Collection<UserDetailsEntity> administrators, UserDetailsEntity newUserDetails)
 	{
 		Map<String, Object> templateProperties = new HashMap<>();
 
@@ -75,12 +75,12 @@ public class DefaultMailService implements MailService
 		                      EMAIL_NOTIFICATION_TEMPLATE);
 	}
 
-	private void sendMailUsingTemplate(Collection<SupplementalUserDetails> supplementalUserDetails, String subject, Map<String, Object> templateProperties, String templateName)
+	private void sendMailUsingTemplate(Collection<UserDetailsEntity> userDetailEntities, String subject, Map<String, Object> templateProperties, String templateName)
 	{
 		try
 		{
 			String messageContent = FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerConfiguration.getTemplate(templateName), templateProperties);
-			sendMail(supplementalUserDetails, subject, messageContent);
+			sendMail(userDetailEntities, subject, messageContent);
 		}
 		catch (IOException | TemplateException e)
 		{
@@ -90,7 +90,7 @@ public class DefaultMailService implements MailService
 
 	}
 
-	private void sendMail(Collection<SupplementalUserDetails> supplementalUserDetails, String subject, String messageContent)
+	private void sendMail(Collection<UserDetailsEntity> userDetailEntities, String subject, String messageContent)
 	{
 		if (!isServiceAvailable())
 		{
@@ -101,11 +101,11 @@ public class DefaultMailService implements MailService
 		{
 			MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 			message.setFrom(new InternetAddress(FROM_ADDRESS, FROM_NAME));
-			supplementalUserDetails.forEach(details ->
+			userDetailEntities.forEach(details ->
 			                                {
 				                                try
 				                                {
-					                                message.addTo(details.getEmailAddress(), String.join(" ",details.getFirstName(), details.getLastName()));
+					                                message.addTo(details.getUsername(), String.join(" ", details.getFirstName(), details.getLastName()));
 				                                }
 				                                catch (MessagingException | UnsupportedEncodingException e)
 				                                {

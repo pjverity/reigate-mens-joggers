@@ -1,23 +1,20 @@
 package uk.co.vhome.rmj.site.admin;
 
-import uk.co.vhome.rmj.services.UserAccountDetails;
-
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserManagementForm
 {
-	private List<UserAccountDetails> userAccountDetails = new LinkedList<>();
+	private List<UserManagementFormRow> userManagementFormRows = new ArrayList<>();
 
-	public Collection<UserAccountDetails> getUserAccountDetails()
+	public List<UserManagementFormRow> getUserManagementFormRows()
 	{
-		return userAccountDetails;
+		return userManagementFormRows;
 	}
 
-	public void setUserAccountDetails(List<UserAccountDetails> userAccountDetails)
+	public void setUserManagementFormRows(List<UserManagementFormRow> userManagementFormRows)
 	{
-		this.userAccountDetails = userAccountDetails;
+		this.userManagementFormRows = userManagementFormRows;
 	}
 
 }

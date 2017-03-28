@@ -13,13 +13,11 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
 /**
- * Validates the password changes meet all the neccessary criteria
+ * Validates the password changes meet all the necessary criteria
  */
 public class PasswordChangeValidator implements ConstraintValidator<PasswordChangeValid, PasswordChangeFormObject>
 {
 	private final UserDetailsManager userDetailsManager;
-
-	private User principal;
 
 	@Inject
 	public PasswordChangeValidator(UserDetailsManager userDetailsManager)
@@ -28,14 +26,13 @@ public class PasswordChangeValidator implements ConstraintValidator<PasswordChan
 	}
 
 	@Override
-	public void initialize(PasswordChangeValid valid)
-	{
-		principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	}
+	public void initialize(PasswordChangeValid valid) { }
 
 	@Override
 	public boolean isValid(PasswordChangeFormObject passwordChangeFormObject, ConstraintValidatorContext constraintValidatorContext)
 	{
+		User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 		UserDetails userDetails = userDetailsManager.loadUserByUsername(principal.getUsername());
 
 		if ( !Objects.equals(passwordChangeFormObject.getNewPassword(), passwordChangeFormObject.getConfirmedNewPassword()) )
