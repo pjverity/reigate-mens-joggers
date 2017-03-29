@@ -119,7 +119,9 @@ public class DefaultTokenManagementService implements TokenManagementService
 	@Override
 	public Integer balanceForMember(String username)
 	{
-		return purchaseRepository.calculateBalanceForUser(username);
+		Integer balance = purchaseRepository.calculateBalanceForUser(username);
+
+		return balance != null ? balance : 0;
 	}
 
 	private Purchase doTransaction(String username, int quantity)

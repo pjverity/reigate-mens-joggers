@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uk.co.vhome.rmj.security.AuthenticatedUser;
 import uk.co.vhome.rmj.config.ServletContextConfiguration;
+import uk.co.vhome.rmj.services.TokenManagementService;
 import uk.co.vhome.rmj.services.UserAccountManagementService;
 
 import javax.inject.Inject;
@@ -40,6 +41,8 @@ public class HomeController
 	private static final String MESSAGE_CODE_VALIDATION_CONSTRAINT_USER_REGISTRATION_VALID = "validation.constraint.UserRegistrationValid";
 
 	private final UserAccountManagementService registrationService;
+
+	private final TokenManagementService tokenManagementService;
 
 	private final MessageSource messageSource;
 
@@ -69,9 +72,12 @@ public class HomeController
 	}
 
 	@Inject
-	public HomeController(UserAccountManagementService registrationService, MessageSource messageSource)
+	public HomeController(UserAccountManagementService registrationService,
+	                      TokenManagementService tokenManagementService,
+	                      MessageSource messageSource)
 	{
 		this.registrationService = registrationService;
+		this.tokenManagementService = tokenManagementService;
 		this.messageSource = messageSource;
 	}
 
@@ -117,13 +123,12 @@ public class HomeController
 
 		try
 		{
-			AuthenticatedUser.runWithAnonUser(() ->
-			                                  {
-				                                  registrationService.registerNewUser(userRegistrationFormObject.getEmailAddress(),
-				                                                                      userRegistrationFormObject.getFirstName(),
-				                                                                      userRegistrationFormObject.getLastName(),
-				                                                                      userRegistrationFormObject.getPassword());
-			                                  });
+			AuthenticatedUser.runWithAnonUser(() -> registrationService.registerNewUser(userRegistrationFormObject.getEmailAddress(),
+			                                                                            userRegistrationFormObject.getFirstName(),
+			                                                                            userRegistrationFormObject.getLastName(),
+			                                                                            userRegistrationFormObject.getPassword()));
+
+			AuthenticatedUser.runWithSystemUser(() -> tokenManagementService.creditAccount(userRegistrationFormObject.getEmailAddress(), 1));
 
 			// This appears to by-pass the login handler, so have to duplicate setting the session variables here
 			httpServletRequest.login(userRegistrationFormObject.getConfirmEmailAddress(), userRegistrationFormObject.getPassword());

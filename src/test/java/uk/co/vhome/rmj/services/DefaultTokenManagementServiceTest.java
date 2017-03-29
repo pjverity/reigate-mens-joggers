@@ -130,6 +130,20 @@ public class DefaultTokenManagementServiceTest
 	}
 
 	@Test
+	public void creditSucceedsWithNoPreviousBalance()
+	{
+		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
+		when(mockPurchaseRepository.calculateBalanceForUser(ENABLED_USER_ID)).thenReturn(null);
+
+		Purchase purchase = tokenManagementService.creditAccount(ENABLED_USER_ID, 1);
+		assertNotNull(ENABLED_USER_ID + " should be able to purchase 1 token", purchase);
+
+		assertEquals(1, purchase.getQuantity());
+
+		verify(mockPurchaseRepository).save(purchase);
+	}
+
+	@Test
 	public void debitSucceeds()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
