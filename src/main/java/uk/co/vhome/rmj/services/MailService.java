@@ -9,7 +9,7 @@ import java.util.Collection;
 /**
  * Interface for sending mails of predefined content
  */
-public interface MailService extends ServiceAvailabilityReporter
+public interface MailService
 {
 	@Secured({Role.SYSTEM, Role.RUN_AS_SYSTEM})
 	void sendRegistrationMail(UserDetailsEntity newUserDetails);

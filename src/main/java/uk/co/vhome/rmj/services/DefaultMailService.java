@@ -37,14 +37,9 @@ public class DefaultMailService implements MailService
 
 	private final Configuration freemarkerConfiguration;
 
-	private boolean serviceAvailable = false;
-
 	@Inject
 	public DefaultMailService(JavaMailSender javaMailSender, Configuration freemarkerConfiguration)
 	{
-		// TODO - To determine this - perhaps should be a lifecycle bean
-		serviceAvailable = true;
-
 		this.javaMailSender = javaMailSender;
 		this.freemarkerConfiguration = freemarkerConfiguration;
 	}
@@ -92,11 +87,6 @@ public class DefaultMailService implements MailService
 
 	private void sendMail(Collection<UserDetailsEntity> userDetailEntities, String subject, String messageContent)
 	{
-		if (!isServiceAvailable())
-		{
-			throw new IllegalStateException("Attempt to send mail when mail service unavailable");
-		}
-
 		javaMailSender.send(mimeMessage ->
 		{
 			MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -115,12 +105,6 @@ public class DefaultMailService implements MailService
 			message.setSubject(subject);
 			message.setText(messageContent, true);
 		});
-	}
-
-	@Override
-	public boolean isServiceAvailable()
-	{
-		return serviceAvailable;
 	}
 
 }

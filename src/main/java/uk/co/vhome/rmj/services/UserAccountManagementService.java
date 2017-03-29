@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Service interface for user account management
  */
-public interface UserAccountManagementService extends ServiceAvailabilityReporter
+public interface UserAccountManagementService
 {
 	@Secured({Role.SYSTEM})
 	void createBasicDefaultAccounts();

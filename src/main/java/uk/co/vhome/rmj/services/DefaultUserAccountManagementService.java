@@ -45,8 +45,6 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 	private final SessionRegistry sessionRegistry;
 
-	private boolean serviceAvailable = false;
-
 	private InitialSiteUser initialSiteUser;
 
 	@Inject
@@ -59,8 +57,6 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 		this.userDetailsManager = userDetailsManager;
 		this.userDetailsRepository = userDetailsRepository;
 
-		// This service is only usable if it can mail registration confirmations
-		serviceAvailable = mailService.isServiceAvailable();
 		this.sessionRegistry = sessionRegistry;
 
 		this.initialSiteUser = initialSiteUser;
@@ -177,12 +173,6 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	public void updateLastLogin(String username, long timestamp)
 	{
 		userDetailsRepository.updateLastLogin(username, Instant.ofEpochMilli(timestamp));
-	}
-
-	@Override
-	public boolean isServiceAvailable()
-	{
-		return serviceAvailable;
 	}
 
 	private void updateUserDetails(String username, String firstName, String lastName)
