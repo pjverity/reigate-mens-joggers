@@ -1,7 +1,7 @@
 package uk.co.vhome.rmj.services;
 
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.userdetails.UserDetails;
+import uk.co.vhome.rmj.entities.UserDetailsEntity;
 import uk.co.vhome.rmj.security.Role;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Service interface for user account management
  */
-public interface UserAccountManagementService extends ServiceAvailabilityReporter
+public interface UserAccountManagementService
 {
 	@Secured({Role.SYSTEM})
 	void createBasicDefaultAccounts();
@@ -23,14 +23,14 @@ public interface UserAccountManagementService extends ServiceAvailabilityReporte
 	void changePassword(String username, String oldPassword, String newPassword);
 
 	@Secured({Role.ADMIN})
-	void updateUser(String username, boolean isEnabled, String removeFromGroup, String addToGroup);
-
-	@Secured({Role.ADMIN})
-	List<UserAccountDetails> findAllUserDetails();
-
-	@Secured({Role.ORGANISER})
-	UserDetails findUserDetails(String username);
+	void setUserEnabled(Long id, boolean enable);
 
 	@Secured({Role.SYSTEM})
 	void updateLastLogin(String username, long timestamp);
+
+	@Secured({Role.ADMIN})
+	List<UserDetailsEntity> findAllUserDetails();
+
+	@Secured({Role.MEMBER})
+	UserDetailsEntity findUserDetails(String username);
 }

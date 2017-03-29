@@ -1,9 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<%--@elvariable id="userAccountDetails" type="uk.co.vhome.rmj.services.UserAccountDetails"--%>
+<%--@elvariable id="user" type="uk.co.vhome.rmj.entities.UserDetailsEntity"--%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +30,6 @@
 			<tr>
 				<th>Name</th>
 				<th>Email Address</th>
-				<th>Group</th>
 				<th>Enabled</th>
 				<th>Last Login</th>
 			</tr>
@@ -37,19 +37,14 @@
 
 			<tbody>
 
-			<c:forEach var="userAccountDetails" items="${userManagementFormObject.userAccountDetails}" varStatus="vs">
+			<c:forEach var="user" items="${userDetails}" varStatus="vs">
 				<tr>
-					<td><i class="fa fa-circle" style="color: ${userAccountDetails.activeSession ? 'lightseagreen' : 'indianred'}" aria-hidden="true"></i> ${userAccountDetails.fullName}</td>
-					<td><a href="mailto:${userAccountDetails.emailAddress}">${userAccountDetails.emailAddress}</a></td>
-					<td>
-						<form:select path="userAccountDetails[${vs.index}].group">
-							<form:options items="${groups}"/>
-						</form:select>
-					</td>
-					<td><form:checkbox cssClass="checkbox" path="userAccountDetails[${vs.index}].enabled" name="enabled" value="${userAccountDetails.enabled}"/></td>
-					<td>${userAccountDetails.lastLogin}</td>
+					<td><i class="fa fa-circle" style="color: ${activeSessions[user.username] ? 'lightseagreen' : 'indianred'}" aria-hidden="true"></i> ${user.firstName}&nbsp;${user.lastName}</td>
+					<td><a href="mailto:${user.username}">${user.username}</a></td>
+					<td><form:checkbox cssClass="checkbox" path="userManagementFormRows[${vs.index}].enabled" name="enabled" /></td>
+					<td><fmt:formatDate value="${user.lastLoginAsDate}" type="both"/></td>
 				</tr>
-				<form:hidden path="userAccountDetails[${vs.index}].emailAddress" name="emailAddress" value="${userAccountDetails.emailAddress}"/>
+				<form:hidden path="userManagementFormRows[${vs.index}].id" name="id" />
 			</c:forEach>
 			</tbody>
 		</table>

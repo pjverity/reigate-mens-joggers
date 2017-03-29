@@ -11,9 +11,8 @@ import java.util.Objects;
 		// cast() is required as PostgreSQL sum() function returns a bigint, which translates to a BigDecimal and so doesn't match
 		// the ctor signature. {h-schema} is a Hibernate construct used for native queries, it substitutes in the default schema name
 		// specified by the hibernate.default_schema JPA property. (This is done automatically for normal entity queries (HQL? JQL?))
-		query = "SELECT u.username, ud.first_name, ud.last_name, cast(sum(p.quantity) as INTEGER) as balance FROM {h-schema}users u, {h-schema}user_details ud, {h-schema}purchases p" +
-				        " WHERE ud.username = p.username" +
-				        " AND u.username = p.username" +
+		query = "SELECT u.username, u.first_name, u.last_name, cast(sum(p.quantity) as INTEGER) as balance FROM {h-schema}users u, {h-schema}purchases p" +
+				        " WHERE u.username = p.username" +
 				        " AND u.enabled = TRUE" +
 				        " GROUP BY u.username, first_name, last_name",
 		resultSetMapping = "QueryResultMapping"

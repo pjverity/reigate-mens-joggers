@@ -79,7 +79,6 @@ public class HomeController
 	public String get(ModelMap model)
 	{
 		model.put("form", new UserRegistrationFormObject());
-		model.put("registrationServiceAvailable", registrationService.isServiceAvailable());
 
 		return VIEW_NAME;
 	}

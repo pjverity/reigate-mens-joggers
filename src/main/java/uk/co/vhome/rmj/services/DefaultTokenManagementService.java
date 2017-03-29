@@ -2,11 +2,11 @@ package uk.co.vhome.rmj.services;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import uk.co.vhome.rmj.entities.MemberBalance;
 import uk.co.vhome.rmj.entities.Purchase;
+import uk.co.vhome.rmj.entities.UserDetailsEntity;
 import uk.co.vhome.rmj.repositories.PurchaseRepository;
 
 import javax.inject.Inject;
@@ -145,7 +145,7 @@ public class DefaultTokenManagementService implements TokenManagementService
 
 	private boolean isUserEnabled(String username)
 	{
-		UserDetails userDetails = userAccountManagementService.findUserDetails(username);
+		UserDetailsEntity userDetails = userAccountManagementService.findUserDetails(username);
 
 		return userDetails != null && userDetails.isEnabled();
 	}
