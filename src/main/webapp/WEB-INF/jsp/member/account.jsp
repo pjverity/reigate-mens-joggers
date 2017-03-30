@@ -22,10 +22,20 @@
 		<h1>Account Management</h1>
 	</div>
 
+	<%-- Token balance --%>
+	<div class="row">
+		<div class="col-md-12">
+			<h5>Token Balance</h5>
+			You currently have <strong>${tokenBalance}</strong> token(s) to use
+		</div>
+	</div>
+
+	<p></p>
+
+	<%-- Password management --%>
 	<div class="row">
 		<div class="col-md-12">
 
-			<%-- Password management --%>
 			<form:form cssClass="form-inline" modelAttribute="passwordChangeFormObject" method="post">
 
 				<spring:hasBindErrors name="passwordChangeFormObject">

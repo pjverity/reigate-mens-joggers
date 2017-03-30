@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import uk.co.vhome.rmj.services.TokenManagementService;
 import uk.co.vhome.rmj.services.UserAccountManagementService;
 
 import javax.inject.Inject;
@@ -24,10 +25,14 @@ public class AccountViewController
 
 	private final UserAccountManagementService userAccountManagementService;
 
+	private final TokenManagementService tokenManagementService;
+
 	@Inject
-	public AccountViewController(UserAccountManagementService userAccountManagementService)
+	public AccountViewController(UserAccountManagementService userAccountManagementService,
+	                             TokenManagementService tokenManagementService)
 	{
 		this.userAccountManagementService = userAccountManagementService;
+		this.tokenManagementService = tokenManagementService;
 	}
 
 	@GetMapping("/member/account")
@@ -65,6 +70,13 @@ public class AccountViewController
 	PasswordChangeFormObject passwordChangeFormObject()
 	{
 		return new PasswordChangeFormObject();
+	}
+
+	@SuppressWarnings("unused")
+	@ModelAttribute("tokenBalance")
+	Integer tokenBalance(@AuthenticationPrincipal Principal principal)
+	{
+		return tokenManagementService.balanceForMember(principal.getName());
 	}
 
 }
