@@ -11,6 +11,8 @@ public class PasswordChangeFormObject
 {
 	private String oldPassword;
 
+	private boolean passwordChanged;
+
 	@NotBlank(message = "{validation.constraint.NotBlank.newPassword}")
 	private String newPassword;
 
@@ -44,5 +46,15 @@ public class PasswordChangeFormObject
 	public void setConfirmedNewPassword(String confirmedNewPassword)
 	{
 		this.confirmedNewPassword = confirmedNewPassword;
+	}
+
+	public boolean isPasswordChanged()
+	{
+		return passwordChanged;
+	}
+
+	public void setPasswordChanged(boolean passwordChanged)
+	{
+		this.passwordChanged = passwordChanged;
 	}
 }
