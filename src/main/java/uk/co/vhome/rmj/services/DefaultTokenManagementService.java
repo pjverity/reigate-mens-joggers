@@ -46,6 +46,9 @@ public class DefaultTokenManagementService implements TokenManagementService
 		setBalanceLowerLimit(-5);
 		setBalanceUpperLimit(20);
 
+		/*
+		 * Take note of UI options in TokenManagementViewController
+		 */
 		setCreditLimit(10);
 		setDebitLimit(1);
 	}

@@ -23,42 +23,38 @@
 		<h1>Token Management</h1>
 	</div>
 
-	<form:form modelAttribute="tokenManagementFormObject" >
+	<form:form modelAttribute="tokenManagementFormObject">
 
-		<table class="table table-condensed">
-			<thead>
-			<tr>
-				<th>Name</th>
-				<th>Balance</th>
-				<th>Quantity</th>
-			</tr>
-			</thead>
-
-			<tbody>
-
-			<c:forEach var="row" items="${tokenManagementFormObject.rows}" varStatus="vs">
+		<div class="table-responsive">
+			<table class="table table-condensed">
+				<thead>
 				<tr>
-					<td class="form-control-static">
-						${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}
-					</td>
-					<td class="form-control-static">
-							${row.memberBalance.balance}
-					</td>
-					<td>
-						<spring:bind path="rows[${vs.index}].quantity">
-						<div class="col-xs-5 ${status.error ? 'has-error':''}">
-
-							<form:input cssClass="form-control input-sm"  path="rows[${vs.index}].quantity" value="${row.quantity}" />
-
-							<form:errors path="rows[${vs.index}].quantity" cssClass="help-block" element="span"/>
-						</div>
-						</spring:bind>
-					</td>
+					<th>Member</th>
+					<th>Current Balance</th>
+					<th>Credit Amount</th>
 				</tr>
-			</c:forEach>
-			</tbody>
-		</table>
+				</thead>
 
+				<tbody>
+
+				<c:forEach var="row" items="${tokenManagementFormObject.rows}" varStatus="vs">
+					<tr>
+						<td class="form-control-static">
+								${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}
+						</td>
+						<td class="form-control-static">
+								${row.memberBalance.balance}
+						</td>
+						<td>
+							<form:select path="rows[${vs.index}].quantity" cssClass="form-control input-sm">
+								<form:options items="${creditQuantities}"/>
+							</form:select>
+						</td>
+					</tr>
+				</c:forEach>
+				</tbody>
+			</table>
+		</div>
 		<form:button type="submit" class="btn btn-primary">Update</form:button>
 	</form:form>
 
