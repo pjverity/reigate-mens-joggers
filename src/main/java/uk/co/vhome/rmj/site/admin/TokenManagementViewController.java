@@ -5,9 +5,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import uk.co.vhome.rmj.entities.MemberBalance;
 import uk.co.vhome.rmj.services.TokenManagementService;
 
 import javax.validation.Valid;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +27,8 @@ public class TokenManagementViewController
 		this.tokenManagementService = tokenManagementService;
 	}
 
-	static {
+	static
+	{
 		/*
 		 * Take note of limits defined in DefaultTokenManagementService
 		 */
@@ -45,7 +48,7 @@ public class TokenManagementViewController
 	@PostMapping(value = "/admin/token-management")
 	String post(@Valid TokenManagementFormObject formObject, BindingResult bindingResult)
 	{
-		if ( bindingResult.hasErrors() )
+		if (bindingResult.hasErrors())
 		{
 			return "/admin/token-management";
 		}
@@ -63,7 +66,9 @@ public class TokenManagementViewController
 	}
 
 	@GetMapping(value = "/admin/token-management")
-	void get() { }
+	void get()
+	{
+	}
 
 	@SuppressWarnings("unused")
 	@ModelAttribute("creditQuantities")
@@ -78,9 +83,10 @@ public class TokenManagementViewController
 		TokenManagementFormObject formObject = new TokenManagementFormObject();
 
 		List<TokenManagementFormRow> rows = tokenManagementService.balanceForAllEnabledMembers()
-				                                      .stream()
-				                                      .map(TokenManagementFormRow::new)
-				                                      .collect(Collectors.toList());
+				                                    .stream()
+				                                    .sorted(Comparator.comparing(MemberBalance::getLastName).thenComparing(Comparator.comparing(MemberBalance::getFirstName)))
+				                                    .map(TokenManagementFormRow::new)
+				                                    .collect(Collectors.toList());
 		formObject.setRows(rows);
 
 		return formObject;

@@ -2,9 +2,11 @@ package uk.co.vhome.rmj.site.organiser;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import uk.co.vhome.rmj.entities.MemberBalance;
 import uk.co.vhome.rmj.services.TokenManagementService;
 
 import javax.inject.Inject;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,9 +47,10 @@ public class EventRegistrationViewController
 		EventRegistrationFormObject formObject = new EventRegistrationFormObject();
 
 		List<EventRegistrationFormRow> rows = tokenManagementService.balanceForAllEnabledMembers()
-				                                         .stream()
-				                                         .map(EventRegistrationFormRow::new)
-				                                         .collect(Collectors.toList());
+				                                      .stream()
+				                                      .sorted(Comparator.comparing(MemberBalance::getLastName).thenComparing(Comparator.comparing(MemberBalance::getFirstName)))
+				                                      .map(EventRegistrationFormRow::new)
+				                                      .collect(Collectors.toList());
 		formObject.setRows(rows);
 
 		return formObject;
