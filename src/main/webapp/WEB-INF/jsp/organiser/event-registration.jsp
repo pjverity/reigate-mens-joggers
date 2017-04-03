@@ -9,9 +9,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<c:set var="pageTitleSuffix" value="Member Registration"/>
+<c:set var="pageTitleSuffix" value="Event Registration"/>
 
-<%@include file="../head.jsp" %>
+<head>
+	<%@ include file='../head-common.jsp' %>
+</head>
 
 <body>
 
@@ -20,17 +22,32 @@
 <div class="container">
 
 	<div class="page-header">
-		<h1>Member Registration</h1>
+		<h1>Event Registration</h1>
 	</div>
 
-	<form:form modelAttribute="eventRegistrationFormObject" >
+	<form:form modelAttribute="eventRegistrationFormObject">
 
+		<div class="form-inline">
+			<div class="form-group">
+				<label for="run" class=" control-label">Run</label>
+				<c:if test="${empty events}">
+					<p id="run" class="form-control-static">No Events scheduled. Click <a href="<c:url value="/organiser/event-management"/>">here</a> to create one</p>
+				</c:if>
+				<c:if test="${not empty events}">
+					<form:select id="run" cssClass="form-control" path="event">
+						<form:options items="${events}" itemLabel="eventDateTimeText"/>
+					</form:select>
+				</c:if>
+			</div>
+		</div>
+
+		<p></p>
 		<table class="table table-condensed">
 			<thead>
 			<tr>
-				<th>Name</th>
-				<th>Tokens</th>
-				<th>Present</th>
+				<th>Member</th>
+				<th>Token Balance</th>
+				<th>Completed Run</th>
 			</tr>
 			</thead>
 
@@ -46,14 +63,14 @@
 			</tbody>
 		</table>
 
-		<form:button type="submit" class="btn btn-primary">Update</form:button>
+		<c:if test="${empty events}">
+			<c:set var="disableSubmit" value="true"/>
+		</c:if>
+
+		<form:button type="submit" class="btn btn-primary" disabled="${disableSubmit}">Complete Run</form:button>
 	</form:form>
 
 </div>
 </body>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-        crossorigin="anonymous"></script>
 
 </html>

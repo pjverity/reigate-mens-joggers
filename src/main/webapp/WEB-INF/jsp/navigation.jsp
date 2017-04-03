@@ -50,6 +50,9 @@
 									<li>
 										<a href="<c:url value="/organiser/event-registration"/>">Event Registration</a>
 									</li>
+									<li>
+										<a href="<c:url value="/organiser/event-management"/>">Event Management</a>
+									</li>
 								</security:authorize>
 								<security:authorize access="hasRole('MEMBER')">
 									<li>

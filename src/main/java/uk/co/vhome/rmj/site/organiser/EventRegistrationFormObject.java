@@ -1,5 +1,8 @@
 package uk.co.vhome.rmj.site.organiser;
 
+import uk.co.vhome.rmj.entities.Event;
+
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -8,6 +11,9 @@ import java.util.List;
 public class EventRegistrationFormObject
 {
 	private List<EventRegistrationFormRow> rows;
+
+	@NotNull
+	private Event event;
 
 	public List<EventRegistrationFormRow> getRows()
 	{
@@ -19,4 +25,13 @@ public class EventRegistrationFormObject
 		this.rows = rows;
 	}
 
+	public Event getEvent()
+	{
+		return event;
+	}
+
+	public void setEvent(Event event)
+	{
+		this.event = event;
+	}
 }
