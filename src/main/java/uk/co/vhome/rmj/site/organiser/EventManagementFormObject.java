@@ -1,6 +1,7 @@
 package uk.co.vhome.rmj.site.organiser;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import uk.co.vhome.rmj.site.form.validation.NotPastLocalDate;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.time.LocalTime;
 public class EventManagementFormObject
 {
 	@NotNull
+	@NotPastLocalDate
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate eventDate;
 

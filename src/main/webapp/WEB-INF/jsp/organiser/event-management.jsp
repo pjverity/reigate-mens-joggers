@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -39,7 +40,9 @@
 					<h3 class="panel-title">Event Creation</h3>
 				</div>
 				<div class="panel-body">
+
 					<form:form cssClass="form-inline" modelAttribute="eventManagementFormObject" method="post">
+
 						<div class="form-group">
 							<label for="datepicker">Date</label>
 							<form:input cssClass="form-control" path="eventDate" type="text" id="datepicker"/>
@@ -52,8 +55,15 @@
 							</form:select>
 						</div>
 
-						<button class="btn btn-primary" type="submit">Add event</button>
+						<button class="btn btn-primary" type="submit">Create Event</button>
+
+						<spring:hasBindErrors name="eventManagementFormObject">
+							<form:errors cssClass="text-danger"/>
+							<form:errors path="eventDate" cssClass="text-danger"/>
+						</spring:hasBindErrors>
+
 					</form:form>
+
 				</div>
 			</div>
 		</div>

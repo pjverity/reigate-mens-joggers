@@ -89,7 +89,7 @@
 				<div class="col-xs-12">
 					<div class="alert alert-danger alert-dismissible" role="alert">
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<strong>Ooos!</strong> We couldn't change your password because of the following problems:
+						<strong>Oops!</strong> We couldn't change your password because of the following problems:
 						<ul>
 							<form:errors path="oldPassword" element="li"/>
 							<form:errors path="newPassword" element="li"/>
