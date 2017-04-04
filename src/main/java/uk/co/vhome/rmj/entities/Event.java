@@ -16,7 +16,10 @@ public class Event
 	@Column(name = "event_datetime")
 	private LocalDateTime eventDateTime;
 
+	@Basic
 	private boolean completed;
+
+	private transient boolean cancelled;
 
 	public Long getId()
 	{
@@ -46,6 +49,16 @@ public class Event
 	public void setCompleted(boolean completed)
 	{
 		this.completed = completed;
+	}
+
+	public boolean isCancelled()
+	{
+		return cancelled;
+	}
+
+	public void setCancelled(boolean cancelled)
+	{
+		this.cancelled = cancelled;
 	}
 
 	public String getEventDateTimeText()

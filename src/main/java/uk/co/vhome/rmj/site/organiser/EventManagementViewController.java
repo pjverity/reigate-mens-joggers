@@ -60,8 +60,8 @@ public class EventManagementViewController
 	}
 
 	@SuppressWarnings("unused")
-	@PostMapping("/organiser/event-management")
-	String post(@Valid EventManagementFormObject eventManagementFormObject, BindingResult bindingResult)
+	@PostMapping("/organiser/create-event")
+	String createEvent(@Valid EventCreationFormObject eventCreationFormObject, BindingResult bindingResult)
 	{
 		if (bindingResult.hasErrors())
 		{
@@ -70,9 +70,8 @@ public class EventManagementViewController
 
 		try
 		{
-
-			LocalDateTime eventDateTime = LocalDateTime.of(eventManagementFormObject.getEventDate(),
-			                                               eventManagementFormObject.getEventTime());
+			LocalDateTime eventDateTime = LocalDateTime.of(eventCreationFormObject.getEventDate(),
+			                                               eventCreationFormObject.getEventTime());
 
 			eventManagementService.createNewEvent(eventDateTime);
 
@@ -88,6 +87,17 @@ public class EventManagementViewController
 	}
 
 	@SuppressWarnings("unused")
+	@PostMapping("/organiser/cancel-event")
+	String cancelEvent(EventCancellationFormObject eventCancellationFormObject)
+	{
+		eventCancellationFormObject.getEvents().stream()
+				.filter(Event::isCancelled)
+				.forEach(eventManagementService::cancelEvent);
+
+		return "redirect:/organiser/event-management";
+	}
+
+	@SuppressWarnings("unused")
 	@ModelAttribute("eventTimes")
 	List<LocalTime> eventTimes()
 	{
@@ -95,18 +105,20 @@ public class EventManagementViewController
 	}
 
 	@SuppressWarnings("unused")
-	@ModelAttribute("incompleteEvents")
-	List<Event> incompleteEvents()
+	@ModelAttribute
+	EventCreationFormObject eventCreationFormObject()
 	{
-		return eventManagementService.findAllIncompleteEvents();
+		EventCreationFormObject eventCreationFormObject = new EventCreationFormObject();
+		eventCreationFormObject.setEventDate(LocalDate.now());
+		return eventCreationFormObject;
 	}
 
 	@SuppressWarnings("unused")
 	@ModelAttribute
-	EventManagementFormObject eventManagementFormObject()
+	EventCancellationFormObject eventCancellationFormObject()
 	{
-		EventManagementFormObject eventManagementFormObject = new EventManagementFormObject();
-		eventManagementFormObject.setEventDate(LocalDate.now());
-		return eventManagementFormObject;
+		EventCancellationFormObject eventCancellationFormObject = new EventCancellationFormObject();
+		eventCancellationFormObject.setEvents(eventManagementService.findAllIncompleteEvents());
+		return eventCancellationFormObject;
 	}
 }

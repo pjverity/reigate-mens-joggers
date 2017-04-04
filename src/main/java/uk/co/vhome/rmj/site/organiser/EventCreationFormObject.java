@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class EventManagementFormObject
+public class EventCreationFormObject
 {
 	@NotNull
 	@NotPastLocalDate

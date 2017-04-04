@@ -46,4 +46,15 @@ public class DefaultEventManagementService implements EventManagementService
 		event.setCompleted(true);
 		eventRepository.save(event);
 	}
+
+	@Override
+	public void cancelEvent(Event event)
+	{
+		if ( event.isCompleted() )
+		{
+			throw new IllegalArgumentException("Attempted to cancel a completed event");
+		}
+
+		eventRepository.delete(event);
+	}
 }

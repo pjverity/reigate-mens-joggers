@@ -14,4 +14,6 @@ public interface EventManagementService
 	void createNewEvent(LocalDateTime eventDateTime);
 
 	void completeEvent(Event event);
+
+	void cancelEvent(Event event);
 }

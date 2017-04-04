@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
@@ -92,6 +93,33 @@ public class EventManagementServiceITTest
 		assertEquals(1, incompleteEvents.size());
 	}
 	
+	@Test
+	@Sql({"/schema.sql", "/data.sql"})
+	public void eventCancelled() throws Exception
+	{
+		List<Event> incompleteEvents = eventManagementService.findAllIncompleteEvents();
+
+		Event eventToCancel = incompleteEvents.get(0);
+
+		eventManagementService.cancelEvent(eventToCancel);
+
+		incompleteEvents = eventManagementService.findAllIncompleteEvents();
+		assertEquals(1, incompleteEvents.size());
+
+		assertNotEquals(incompleteEvents.get(0).getId(), eventToCancel.getId());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	@Sql({"/schema.sql", "/data.sql"})
+	public void throwsExceptionWhenCompletedEventIsCancelled() throws Exception
+	{
+		List<Event> completedEvents = eventManagementService.findAllCompletedEvents();
+
+		Event eventToCancel = completedEvents.get(0);
+
+		eventManagementService.cancelEvent(eventToCancel);
+	}
+
 	@Test(expected = DataIntegrityViolationException.class)
 	@Sql({"/schema.sql", "/data.sql"})
 	public void throwsExceptionWhenDuplicateEventCreated() throws Exception
