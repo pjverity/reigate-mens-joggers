@@ -10,7 +10,7 @@ import uk.co.vhome.rmj.entities.UserDetailsEntity;
 
 import java.time.Instant;
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -21,7 +21,7 @@ public interface UserDetailsRepository extends JpaRepository<UserDetailsEntity, 
 {
 	UserDetailsEntity findByUsername(String username);
 
-	List<UserDetailsEntity> findByUsernameIn(Collection<String> usernames);
+	Set<UserDetailsEntity> findByUsernameIn(Collection<String> usernames);
 
 	@Modifying
 	@Query("update UserDetailsEntity u set u.lastLogin = :loginTime where u.username = :username")

@@ -21,7 +21,9 @@ import uk.co.vhome.rmj.security.RunAs;
 
 import javax.inject.Inject;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Default implementation of the {@link UserAccountManagementService} service interface
@@ -194,7 +196,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 		                                                                                     new String[]{Group.ADMIN},
 		                                                                                     String.class);
 
-		List<UserDetailsEntity> administrators = userDetailsRepository.findByUsernameIn(enabledUsersInGroup);
+		Set<UserDetailsEntity> administrators = userDetailsRepository.findByUsernameIn(new HashSet<>(enabledUsersInGroup));
 		mailService.sendAdministratorNotification(administrators, newUserDetails);
 	}
 

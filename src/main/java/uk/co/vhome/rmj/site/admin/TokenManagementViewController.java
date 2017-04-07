@@ -82,7 +82,7 @@ public class TokenManagementViewController
 	{
 		TokenManagementFormObject formObject = new TokenManagementFormObject();
 
-		List<TokenManagementFormRow> rows = tokenManagementService.balanceForAllEnabledMembers()
+		List<TokenManagementFormRow> rows = tokenManagementService.balancesForAllEnabledMembers()
 				                                    .stream()
 				                                    .sorted(Comparator.comparing(MemberBalance::getLastName).thenComparing(Comparator.comparing(MemberBalance::getFirstName)))
 				                                    .map(TokenManagementFormRow::new)

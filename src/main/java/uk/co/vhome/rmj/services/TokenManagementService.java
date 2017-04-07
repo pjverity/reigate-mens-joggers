@@ -23,5 +23,5 @@ public interface TokenManagementService
 	Integer balanceForMember(String username);
 
 	@Secured({Role.ORGANISER})
-	List<MemberBalance> balanceForAllEnabledMembers();
+	List<MemberBalance> balancesForAllEnabledMembers();
 }

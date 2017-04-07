@@ -143,7 +143,7 @@ public class DefaultTokenManagementService implements TokenManagementService
 	}
 
 	@Override
-	public List<MemberBalance> balanceForAllEnabledMembers()
+	public List<MemberBalance> balancesForAllEnabledMembers()
 	{
 		return ((List<MemberBalance>) entityManager.createNamedQuery(MemberBalance.ALL_ENABLED_MEMBERS_BALANCE_QUERY).getResultList());
 	}

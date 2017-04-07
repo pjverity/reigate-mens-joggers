@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Set;
 
 @Entity
 @Table(name = "events")
@@ -15,6 +16,12 @@ public class Event
 
 	@Column(name = "event_datetime")
 	private LocalDateTime eventDateTime;
+
+	@ManyToMany
+	@JoinTable(name = "event_participants",
+		joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
+		inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+	private Set<UserDetailsEntity> userDetailsEntities;
 
 	@Basic
 	private boolean completed;
@@ -61,8 +68,41 @@ public class Event
 		this.cancelled = cancelled;
 	}
 
+	public Set<UserDetailsEntity> getUserDetailsEntities()
+	{
+		return userDetailsEntities;
+	}
+
+	public void setUserDetailsEntities(Set<UserDetailsEntity> userDetailsEntities)
+	{
+		this.userDetailsEntities = userDetailsEntities;
+	}
+
 	public String getEventDateTimeText()
 	{
 		return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT).format(eventDateTime);
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o)
+		{
+			return true;
+		}
+		if (o == null || getClass() != o.getClass())
+		{
+			return false;
+		}
+
+		Event event = (Event) o;
+
+		return id != null ? id.equals(event.id) : event.id == null;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return id != null ? id.hashCode() : 0;
 	}
 }

@@ -15,6 +15,15 @@ public class EventRegistrationFormObject
 	@NotNull
 	private Event event;
 
+	public EventRegistrationFormObject()
+	{
+	}
+
+	public EventRegistrationFormObject(List<EventRegistrationFormRow> rows)
+	{
+		this.rows = rows;
+	}
+
 	public List<EventRegistrationFormRow> getRows()
 	{
 		return rows;

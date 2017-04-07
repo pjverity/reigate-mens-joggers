@@ -87,7 +87,7 @@ public class DefaultTokenManagementServiceITCase
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 
-		List<MemberBalance> memberBalance = tokenManagementService.balanceForAllEnabledMembers();
+		List<MemberBalance> memberBalance = tokenManagementService.balancesForAllEnabledMembers();
 
 		assertEquals(1, memberBalance.size());
 

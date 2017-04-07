@@ -4,7 +4,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
@@ -38,9 +37,7 @@ import java.util.Map;
 		excludeFilters = @ComponentScan.Filter(Controller.class)
 )
 @EnableJpaRepositories(     //p.651
-		basePackages = "uk.co.vhome.rmj.repositories",
-		entityManagerFactoryRef = "entityManagerFactoryBean",
-		transactionManagerRef = "jpaTransactionManager"
+		basePackages = "uk.co.vhome.rmj.repositories"
 )
 public class RootContextConfiguration
 {
@@ -86,7 +83,7 @@ public class RootContextConfiguration
 	// Configure the persistence unit (Which manages our entities and configures the JPA implementation
 	// (Hibernate O/RM being the chosen JPA implementation) (p604)
 	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean()
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory()
 	{
 		Map<String, Object> properties = new Hashtable<>();
 		properties.put(SCHEMA_GENERATION_KEY, "none");
@@ -109,7 +106,7 @@ public class RootContextConfiguration
 	//@Primary - Uncomment if more than one PlatformTransactionManager is present, for example if
 	// a bean creates a DataSourceTransactionManager. This annotation is preferred
 	// vs implementing TransactionManagementConfigurer.
-	public PlatformTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory)
+	public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory)
 	{
 		return new JpaTransactionManager(entityManagerFactory);
 	}
