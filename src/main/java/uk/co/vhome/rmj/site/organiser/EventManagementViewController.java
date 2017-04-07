@@ -3,7 +3,9 @@ package uk.co.vhome.rmj.site.organiser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class EventManagementViewController
@@ -55,8 +58,13 @@ public class EventManagementViewController
 
 	@SuppressWarnings("unused")
 	@GetMapping("/organiser/event-management")
-	void get()
+	void get(@Param(value = "eventId") Long eventId, @ModelAttribute("completedEvents") ArrayList<Event> completedEvents, ModelMap modelMap)
 	{
+		if (eventId != null)
+		{
+			Optional<Event> event = completedEvents.stream().filter(e -> e.getId().equals(eventId)).findFirst();
+			event.ifPresent(e -> modelMap.put("selectedEvent", e));
+		}
 	}
 
 	@SuppressWarnings("unused")

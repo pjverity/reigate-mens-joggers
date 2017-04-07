@@ -39,29 +39,34 @@
 							</a>
 							<ul class="dropdown-menu">
 								<security:authorize access="hasRole('ADMIN')">
+									<li class="dropdown-header">Admin</li>
 									<li>
 										<a href="<c:url value="/admin/user-management"/>">User Management</a>
 									</li>
 									<li>
 										<a href="<c:url value="/admin/token-management"/>">Token Management</a>
 									</li>
+									<li role="separator" class="divider"></li>
 								</security:authorize>
 								<security:authorize access="hasRole('ORGANISER')">
-									<li>
-										<a href="<c:url value="/organiser/event-registration"/>">Event Registration</a>
-									</li>
+									<li class="dropdown-header">Organiser</li>
 									<li>
 										<a href="<c:url value="/organiser/event-management"/>">Event Management</a>
 									</li>
+									<li>
+										<a href="<c:url value="/organiser/event-registration"/>">Event Registration</a>
+									</li>
+									<li role="separator" class="divider"></li>
 								</security:authorize>
 								<security:authorize access="hasRole('MEMBER')">
 									<li>
-										<a href="<c:url value="/member/home"/>">Member</a>
+										<a href="<c:url value="/member/home"/>">Messages</a>
 									</li>
 								</security:authorize>
 								<li>
-									<a href="<c:url value="/member/account"/>">My Account</a>
+									<a href="<c:url value="/member/account"/>">Account</a>
 								</li>
+								<li role="separator" class="divider"></li>
 								<li>
 									<a href="#" onclick="document.logoutForm.submit()">Logout</a>
 								</li>

@@ -41,7 +41,7 @@
 
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Event Creation</h3>
+					<h3 class="panel-title">Create New Event</h3>
 				</div>
 				<div class="panel-body">
 					<c:url var="createEventUrl" value="/organiser/create-event" />
@@ -123,9 +123,12 @@
 						</thead>
 						<tbody>
 						<c:forEach var="event" items="${completedEvents}">
+							<c:url value="/organiser/event-management" var="url">
+								<c:param name="eventId" value="${event.id}"/>
+							</c:url>
 							<tr>
-								<td>${event.eventDateTimeText}</td>
-								<td>${fn:length(event.userDetailsEntities)}</td>
+								<td><a href="${url}">${event.eventDateTimeText}</a></td>
+								<td><a href="${url}">${fn:length(event.userDetailsEntities)}</a></td>
 							</tr>
 						</c:forEach>
 						</tbody>
@@ -135,6 +138,25 @@
 		</div>
 
 	</div>
+
+	<c:if test="${not empty selectedEvent}">
+		<div class="row">
+			<div class="col-md-12">
+				<div class=" panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Participants for event: ${selectedEvent.eventDateTimeText}</h3>
+					</div>
+					<div class="panel-body">
+						<ul>
+						<c:forEach var="user" items="${selectedEvent.userDetailsEntities}">
+							<li>${user.firstName}&nbsp;${user.lastName} (<a href="mailto:${user.username}">${user.username}</a>)</li>
+						</c:forEach>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</c:if>
 
 </div>
 

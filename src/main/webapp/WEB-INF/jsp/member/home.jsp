@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<c:set var="pageTitleSuffix" value="User Home"/>
+<c:set var="pageTitleSuffix" value="Member Home"/>
 
 <head>
 	<%@include file="../head-common.jsp" %>
@@ -18,7 +18,7 @@
 
 <div class="container">
 	<div class="page-header">
-		<h1>Member Pages
+		<h1>Messages
 			<small>(More Coming Soon)</small>
 		</h1>
 	</div>
