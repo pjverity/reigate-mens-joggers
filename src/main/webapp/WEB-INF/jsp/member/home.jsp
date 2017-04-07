@@ -18,17 +18,20 @@
 
 <div class="container">
 	<div class="page-header">
-		<h1>Messages
-			<small>(More Coming Soon)</small>
-		</h1>
+		<h1>Messages</h1>
 	</div>
+	<div class="well">
 	<p>Hi ${userFirstName}!</p>
 	<p>
-		This is your very own page at Reigate Mens Joggers. It's a little barren at the moment but we hope to fix that soon enough as we start to build
-		up our site.
+		It's been a while coming, but we have our first significant site update! In this update you can:
 	</p>
+	<ul>
+		<li>Check how many tokens you have from your <a href="<c:url value="/member/account"/> ">Account</a> page</li>
+		<li>See when all our upcoming runs are planned to take place</li>
+		<li>See how many runs you've completed. (Since we started keeping track that is!)</li>
+	</ul>
 	<p>
-		Use the navigation menu on the top bar of any page to access other member areas.
+		We're always happy to get your feedback on the site and what you'd like to see, so drop us a message with your ideas!
 	</p>
 	<p>
 		If you spot any errors or run in to any difficulties with the site, then please contact us at <a href="mailto:administrator@reigatemensjoggers.co.uk">administrator@reigatemensjoggers.co.uk</a>
@@ -40,10 +43,30 @@
 	<p>
 		The RMJ Team
 	</p>
+	</div>
 
-	<div class="text-center text-success bg-success">
-		<div style="font-size: 4em"><strong>${tokenCount}</strong></div>
-		Tokens
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<h3 class="panel-title">Upcoming Runs. You have completed <span class="badge ">${completedEvents}</span> runs!</h3>
+				</div>
+				<div class="panel-body">
+					<c:choose>
+						<c:when test="${empty upcomingEvents}">
+							No runs planned. Stay tuned!
+						</c:when>
+						<c:otherwise>
+							<ul>
+								<c:forEach var="event" items="${upcomingEvents}">
+									<li>${event.eventDateTimeText}</li>
+								</c:forEach>
+							</ul>
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</div>
+		</div>
 	</div>
 
 </div>

@@ -1,30 +1,45 @@
 package uk.co.vhome.rmj.site.member;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import uk.co.vhome.rmj.services.TokenManagementService;
+import uk.co.vhome.rmj.entities.Event;
+import uk.co.vhome.rmj.services.controller.MemberService;
 
-import java.security.Principal;
+import java.util.List;
 
 /**
  * Member home screen
  */
 @Controller
+@RequestMapping("member/home")
 public class HomeViewController
 {
-	private final TokenManagementService tokenManagementService;
+	private final MemberService memberService;
 
-	public HomeViewController(TokenManagementService tokenManagementService)
+	public HomeViewController(MemberService memberService)
 	{
-		this.tokenManagementService = tokenManagementService;
+		this.memberService = memberService;
 	}
 
-	@RequestMapping(value = "/member/home", method = RequestMethod.GET)
-	public void home(@AuthenticationPrincipal Principal principal, ModelMap modelMap)
+	@SuppressWarnings("unused")
+	@GetMapping
+	void get()
 	{
-		modelMap.put("tokenCount", tokenManagementService.balanceForMember(principal.getName()));
+	}
+
+	@SuppressWarnings("unused")
+	@ModelAttribute("completedEvents")
+	int completedEvents()
+	{
+		return memberService.completedEvents().size();
+	}
+
+	@SuppressWarnings("unused")
+	@ModelAttribute("upcomingEvents")
+	List<Event> upcomingEvents()
+	{
+		return memberService.findAllIncompleteEvents();
 	}
 }
