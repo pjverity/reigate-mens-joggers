@@ -105,6 +105,13 @@ public class EventManagementViewController
 	}
 
 	@SuppressWarnings("unused")
+	@ModelAttribute("completedEvents")
+	List<Event> completedEvents()
+	{
+		return eventManagementService.findTop10CompletedEvents();
+	}
+
+	@SuppressWarnings("unused")
 	@ModelAttribute
 	EventCreationFormObject eventCreationFormObject()
 	{

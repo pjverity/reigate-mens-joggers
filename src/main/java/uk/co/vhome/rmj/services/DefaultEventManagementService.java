@@ -1,6 +1,7 @@
 package uk.co.vhome.rmj.services;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uk.co.vhome.rmj.entities.Event;
 import uk.co.vhome.rmj.repositories.EventRepository;
 
@@ -26,9 +27,12 @@ public class DefaultEventManagementService implements EventManagementService
 	}
 
 	@Override
-	public List<Event> findAllCompletedEvents()
+	@Transactional
+	public List<Event> findTop10CompletedEvents()
 	{
-		return eventRepository.findAllByCompletedTrueOrderByEventDateTime();
+		List<Event> events = eventRepository.findTop10ByCompletedTrueOrderByEventDateTimeDesc();
+		events.forEach(e -> e.getUserDetailsEntities().size());
+		return events;
 	}
 
 	@Override

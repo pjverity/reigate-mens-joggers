@@ -53,7 +53,7 @@ public class EventManagementServiceITTest
 	@Sql({"/schema.sql", "/data.sql"})
 	public void findsAllCompletedSchedules() throws Exception
 	{
-		List<Event> completedEvents = eventManagementService.findAllCompletedEvents();
+		List<Event> completedEvents = eventManagementService.findTop10CompletedEvents();
 
 		assertNotNull(completedEvents);
 		assertEquals(1, completedEvents.size());
@@ -86,7 +86,7 @@ public class EventManagementServiceITTest
 		
 		eventManagementService.completeEvent(incompleteEvents.get(0));
 
-		List<Event> completedEvents = eventManagementService.findAllCompletedEvents();
+		List<Event> completedEvents = eventManagementService.findTop10CompletedEvents();
 		assertEquals(2, completedEvents.size());
 
 		incompleteEvents = eventManagementService.findAllIncompleteEvents();
@@ -113,7 +113,7 @@ public class EventManagementServiceITTest
 	@Sql({"/schema.sql", "/data.sql"})
 	public void throwsExceptionWhenCompletedEventIsCancelled() throws Exception
 	{
-		List<Event> completedEvents = eventManagementService.findAllCompletedEvents();
+		List<Event> completedEvents = eventManagementService.findTop10CompletedEvents();
 
 		Event eventToCancel = completedEvents.get(0);
 

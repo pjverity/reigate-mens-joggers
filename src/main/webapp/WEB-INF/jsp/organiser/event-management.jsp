@@ -3,6 +3,7 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%--@elvariable id="eventCreationFormObject" type="uk.co.vhome.rmj.site.organiser.EventCreationFormObject"--%>
 <%--@elvariable id="eventCancellationFormObject" type="uk.co.vhome.rmj.site.organiser.EventCancellationFormObject"--%>
@@ -74,7 +75,7 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-6">
 			<div class=" panel panel-default">
 				<div class="panel-heading">
 					<h3 class="panel-title">Upcoming Events</h3>
@@ -106,6 +107,33 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="col-md-6">
+			<div class=" panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Completed Events</h3>
+				</div>
+				<div class="panel-body">
+					<table class="table table-condensed">
+						<thead>
+						<tr>
+							<th>Event Date</th>
+							<th>Participants</th>
+						</tr>
+						</thead>
+						<tbody>
+						<c:forEach var="event" items="${completedEvents}">
+							<tr>
+								<td>${event.eventDateTimeText}</td>
+								<td>${fn:length(event.userDetailsEntities)}</td>
+							</tr>
+						</c:forEach>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
 	</div>
 
 </div>

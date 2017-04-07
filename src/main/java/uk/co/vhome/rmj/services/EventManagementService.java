@@ -9,7 +9,7 @@ public interface EventManagementService
 {
 	List<Event> findAllIncompleteEvents();
 
-	List<Event> findAllCompletedEvents();
+	List<Event> findTop10CompletedEvents();
 
 	void createNewEvent(LocalDateTime eventDateTime);
 
