@@ -35,6 +35,20 @@
 		<a href="https://twitter.com/MensJoggers" class="glyphicon fa fa-2x fa-twitter social-buttons" style="background-color: #55ACEE"></a>
 	</div>
 
+	<br/>
+
+	<div class="row">
+		<div class="col-sm-4"></div>
+		<div class="col-sm-4">
+			<div class="panel panel-info">
+				<div class="panel-heading">Next Run</div>
+				<div class="panel-body">
+					${nextEvent}
+				</div>
+			</div>
+		<div class="col-sm-4"></div>
+		</div>
+	</div>
 </div>
 
 <hr/>

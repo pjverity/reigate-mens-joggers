@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import uk.co.vhome.rmj.security.AuthenticatedUser;
 import uk.co.vhome.rmj.config.ServletContextConfiguration;
+import uk.co.vhome.rmj.entities.Event;
+import uk.co.vhome.rmj.security.AuthenticatedUser;
+import uk.co.vhome.rmj.services.EventManagementService;
 import uk.co.vhome.rmj.services.TokenManagementService;
 import uk.co.vhome.rmj.services.UserAccountManagementService;
 
@@ -23,9 +25,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -43,6 +48,8 @@ public class HomeController
 	private final UserAccountManagementService registrationService;
 
 	private final TokenManagementService tokenManagementService;
+
+	private final EventManagementService eventManagementService;
 
 	private final MessageSource messageSource;
 
@@ -74,10 +81,11 @@ public class HomeController
 	@Inject
 	public HomeController(UserAccountManagementService registrationService,
 	                      TokenManagementService tokenManagementService,
-	                      MessageSource messageSource)
+	                      EventManagementService eventManagementService, MessageSource messageSource)
 	{
 		this.registrationService = registrationService;
 		this.tokenManagementService = tokenManagementService;
+		this.eventManagementService = eventManagementService;
 		this.messageSource = messageSource;
 	}
 
@@ -146,6 +154,17 @@ public class HomeController
 		}
 
 		return model;
+	}
+
+	@SuppressWarnings("unused")
+	@ModelAttribute("nextEvent")
+	String nextEvent()
+	{
+		Optional<Event> first = eventManagementService.findAllIncompleteEvents().stream().findFirst();
+
+		return first.map(event -> event.getEventDateTime().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.SHORT)))
+				       .orElse("Watch this space!");
+
 	}
 
 	private static void populatePageModelForRegistration(Map<String, Object> pageModel, boolean isSuccessful, List<ConciseFieldError> conciseFieldErrors, String generalErrorMessage)
