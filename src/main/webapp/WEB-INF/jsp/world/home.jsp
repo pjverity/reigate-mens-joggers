@@ -38,15 +38,15 @@
 	<br/>
 
 	<div class="row">
-		<div class="col-sm-4"></div>
-		<div class="col-sm-4">
+		<div class="col-sm-3"></div>
+		<div class="col-sm-6">
 			<div class="panel panel-info">
 				<div class="panel-heading">Next Run</div>
 				<div class="panel-body">
-					${nextEvent}
+					<h4>${nextEvent}</h4>
 				</div>
 			</div>
-		<div class="col-sm-4"></div>
+		<div class="col-sm-3"></div>
 		</div>
 	</div>
 </div>
