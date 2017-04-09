@@ -141,9 +141,9 @@
 		<div class="row">
 			<div class="col-md-6"></div>
 			<div class="col-md-6">
-				<div class=" panel panel-default">
+				<div class=" panel panel-success">
 					<div class="panel-heading">
-						<h3 class="panel-title">${selectedEvent.eventDateTimeFullText}</h3>
+						<h3 class="panel-title"><i class="fa fa-check-square-o"></i> ${selectedEvent.eventDateTimeFullText}</h3>
 					</div>
 					<ul class="list-group">
 					<c:forEach var="user" items="${selectedEvent.userDetailsEntities}">

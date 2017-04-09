@@ -78,6 +78,11 @@ public class Event
 		this.userDetailsEntities = userDetailsEntities;
 	}
 
+	public String getEventDateTimeText()
+	{
+		return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT).format(eventDateTime);
+	}
+
 	public String getEventDateTimeFullText()
 	{
 		return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.SHORT).format(eventDateTime);

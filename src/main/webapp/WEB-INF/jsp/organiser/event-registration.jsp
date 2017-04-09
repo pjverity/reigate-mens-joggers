@@ -25,7 +25,7 @@
 		<h1>Event Registration</h1>
 	</div>
 
-	<form:form modelAttribute="eventRegistrationFormObject">
+	<form:form id="registrationForm" modelAttribute="eventRegistrationFormObject">
 
 		<div class="form-inline">
 			<div class="form-group">
@@ -35,7 +35,7 @@
 				</c:if>
 				<c:if test="${not empty events}">
 					<form:select id="run" cssClass="form-control" path="event">
-						<form:options items="${events}" itemLabel="eventDateTimeText"/>
+						<form:options items="${events}" itemLabel="eventDateTimeFullText"/>
 					</form:select>
 				</c:if>
 			</div>
@@ -67,10 +67,45 @@
 			<c:set var="disableSubmit" value="true"/>
 		</c:if>
 
-		<form:button type="submit" class="btn btn-primary" disabled="${disableSubmit}">Complete Run</form:button>
+		<div id="confirmModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Complete Run?</h4>
+					</div>
+					<div class="modal-body">
+						Confirm <strong><span id="partipantCount"></span></strong> people completed the run on <strong><span id="selectedEventDateTime"></span></strong>
+					</div>
+					<div class="modal-footer">
+						<form:button id="signup-cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancel</form:button>
+						<form:button type="submit" class="btn btn-primary" disabled="${disableSubmit}">Confirm</form:button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<a class="btn btn-primary" ${disableSubmit ? '' : 'data-target="#confirmModal"'} ${disableSubmit ? 'disabled' : ''} data-toggle="modal"  style="cursor: pointer">Complete Run</a>
+
 	</form:form>
 
 </div>
 </body>
+
+<script type="text/javascript">
+    const form = $("#registrationForm");
+
+    $('#confirmModal').on('show.bs.modal', function (e) {
+        $('#selectedEventDateTime').text($('#run').find(':selected').text());
+
+        var count = 0;
+        var input = $( "form input:checkbox" ).each( function () {
+            if ( this.checked ) { ++count; }
+        });
+
+        $('#partipantCount').text(count);
+
+    });
+
+</script>
 
 </html>
