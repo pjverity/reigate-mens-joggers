@@ -4,7 +4,9 @@ import org.springframework.security.access.annotation.Secured;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
 import uk.co.vhome.rmj.security.Role;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Service interface for user account management
@@ -14,7 +16,7 @@ public interface UserAccountManagementService
 	@Secured({Role.SYSTEM})
 	void createBasicDefaultAccounts();
 
-	void registerNewUser(String username, String firstName, String lastName, String password);
+	UserDetailsEntity registerNewUser(String username, String firstName, String lastName, String password);
 
 	@Secured({Role.ADMIN})
 	void createUser(String username, String firstName, String lastName, String password, String groupName);
@@ -30,6 +32,9 @@ public interface UserAccountManagementService
 
 	@Secured({Role.ADMIN})
 	List<UserDetailsEntity> findAllUserDetails();
+
+	@Secured({Role.ADMIN})
+	Set<UserDetailsEntity> findAllUserDetailsIn(Collection<String> usernames);
 
 	@Secured({Role.MEMBER})
 	UserDetailsEntity findUserDetails(String username);

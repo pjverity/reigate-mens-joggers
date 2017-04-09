@@ -21,7 +21,7 @@ import uk.co.vhome.rmj.security.RunAs;
 
 import javax.inject.Inject;
 import java.time.Instant;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -33,13 +33,6 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private static final String QUERY_ENABLED_ADMINS = "SELECT u.username FROM users u, group_members gm, groups g WHERE" +
-			                                                                                     " u.enabled = TRUE AND" +
-			                                                                                     " u.username = gm.username AND" +
-			                                                                                     " gm.group_id = g.id AND" +
-			                                                                                     " g.group_name = ?";
-
-	private final MailService mailService;
 
 	private final JdbcUserDetailsManager userDetailsManager;
 
@@ -51,12 +44,10 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 	@Inject
 	public DefaultUserAccountManagementService(InitialSiteUser initialSiteUser,
-	                                           MailService mailService,
 	                                           JdbcUserDetailsManager userDetailsManager,
 	                                           UserDetailsRepository userDetailsRepository,
 	                                           SessionRegistry sessionRegistry)
 	{
-		this.mailService = mailService;
 		this.userDetailsManager = userDetailsManager;
 		this.userDetailsRepository = userDetailsRepository;
 
@@ -98,20 +89,13 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	@Override
 	@Transactional(timeout = 15)
 	@Secured({RunAs.SYSTEM, Role.ANON})
-	public void registerNewUser(String username, String firstName, String lastName, String password)
+	public UserDetailsEntity registerNewUser(String username, String firstName, String lastName, String password)
 	{
 		LOGGER.info("Registering new user {}", username);
 
 		createUser(username, firstName, lastName, password, Group.MEMBER);
 
-		UserDetailsEntity userDetailsEntity = userDetailsRepository.findByUsername(username);
-
-		mailService.sendRegistrationMail(userDetailsEntity);
-
-		// TODO - Don't put this in the same transaction. If the notification sends to the
-		// user Ok and fails to sent to the admin, then whole thing rolls back leaving the
-		// user wondering why they can't log in to their account!
-		sendAdministratorNotification(userDetailsEntity);
+		return userDetailsRepository.findByUsername(username);
 	}
 
 	@Override
@@ -166,6 +150,11 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 		return userDetailsRepository.findAll();
 	}
 
+	@Override
+	public Set<UserDetailsEntity> findAllUserDetailsIn(Collection<String> usernames)
+	{
+		return userDetailsRepository.findByUsernameIn(usernames);
+	}
 
 	@Override
 	public UserDetailsEntity findUserDetails(String username)
@@ -187,17 +176,6 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 		userDetailsEntity.setLastName(StringUtils.capitalize(lastName));
 
 		userDetailsRepository.save(userDetailsEntity);
-	}
-
-	private void sendAdministratorNotification(UserDetailsEntity newUserDetails)
-	{
-		// TODO - Create a proper ORM entity model and interfaces to run these queries rather than using JDBC queries
-		List<String> enabledUsersInGroup = userDetailsManager.getJdbcTemplate().queryForList(QUERY_ENABLED_ADMINS,
-		                                                                                     new String[]{Group.ADMIN},
-		                                                                                     String.class);
-
-		Set<UserDetailsEntity> administrators = userDetailsRepository.findByUsernameIn(new HashSet<>(enabledUsersInGroup));
-		mailService.sendAdministratorNotification(administrators, newUserDetails);
 	}
 
 	private void invalidateSession(String username)

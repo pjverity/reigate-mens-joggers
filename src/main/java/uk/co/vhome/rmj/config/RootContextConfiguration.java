@@ -16,6 +16,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
@@ -109,6 +110,15 @@ public class RootContextConfiguration
 	public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory)
 	{
 		return new JpaTransactionManager(entityManagerFactory);
+	}
+
+	/**
+	 * Used in places where granular transaction management is required
+	 */
+	@Bean
+	TransactionTemplate transactionTemplate(PlatformTransactionManager platformTransactionManager)
+	{
+		return new TransactionTemplate(platformTransactionManager);
 	}
 
 	/**

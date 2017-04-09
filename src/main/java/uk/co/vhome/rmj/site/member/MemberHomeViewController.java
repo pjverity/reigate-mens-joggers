@@ -14,11 +14,11 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("member/home")
-public class HomeViewController
+public class MemberHomeViewController
 {
 	private final MemberService memberService;
 
-	public HomeViewController(MemberService memberService)
+	public MemberHomeViewController(MemberService memberService)
 	{
 		this.memberService = memberService;
 	}

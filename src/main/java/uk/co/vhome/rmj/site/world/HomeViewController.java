@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uk.co.vhome.rmj.config.ServletContextConfiguration;
 import uk.co.vhome.rmj.entities.Event;
-import uk.co.vhome.rmj.security.AuthenticatedUser;
-import uk.co.vhome.rmj.services.EventManagementService;
-import uk.co.vhome.rmj.services.TokenManagementService;
-import uk.co.vhome.rmj.services.UserAccountManagementService;
+import uk.co.vhome.rmj.services.controller.HomeViewControllerService;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +34,7 @@ import java.util.stream.Collectors;
  * The sites home page that also provides user registration functions
  */
 @Controller
-public class HomeController
+public class HomeViewController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
@@ -45,13 +42,9 @@ public class HomeController
 
 	private static final String MESSAGE_CODE_VALIDATION_CONSTRAINT_USER_REGISTRATION_VALID = "validation.constraint.UserRegistrationValid";
 
-	private final UserAccountManagementService registrationService;
-
-	private final TokenManagementService tokenManagementService;
-
-	private final EventManagementService eventManagementService;
-
 	private final MessageSource messageSource;
+
+	private final HomeViewControllerService homeViewControllerService;
 
 	private static class ConciseFieldError
 	{
@@ -79,13 +72,9 @@ public class HomeController
 	}
 
 	@Inject
-	public HomeController(UserAccountManagementService registrationService,
-	                      TokenManagementService tokenManagementService,
-	                      EventManagementService eventManagementService, MessageSource messageSource)
+	public HomeViewController(HomeViewControllerService homeViewControllerService, MessageSource messageSource)
 	{
-		this.registrationService = registrationService;
-		this.tokenManagementService = tokenManagementService;
-		this.eventManagementService = eventManagementService;
+		this.homeViewControllerService = homeViewControllerService;
 		this.messageSource = messageSource;
 	}
 
@@ -131,12 +120,10 @@ public class HomeController
 
 		try
 		{
-			AuthenticatedUser.runWithAnonUser(() -> registrationService.registerNewUser(userRegistrationFormObject.getEmailAddress(),
-			                                                                            userRegistrationFormObject.getFirstName(),
-			                                                                            userRegistrationFormObject.getLastName(),
-			                                                                            userRegistrationFormObject.getPassword()));
-
-			AuthenticatedUser.runWithSystemUser(() -> tokenManagementService.creditAccount(userRegistrationFormObject.getEmailAddress(), 1));
+			homeViewControllerService.registerNewUser(userRegistrationFormObject.getEmailAddress(),
+			                                          userRegistrationFormObject.getFirstName(),
+			                                          userRegistrationFormObject.getLastName(),
+			                                          userRegistrationFormObject.getPassword());
 
 			// This appears to by-pass the login handler, so have to duplicate setting the session variables here
 			httpServletRequest.login(userRegistrationFormObject.getConfirmEmailAddress(), userRegistrationFormObject.getPassword());
@@ -160,9 +147,9 @@ public class HomeController
 	@ModelAttribute("nextEvent")
 	String nextEvent()
 	{
-		Optional<Event> first = eventManagementService.findAllIncompleteEvents().stream().findFirst();
+		Optional<Event> optionalNextEvent = homeViewControllerService.findNextEvent();
 
-		return first.map(event -> event.getEventDateTime().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.SHORT)))
+		return optionalNextEvent.map(event -> event.getEventDateTime().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.SHORT)))
 				       .orElse("Watch this space!");
 
 	}

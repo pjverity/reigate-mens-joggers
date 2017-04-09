@@ -6,19 +6,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
+import uk.co.vhome.rmj.security.Group;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class DefaultMailService implements MailService
@@ -33,13 +32,25 @@ public class DefaultMailService implements MailService
 
 	private static final String FROM_NAME = "Reigate Mens Joggers";
 
+	private static final String QUERY_ENABLED_ADMINS = "SELECT u.username FROM users u, group_members gm, groups g WHERE" +
+			                                                   " u.enabled = TRUE AND" +
+			                                                   " u.username = gm.username AND" +
+			                                                   " gm.group_id = g.id AND" +
+			                                                   " g.group_name = ?";
+
+	private final JdbcUserDetailsManager userDetailsManager;
+
+	private final UserAccountManagementService userAccountManagementService;
+
 	private final JavaMailSender javaMailSender;
 
 	private final Configuration freemarkerConfiguration;
 
 	@Inject
-	public DefaultMailService(JavaMailSender javaMailSender, Configuration freemarkerConfiguration)
+	public DefaultMailService(JdbcUserDetailsManager userDetailsManager, UserAccountManagementService userAccountManagementService, JavaMailSender javaMailSender, Configuration freemarkerConfiguration)
 	{
+		this.userDetailsManager = userDetailsManager;
+		this.userAccountManagementService = userAccountManagementService;
 		this.javaMailSender = javaMailSender;
 		this.freemarkerConfiguration = freemarkerConfiguration;
 	}
@@ -58,11 +69,18 @@ public class DefaultMailService implements MailService
 	}
 
 	@Override
-	public void sendAdministratorNotification(Collection<UserDetailsEntity> administrators, UserDetailsEntity newUserDetails)
+	public void sendAdministratorNotification(UserDetailsEntity newUserDetails)
 	{
 		Map<String, Object> templateProperties = new HashMap<>();
 
 		templateProperties.put("user", newUserDetails);
+
+		// TODO - Create a proper ORM entity model and interfaces to run these queries rather than using JDBC queries
+		List<String> enabledUsersInGroup = userDetailsManager.getJdbcTemplate().queryForList(QUERY_ENABLED_ADMINS,
+		                                                                                     new String[]{Group.ADMIN},
+		                                                                                     String.class);
+
+		Set<UserDetailsEntity> administrators = userAccountManagementService.findAllUserDetailsIn((new HashSet<>(enabledUsersInGroup)));
 
 		sendMailUsingTemplate(administrators,
 		                      "New User Registered",
