@@ -51,20 +51,18 @@
 				<div class="panel-heading">
 					<h3 class="panel-title">Upcoming Runs. You have completed <span class="badge ">${completedEvents}</span> runs!</h3>
 				</div>
-				<div class="panel-body">
-					<c:choose>
-						<c:when test="${empty upcomingEvents}">
-							No runs planned. Stay tuned!
-						</c:when>
-						<c:otherwise>
-							<ul>
-								<c:forEach var="event" items="${upcomingEvents}">
-									<li>${event.eventDateTimeFullText}</li>
-								</c:forEach>
-							</ul>
-						</c:otherwise>
-					</c:choose>
-				</div>
+				<c:choose>
+					<c:when test="${empty upcomingEvents}">
+						No runs planned. Stay tuned!
+					</c:when>
+					<c:otherwise>
+						<ul class="list-group">
+							<c:forEach var="event" items="${upcomingEvents}">
+								<li class="list-group-item">${event.eventDateTimeFullText}</li>
+							</c:forEach>
+						</ul>
+					</c:otherwise>
+				</c:choose>
 			</div>
 		</div>
 	</div>
