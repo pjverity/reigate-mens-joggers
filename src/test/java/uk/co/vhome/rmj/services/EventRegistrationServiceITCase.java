@@ -31,7 +31,7 @@ import static uk.co.vhome.rmj.UserConfigurations.ENABLED_USER_ID;
 		DefaultEventRegistrationService.class
 })
 @Transactional
-public class EventRegistrationServiceITTest
+public class EventRegistrationServiceITCase
 {
 	@Inject
 	private EventRegistrationService eventRegistrationService;

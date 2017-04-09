@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNotNull;
 @ActiveProfiles({"integration-test"})
 @ContextConfiguration(classes = {IntegrationTestConfiguration.class, DefaultEventManagementService.class})
 @Transactional
-public class EventManagementServiceITTest
+public class EventManagementServiceITCase
 {
 
 	private final LocalDateTime TEST_EVENT_DATETIME1 = LocalDateTime.of(2017, 8, 31, 12, 20, 0);
