@@ -59,7 +59,7 @@
 						<c:otherwise>
 							<ul>
 								<c:forEach var="event" items="${upcomingEvents}">
-									<li>${event.eventDateTimeText}</li>
+									<li>${event.eventDateTimeFullText}</li>
 								</c:forEach>
 							</ul>
 						</c:otherwise>
