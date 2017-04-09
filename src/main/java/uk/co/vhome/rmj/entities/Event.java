@@ -78,9 +78,9 @@ public class Event
 		this.userDetailsEntities = userDetailsEntities;
 	}
 
-	public String getEventDateTimeText()
+	public String getEventDateTimeFullText()
 	{
-		return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT).format(eventDateTime);
+		return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.SHORT).format(eventDateTime);
 	}
 
 	@Override

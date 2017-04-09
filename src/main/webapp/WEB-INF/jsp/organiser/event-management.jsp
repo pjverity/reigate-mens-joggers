@@ -93,7 +93,7 @@
 							<tbody>
 							<c:forEach var="event" items="${eventCancellationFormObject.events}" varStatus="vs">
 								<tr>
-									<td>${event.eventDateTimeText}</td>
+									<td>${event.eventDateTimeFullText}</td>
 									<td>
 										<form:checkbox path="events[${vs.index}].cancelled"/>
 									</td>
@@ -113,27 +113,25 @@
 				<div class="panel-heading">
 					<h3 class="panel-title">Completed Events (10 Most Recent)</h3>
 				</div>
-				<div class="panel-body">
-					<table class="table table-condensed">
-						<thead>
+				<table class="table">
+					<thead>
+					<tr>
+						<th>Event Date</th>
+						<th>Participants</th>
+					</tr>
+					</thead>
+					<tbody>
+					<c:forEach var="event" items="${completedEvents}">
+						<c:url value="/organiser/event-management" var="url">
+							<c:param name="eventId" value="${event.id}"/>
+						</c:url>
 						<tr>
-							<th>Event Date</th>
-							<th>Participants</th>
+							<td><a href="${url}">${event.eventDateTimeFullText}</a></td>
+							<td><a href="${url}">${fn:length(event.userDetailsEntities)}</a></td>
 						</tr>
-						</thead>
-						<tbody>
-						<c:forEach var="event" items="${completedEvents}">
-							<c:url value="/organiser/event-management" var="url">
-								<c:param name="eventId" value="${event.id}"/>
-							</c:url>
-							<tr>
-								<td><a href="${url}">${event.eventDateTimeText}</a></td>
-								<td><a href="${url}">${fn:length(event.userDetailsEntities)}</a></td>
-							</tr>
-						</c:forEach>
-						</tbody>
-					</table>
-				</div>
+					</c:forEach>
+					</tbody>
+				</table>
 			</div>
 		</div>
 
@@ -141,18 +139,17 @@
 
 	<c:if test="${not empty selectedEvent}">
 		<div class="row">
-			<div class="col-md-12">
+			<div class="col-md-6"></div>
+			<div class="col-md-6">
 				<div class=" panel panel-default">
 					<div class="panel-heading">
-						<h3 class="panel-title">Participants for event: ${selectedEvent.eventDateTimeText}</h3>
+						<h3 class="panel-title">${selectedEvent.eventDateTimeFullText}</h3>
 					</div>
-					<div class="panel-body">
-						<ul>
-						<c:forEach var="user" items="${selectedEvent.userDetailsEntities}">
-							<li>${user.firstName}&nbsp;${user.lastName} (<a href="mailto:${user.username}">${user.username}</a>)</li>
-						</c:forEach>
-						</ul>
-					</div>
+					<ul class="list-group">
+					<c:forEach var="user" items="${selectedEvent.userDetailsEntities}">
+						<li class="list-group-item">${user.firstName}&nbsp;${user.lastName} (<a href="mailto:${user.username}">${user.username}</a>)</li>
+					</c:forEach>
+					</ul>
 				</div>
 			</div>
 		</div>
