@@ -133,30 +133,21 @@
 					</tbody>
 				</table>
 			</div>
-		</div>
-
-	</div>
-
-	<c:if test="${not empty selectedEvent}">
-		<div class="row">
-			<div class="col-md-6"></div>
-			<div class="col-md-6">
+			<c:if test="${not empty selectedEvent}">
 				<div class=" panel panel-success">
 					<div class="panel-heading">
 						<h3 class="panel-title"><i class="fa fa-check-square-o"></i> ${selectedEvent.eventDateTimeFullText}</h3>
 					</div>
 					<ul class="list-group">
-					<c:forEach var="user" items="${selectedEvent.userDetailsEntities}">
-						<li class="list-group-item">${user.firstName}&nbsp;${user.lastName} (<a href="mailto:${user.username}">${user.username}</a>)</li>
-					</c:forEach>
+						<c:forEach var="user" items="${selectedEvent.userDetailsEntities}">
+							<li class="list-group-item">${user.firstName}&nbsp;${user.lastName} (<a href="mailto:${user.username}">${user.username}</a>)</li>
+						</c:forEach>
 					</ul>
-				</div>
-			</div>
+			</c:if>
 		</div>
-	</c:if>
+	</div>
 
 </div>
-
 
 </body>
 
