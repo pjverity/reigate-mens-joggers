@@ -44,7 +44,7 @@
 					<h3 class="panel-title">Create New Event</h3>
 				</div>
 				<div class="panel-body">
-					<c:url var="createEventUrl" value="/organiser/create-event" />
+					<c:url var="createEventUrl" value="/organiser/create-event"/>
 
 					<form:form cssClass="form-inline" modelAttribute="eventCreationFormObject" action="${createEventUrl}">
 
@@ -76,12 +76,12 @@
 
 	<div class="row">
 		<div class="col-md-6">
-			<div class=" panel panel-default">
+			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h3 class="panel-title">Upcoming Events</h3>
 				</div>
 				<div class="panel-body">
-					<c:url var="cancelEventUrl" value="/organiser/cancel-event" />
+					<c:url var="cancelEventUrl" value="/organiser/cancel-event"/>
 					<form:form modelAttribute="eventCancellationFormObject" action="${cancelEventUrl}">
 						<table class="table table-condensed">
 							<thead>
@@ -101,7 +101,25 @@
 							</c:forEach>
 							</tbody>
 						</table>
-						<button class="btn btn-primary" type="submit">Cancel Selected Events</button>
+
+						<div id="confirmModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h4 class="modal-title">Confirm Cancellation</h4>
+									</div>
+									<div class="modal-body">
+										Are you sure you want to cancel <span id="cancelledEventCount"></span>?
+									</div>
+									<div class="modal-footer">
+										<form:button type="button" class="btn btn-default" data-dismiss="modal">Cancel</form:button>
+										<form:button type="submit" class="btn btn-primary">Confirm</form:button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<a id="cancelEventButton" class="btn btn-danger disabled" data-target="#confirmModal" data-toggle="modal">Cancel Selected Events</a>
 
 					</form:form>
 				</div>
@@ -134,20 +152,39 @@
 				</table>
 			</div>
 			<c:if test="${not empty selectedEvent}">
-				<div class=" panel panel-success">
-					<div class="panel-heading">
-						<h3 class="panel-title"><i class="fa fa-check-square-o"></i> ${selectedEvent.eventDateTimeFullText}</h3>
-					</div>
-					<ul class="list-group">
-						<c:forEach var="user" items="${selectedEvent.userDetailsEntities}">
-							<li class="list-group-item">${user.firstName}&nbsp;${user.lastName} (<a href="mailto:${user.username}">${user.username}</a>)</li>
-						</c:forEach>
-					</ul>
-			</c:if>
+			<div class=" panel panel-success">
+				<div class="panel-heading">
+					<h3 class="panel-title"><i class="fa fa-check-square-o"></i> ${selectedEvent.eventDateTimeFullText}</h3>
+				</div>
+				<ul class="list-group">
+					<c:forEach var="user" items="${selectedEvent.userDetailsEntities}">
+						<li class="list-group-item">${user.firstName}&nbsp;${user.lastName} (<a href="mailto:${user.username}">${user.username}</a>)</li>
+					</c:forEach>
+				</ul>
+				</c:if>
+			</div>
 		</div>
+
 	</div>
 
-</div>
+	<script type="text/javascript">
+      var selectedEventCount = 0;
+      $("form input:checkbox").on('click', function () {
+          selectedEventCount += this.checked ? 1 : -1;
+          $('#cancelEventButton').toggleClass('disabled', selectedEventCount === 0);
+      });
+
+      $('#confirmModal').on('show.bs.modal', function (e) {
+          var count = 0;
+          var input = $("form input:checkbox").each(function () {
+              if (this.checked) {
+                  ++count;
+              }
+          });
+
+          $('#cancelledEventCount').html('<strong>'+count+'</strong> event' + (count === 1 ? '' : 's'));
+      });
+	</script>
 
 </body>
 

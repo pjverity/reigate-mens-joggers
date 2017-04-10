@@ -24,7 +24,9 @@ import java.util.Properties;
  */
 @Profile("integration-test")
 @Configuration
-@EnableJpaRepositories
+@EnableJpaRepositories(
+		entityManagerFactoryRef = "testEntityManagerFactory",
+		transactionManagerRef = "testTransactionManager")
 @EnableTransactionManagement
 public class IntegrationTestConfiguration
 {
@@ -36,7 +38,7 @@ public class IntegrationTestConfiguration
 	}
 
 	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory()
+	public LocalContainerEntityManagerFactoryBean testEntityManagerFactory()
 	{
 		Properties properties = new Properties();
 		properties.put("hibernate.default_schema", "APP");
@@ -55,7 +57,7 @@ public class IntegrationTestConfiguration
 	}
 
 	@Bean
-	public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory)
+	public PlatformTransactionManager testTransactionManager(EntityManagerFactory entityManagerFactory)
 	{
 		JpaTransactionManager txManager = new JpaTransactionManager();
 		txManager.setEntityManagerFactory(entityManagerFactory);
