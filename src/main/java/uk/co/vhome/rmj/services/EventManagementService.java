@@ -11,7 +11,7 @@ public interface EventManagementService
 
 	List<Event> findTop10CompletedEvents();
 
-	void createNewEvent(LocalDateTime eventDateTime);
+	Event createNewEvent(LocalDateTime eventDateTime);
 
 	void completeEvent(Event event);
 

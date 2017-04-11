@@ -33,4 +33,11 @@ CREATE TABLE event_participants
   PRIMARY KEY (event_id, user_id),
   CONSTRAINT fk_event FOREIGN KEY (event_id) REFERENCES users (id),
   CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users (id)
-)
+);
+
+CREATE TABLE event_info
+(
+  event_id INTEGER NOT NULL,
+  distance DOUBLE DEFAULT NULL ,
+  CONSTRAINT fk_event_id FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
+);

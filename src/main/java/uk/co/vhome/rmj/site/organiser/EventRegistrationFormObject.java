@@ -1,5 +1,6 @@
 package uk.co.vhome.rmj.site.organiser;
 
+import org.springframework.data.geo.Metrics;
 import uk.co.vhome.rmj.entities.Event;
 
 import javax.validation.constraints.NotNull;
@@ -14,6 +15,12 @@ public class EventRegistrationFormObject
 
 	@NotNull
 	private Event event;
+
+	@NotNull
+	private Double distance;
+
+	@NotNull(message = "{uk.co.vhome.rmj.site.organiser.EventRegistrationFormObject.metric.Null}")
+	private Metrics metric;
 
 	public EventRegistrationFormObject()
 	{
@@ -42,5 +49,25 @@ public class EventRegistrationFormObject
 	public void setEvent(Event event)
 	{
 		this.event = event;
+	}
+
+	public Double getDistance()
+	{
+		return distance;
+	}
+
+	public void setDistance(Double distance)
+	{
+		this.distance = distance;
+	}
+
+	public Metrics getMetric()
+	{
+		return metric;
+	}
+
+	public void setMetric(Metrics metric)
+	{
+		this.metric = metric;
 	}
 }

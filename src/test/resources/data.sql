@@ -14,3 +14,7 @@ INSERT INTO events VALUES (2, TIMESTAMP('2017-08-11 14:30:00'), TRUE);
 INSERT INTO event_participants VALUES (0, 0);
 INSERT INTO event_participants VALUES (1, 0);
 INSERT INTO event_participants VALUES (1, 1);
+
+INSERT INTO event_info VALUES (0, DEFAULT );
+INSERT INTO event_info VALUES (1, DEFAULT );
+INSERT INTO event_info VALUES (2, 10.25);

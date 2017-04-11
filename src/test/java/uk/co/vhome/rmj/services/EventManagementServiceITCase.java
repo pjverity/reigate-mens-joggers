@@ -12,12 +12,13 @@ import uk.co.vhome.rmj.IntegrationTestConfiguration;
 import uk.co.vhome.rmj.entities.Event;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles({"integration-test"})
@@ -25,7 +26,6 @@ import static org.junit.Assert.assertNotNull;
 @Transactional
 public class EventManagementServiceITCase
 {
-
 	private final LocalDateTime TEST_EVENT_DATETIME1 = LocalDateTime.of(2017, 8, 31, 12, 20, 0);
 
 	private final LocalDateTime TEST_EVENT_DATETIME2 = LocalDateTime.of(2017, 7, 14, 13, 25, 0);
@@ -41,12 +41,13 @@ public class EventManagementServiceITCase
 	{
 		List<Event> incompleteEvents = eventManagementService.findAllIncompleteEvents();
 
+		incompleteEvents.forEach(e -> System.out.println(e.getEventInfo().getDistance()));
+
 		assertNotNull(incompleteEvents);
 		assertEquals(2, incompleteEvents.size());
 
 		assertEquals(TEST_EVENT_DATETIME2, incompleteEvents.get(0).getEventDateTime());
 		assertEquals(TEST_EVENT_DATETIME1, incompleteEvents.get(1).getEventDateTime());
-
 	}
 
 	@Test
@@ -74,6 +75,7 @@ public class EventManagementServiceITCase
 		assertEquals(3, incompleteEvents.size());
 
 		assertEquals(eventDateTime, incompleteEvents.get(0).getEventDateTime());
+		assertEquals(null, incompleteEvents.get(0).getEventInfo().getDistance());
 		assertEquals(TEST_EVENT_DATETIME2, incompleteEvents.get(1).getEventDateTime());
 		assertEquals(TEST_EVENT_DATETIME1, incompleteEvents.get(2).getEventDateTime());
 	}
@@ -83,14 +85,26 @@ public class EventManagementServiceITCase
 	public void eventSetAsComplete() throws Exception
 	{
 		List<Event> incompleteEvents = eventManagementService.findAllIncompleteEvents();
-		
-		eventManagementService.completeEvent(incompleteEvents.get(0));
 
+		// Choose an event to complete
+		Event eventToComplete = incompleteEvents.get(0);
+		eventToComplete.getEventInfo().setDistance(BigDecimal.valueOf(2.5));
+
+		// Mark it completed
+		eventManagementService.completeEvent(eventToComplete);
+
+		// Ensure the number of completed events has increased
 		List<Event> completedEvents = eventManagementService.findTop10CompletedEvents();
 		assertEquals(2, completedEvents.size());
 
+		// Ensure the number of incomplete events has decreased
 		incompleteEvents = eventManagementService.findAllIncompleteEvents();
 		assertEquals(1, incompleteEvents.size());
+
+		// Find out completed event and ensure the distance has been updated
+		Optional<Event> completedEvent = completedEvents.stream().filter(Predicate.isEqual(eventToComplete)).findFirst();
+		assertEquals(true, completedEvent.isPresent());
+		assertEquals(BigDecimal.valueOf(2.5), completedEvent.get().getEventInfo().getDistance());
 	}
 	
 	@Test
@@ -126,6 +140,5 @@ public class EventManagementServiceITCase
 	{
 		eventManagementService.createNewEvent(TEST_EVENT_DATETIME1);
 	}
-
 
 }

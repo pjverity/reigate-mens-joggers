@@ -14,6 +14,10 @@ public class Event
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "event")
+	@PrimaryKeyJoinColumn
+	private EventInfo eventInfo;
+
 	@Column(name = "event_datetime")
 	private LocalDateTime eventDateTime;
 
@@ -28,6 +32,16 @@ public class Event
 
 	private transient boolean cancelled;
 
+	public Event()
+	{
+	}
+
+	public Event(LocalDateTime eventDateTime, EventInfo eventInfo)
+	{
+		this.eventDateTime = eventDateTime;
+		this.eventInfo = eventInfo;
+	}
+
 	public Long getId()
 	{
 		return id;
@@ -36,6 +50,16 @@ public class Event
 	public void setId(Long id)
 	{
 		this.id = id;
+	}
+
+	public EventInfo getEventInfo()
+	{
+		return eventInfo;
+	}
+
+	public void setEventInfo(EventInfo eventInfo)
+	{
+		this.eventInfo = eventInfo;
 	}
 
 	public LocalDateTime getEventDateTime()

@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <%--@elvariable id="row" type="uk.co.vhome.rmj.site.organiser.EventRegistrationFormRow"--%>
 <%--@elvariable id="eventRegistrationFormObject" type="uk.co.vhome.rmj.site.organiser.EventRegistrationFormObject"--%>
@@ -31,6 +32,7 @@
 			<div class="col-md-12">
 				<div class="form-inline">
 					<div class="form-group">
+
 						<label for="run" class="control-label">Run</label>
 						<c:if test="${empty events}">
 							<p id="run" class="form-control-static">No Events scheduled. Click <a href="<c:url value="/organiser/event-management"/>">here</a> to create one</p>
@@ -39,7 +41,29 @@
 							<form:select id="run" cssClass="form-control" path="event">
 								<form:options items="${events}" itemLabel="eventDateTimeFullText"/>
 							</form:select>
+							&nbsp;
+
+							<label for="distance" class="control-label">Distance</label>
+							<form:select id="distance" cssClass="form-control" path="distance">
+								<form:options items="${distances}"/>
+							</form:select>
+
+							&nbsp;
+
+							<label class="radio-inline">
+								<form:radiobutton path="metric" value="MILES"/> Miles
+							</label>
+							<label class="radio-inline">
+								<form:radiobutton path="metric" value="KILOMETERS"/> Km
+							</label>
+
+							<spring:hasBindErrors name="eventRegistrationFormObject">
+								<span class="alert alert-danger" >
+								<form:errors path="metric"  />
+								</span>
+							</spring:hasBindErrors>
 						</c:if>
+
 					</div>
 				</div>
 			</div>
@@ -116,7 +140,7 @@
         });
 
         if ( count === 0 ) {
-            $('#participantCount').html("<strong>No one</strong>");
+            $('#participantCount').html("<strong>no one</strong>");
         }
         else {
             $('#participantCount').html("<strong>" + count + "</strong> " + (count === 1 ? 'person' : 'people'));
