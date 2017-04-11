@@ -8,6 +8,7 @@ import uk.co.vhome.rmj.entities.Event;
 import uk.co.vhome.rmj.services.controller.MemberService;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Member home screen
@@ -31,9 +32,10 @@ public class MemberHomeViewController
 
 	@SuppressWarnings("unused")
 	@ModelAttribute("completedEvents")
-	int completedEvents()
+	Set<Event> completedEvents()
 	{
-		return memberService.completedEvents().size();
+		// TODO - Page this data
+		return memberService.completedEvents();
 	}
 
 	@SuppressWarnings("unused")
@@ -41,5 +43,15 @@ public class MemberHomeViewController
 	List<Event> upcomingEvents()
 	{
 		return memberService.findAllIncompleteEvents();
+	}
+
+	@SuppressWarnings("unused")
+	@ModelAttribute("totalDistance")
+	Double totalDistance()
+	{
+		// TODO - move this to the DB
+		return memberService.completedEvents().stream()
+				       .mapToDouble(e -> e.getEventInfo().getDistance().doubleValue())
+				       .sum();
 	}
 }

@@ -4,6 +4,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%--@elvariable id="eventCreationFormObject" type="uk.co.vhome.rmj.site.organiser.EventCreationFormObject"--%>
 <%--@elvariable id="eventCancellationFormObject" type="uk.co.vhome.rmj.site.organiser.EventCancellationFormObject"--%>
@@ -136,6 +137,7 @@
 					<tr>
 						<th>Event Date</th>
 						<th>Participants</th>
+						<th>Distance (km)</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -146,6 +148,7 @@
 						<tr>
 							<td><a href="${url}">${event.eventDateTimeFullText}</a></td>
 							<td><a href="${url}">${fn:length(event.userDetailsEntities)}</a></td>
+							<td><a href="${url}"><fmt:formatNumber type="number" minFractionDigits="3" value="${event.eventInfo.distance}" /></a></td>
 						</tr>
 					</c:forEach>
 					</tbody>
