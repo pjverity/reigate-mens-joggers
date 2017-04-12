@@ -14,4 +14,6 @@ public interface EventRegistrationService
 	Stream<MemberBalance> fetchMemberBalances();
 
 	List<Event> fetchIncompleteEvents();
+
+	List<Event> fetchIncompleteEventsOnOrBeforeToday();
 }

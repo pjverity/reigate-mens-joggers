@@ -51,10 +51,10 @@
 								<security:authorize access="hasRole('ORGANISER')">
 									<li class="dropdown-header">Organiser</li>
 									<li>
-										<a href="<c:url value="/organiser/event-management"/>">Event Management</a>
+										<a href="<c:url value="/organiser/event-scheduling"/>">Run Scheduling</a>
 									</li>
 									<li>
-										<a href="<c:url value="/organiser/event-registration"/>">Event Registration</a>
+										<a href="<c:url value="/organiser/event-completion"/>">Run Completion</a>
 									</li>
 									<li role="separator" class="divider"></li>
 								</security:authorize>

@@ -34,7 +34,7 @@
 <div class="container">
 
 	<div class="page-header">
-		<h1>Event Management</h1>
+		<h1>Run Scheduling</h1>
 	</div>
 
 	<div class="row">
@@ -42,7 +42,7 @@
 
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Create New Event</h3>
+					<h3 class="panel-title">Create New Run</h3>
 				</div>
 				<div class="panel-body">
 					<c:url var="createEventUrl" value="/organiser/create-event"/>
@@ -61,7 +61,7 @@
 							</form:select>
 						</div>
 
-						<button class="btn btn-primary" type="submit">Create Event</button>
+						<button class="btn btn-primary" type="submit">Create Run</button>
 
 						<spring:hasBindErrors name="eventCreationFormObject">
 							<form:errors cssClass="text-danger"/>
@@ -79,7 +79,7 @@
 		<div class="col-md-6">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Upcoming Events</h3>
+					<h3 class="panel-title">Upcoming Run</h3>
 				</div>
 				<div class="panel-body">
 					<c:url var="cancelEventUrl" value="/organiser/cancel-event"/>
@@ -88,7 +88,7 @@
 							<thead>
 							<tr>
 								<th>Event Date</th>
-								<th>Cancel Event</th>
+								<th>Cancel Run</th>
 							</tr>
 							</thead>
 							<tbody>
@@ -120,7 +120,7 @@
 							</div>
 						</div>
 
-						<a id="cancelEventButton" class="btn btn-danger disabled" data-target="#confirmModal" data-toggle="modal">Cancel Selected Events</a>
+						<a id="cancelEventButton" class="btn btn-danger disabled" data-target="#confirmModal" data-toggle="modal">Cancel Selected Runs</a>
 
 					</form:form>
 				</div>
@@ -128,21 +128,21 @@
 		</div>
 
 		<div class="col-md-6">
-			<div class=" panel panel-default">
+			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Completed Events (10 Most Recent)</h3>
+					<h3 class="panel-title">Completed Runs (10 Most Recent)</h3>
 				</div>
 				<table class="table">
 					<thead>
 					<tr>
 						<th>Event Date</th>
-						<th>Participants</th>
+						<th>Runners</th>
 						<th>Distance (km)</th>
 					</tr>
 					</thead>
 					<tbody>
 					<c:forEach var="event" items="${completedEvents}">
-						<c:url value="/organiser/event-management" var="url">
+						<c:url value="/organiser/event-scheduling" var="url">
 							<c:param name="eventId" value="${event.id}"/>
 						</c:url>
 						<tr>
@@ -157,7 +157,7 @@
 			<c:if test="${not empty selectedEvent}">
 			<div class=" panel panel-success">
 				<div class="panel-heading">
-					<h3 class="panel-title"><i class="fa fa-check-square-o"></i> ${selectedEvent.eventDateTimeFullText}</h3>
+					<h3 class="panel-title">${selectedEvent.eventDateTimeFullText}</h3>
 				</div>
 				<ul class="list-group">
 					<c:forEach var="user" items="${selectedEvent.userDetailsEntities}">
@@ -185,7 +185,7 @@
               }
           });
 
-          $('#cancelledEventCount').html('<strong>'+count+'</strong> event' + (count === 1 ? '' : 's'));
+          $('#cancelledEventCount').html('<strong>'+count+'</strong> run' + (count === 1 ? '' : 's'));
       });
 	</script>
 

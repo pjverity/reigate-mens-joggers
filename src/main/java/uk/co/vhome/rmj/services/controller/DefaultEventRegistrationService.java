@@ -10,6 +10,7 @@ import uk.co.vhome.rmj.services.EventManagementService;
 import uk.co.vhome.rmj.services.TokenManagementService;
 
 import javax.inject.Inject;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -58,5 +59,11 @@ public class DefaultEventRegistrationService implements EventRegistrationService
 	public List<Event> fetchIncompleteEvents()
 	{
 		return eventManagementService.findAllIncompleteEvents();
+	}
+
+	@Override
+	public List<Event> fetchIncompleteEventsOnOrBeforeToday()
+	{
+		return eventManagementService.fetchEventsBefore(LocalDateTime.now(), true, false);
 	}
 }

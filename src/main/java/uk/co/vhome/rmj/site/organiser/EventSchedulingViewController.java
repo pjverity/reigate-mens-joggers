@@ -23,13 +23,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class EventManagementViewController
+public class EventSchedulingViewController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final String ERROR_CODE = "uk.co.vhome.rmj.site.organiser.EventManagementViewController.CreateEventFailed";
 
 	private static final List<LocalTime> EVENT_TIMES = new ArrayList<>(13);
+
+	private static final String VIEW_NAME = "/organiser/event-scheduling";
 
 	private final EventManagementService eventManagementService;
 
@@ -51,13 +53,13 @@ public class EventManagementViewController
 	}
 
 	@Inject
-	public EventManagementViewController(EventManagementService eventManagementService)
+	public EventSchedulingViewController(EventManagementService eventManagementService)
 	{
 		this.eventManagementService = eventManagementService;
 	}
 
 	@SuppressWarnings("unused")
-	@GetMapping("/organiser/event-management")
+	@GetMapping(VIEW_NAME)
 	void get(@Param(value = "eventId") Long eventId, @ModelAttribute("completedEvents") ArrayList<Event> completedEvents, ModelMap modelMap)
 	{
 		if (eventId != null)
@@ -73,7 +75,7 @@ public class EventManagementViewController
 	{
 		if (bindingResult.hasErrors())
 		{
-			return "/organiser/event-management";
+			return VIEW_NAME;
 		}
 
 		try
@@ -83,7 +85,7 @@ public class EventManagementViewController
 
 			eventManagementService.createNewEvent(eventDateTime);
 
-			return "redirect:/organiser/event-management";
+			return "redirect:"+VIEW_NAME;
 		}
 		catch (DataIntegrityViolationException e)
 		{
@@ -91,7 +93,7 @@ public class EventManagementViewController
 			LOGGER.error("Failed to create new event", e);
 		}
 
-		return "/organiser/event-management";
+		return VIEW_NAME;
 	}
 
 	@SuppressWarnings("unused")
@@ -102,7 +104,7 @@ public class EventManagementViewController
 				.filter(Event::isCancelled)
 				.forEach(eventManagementService::cancelEvent);
 
-		return "redirect:/organiser/event-management";
+		return "redirect:"+VIEW_NAME;
 	}
 
 	@SuppressWarnings("unused")

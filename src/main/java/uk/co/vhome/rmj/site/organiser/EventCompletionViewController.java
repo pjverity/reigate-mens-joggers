@@ -19,62 +19,64 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
-public class EventRegistrationViewController
+public class EventCompletionViewController
 {
+	private static final String VIEW_NAME = "/organiser/event-completion";
+
 	private final EventRegistrationService eventRegistrationService;
 
 	@Inject
-	public EventRegistrationViewController(EventRegistrationService eventRegistrationService)
+	public EventCompletionViewController(EventRegistrationService eventRegistrationService)
 	{
 		this.eventRegistrationService = eventRegistrationService;
 	}
 
-	@PostMapping(value = "/organiser/event-registration")
-	public String post(@Valid EventRegistrationFormObject eventRegistrationFormObject, BindingResult bindingResult)
+	@PostMapping(value = VIEW_NAME)
+	public String post(@Valid EventCompletionFormObject eventCompletionFormObject, BindingResult bindingResult)
 	{
 		if ( bindingResult.hasErrors() )
 		{
-			return "/organiser/event-registration";
+			return VIEW_NAME;
 		}
 
-		Set<String> usernames = eventRegistrationFormObject.getRows().stream()
-				                        .filter(EventRegistrationFormRow::isPresent)
+		Set<String> usernames = eventCompletionFormObject.getRows().stream()
+				                        .filter(EventCompletionFormRow::isPresent)
 				                        .map(r -> r.getMemberBalance().getUsername())
 				                        .collect(Collectors.toSet());
 
 
-		Distance distanceInGivenMetric = new Distance(eventRegistrationFormObject.getDistance(),
-		                                              eventRegistrationFormObject.getMetric());
+		Distance distanceInGivenMetric = new Distance(eventCompletionFormObject.getDistance(),
+		                                              eventCompletionFormObject.getMetric());
 
 		BigDecimal distanceInKm = BigDecimal.valueOf(distanceInGivenMetric.in(Metrics.KILOMETERS).getValue());
 
-		Event event = eventRegistrationFormObject.getEvent();
+		Event event = eventCompletionFormObject.getEvent();
 		event.getEventInfo().setDistance(distanceInKm);
 
 		eventRegistrationService.completeEventAndDebitMemberAccounts(event, usernames);
 
-		return "redirect:/organiser/event-registration";
+		return "redirect:"+VIEW_NAME;
 	}
 
-	@GetMapping(value = "/organiser/event-registration")
+	@GetMapping(value = VIEW_NAME)
 	public void get()
 	{
 	}
 
 	@ModelAttribute
-	public EventRegistrationFormObject eventRegistrationFormObject()
+	public EventCompletionFormObject eventRegistrationFormObject()
 	{
-		List<EventRegistrationFormRow> rows = eventRegistrationService.fetchMemberBalances()
-				                                      .map(EventRegistrationFormRow::new)
+		List<EventCompletionFormRow> rows = eventRegistrationService.fetchMemberBalances()
+				                                      .map(EventCompletionFormRow::new)
 				                                      .collect(Collectors.toList());
 
-		return new EventRegistrationFormObject(rows);
+		return new EventCompletionFormObject(rows);
 	}
 
 	@ModelAttribute("events")
 	public List<Event> events()
 	{
-		return eventRegistrationService.fetchIncompleteEvents();
+		return eventRegistrationService.fetchIncompleteEventsOnOrBeforeToday();
 	}
 
 	@ModelAttribute("distances")

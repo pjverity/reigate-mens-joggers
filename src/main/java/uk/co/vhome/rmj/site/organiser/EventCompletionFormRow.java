@@ -5,13 +5,13 @@ import uk.co.vhome.rmj.entities.MemberBalance;
 /**
  * Represents a row in the event registration table for registering the presence of a member
  */
-public class EventRegistrationFormRow
+public class EventCompletionFormRow
 {
 	private MemberBalance memberBalance;
 
 	private boolean present;
 
-	public EventRegistrationFormRow(MemberBalance memberBalance)
+	public EventCompletionFormRow(MemberBalance memberBalance)
 	{
 		this.memberBalance = memberBalance;
 	}

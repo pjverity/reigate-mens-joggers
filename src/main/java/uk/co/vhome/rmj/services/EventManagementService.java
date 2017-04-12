@@ -16,4 +16,9 @@ public interface EventManagementService
 	void completeEvent(Event event);
 
 	void cancelEvent(Event event);
+
+	List<Event> fetchEventsAfter(LocalDateTime dateTime, boolean inclusive, boolean completed);
+
+	List<Event> fetchEventsBefore(LocalDateTime dateTime, boolean inclusive, boolean completed);
+
 }

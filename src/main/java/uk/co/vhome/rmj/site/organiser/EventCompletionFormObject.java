@@ -9,9 +9,9 @@ import java.util.List;
 /**
  * Form object for maintaining which members were at an event
  */
-public class EventRegistrationFormObject
+public class EventCompletionFormObject
 {
-	private List<EventRegistrationFormRow> rows;
+	private List<EventCompletionFormRow> rows;
 
 	@NotNull
 	private Event event;
@@ -19,24 +19,24 @@ public class EventRegistrationFormObject
 	@NotNull
 	private Double distance;
 
-	@NotNull(message = "{uk.co.vhome.rmj.site.organiser.EventRegistrationFormObject.metric.Null}")
+	@NotNull(message = "{uk.co.vhome.rmj.site.organiser.EventCompletionFormObject.metric.Null}")
 	private Metrics metric;
 
-	public EventRegistrationFormObject()
+	public EventCompletionFormObject()
 	{
 	}
 
-	public EventRegistrationFormObject(List<EventRegistrationFormRow> rows)
+	public EventCompletionFormObject(List<EventCompletionFormRow> rows)
 	{
 		this.rows = rows;
 	}
 
-	public List<EventRegistrationFormRow> getRows()
+	public List<EventCompletionFormRow> getRows()
 	{
 		return rows;
 	}
 
-	public void setRows(List<EventRegistrationFormRow> rows)
+	public void setRows(List<EventCompletionFormRow> rows)
 	{
 		this.rows = rows;
 	}

@@ -63,4 +63,20 @@ public class DefaultEventManagementService implements EventManagementService
 
 		eventRepository.delete(event);
 	}
+
+	@Override
+	public List<Event> fetchEventsAfter(LocalDateTime dateTime, boolean inclusive, boolean completed)
+	{
+		LocalDateTime adjustedDateTime = inclusive ? dateTime.minusDays(1) : dateTime;
+
+		return eventRepository.findAllByCompletedAndEventDateTimeAfter(completed, adjustedDateTime);
+	}
+
+	@Override
+	public List<Event> fetchEventsBefore(LocalDateTime dateTime, boolean inclusive, boolean completed)
+	{
+		LocalDateTime adjustedDateTime = inclusive ? dateTime.plusDays(1) : dateTime;
+
+		return eventRepository.findAllByCompletedAndEventDateTimeBefore(completed, adjustedDateTime);
+	}
 }

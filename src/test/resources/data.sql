@@ -7,9 +7,9 @@ INSERT INTO purchases VALUES (DEFAULT, 'test.user.enabled@home.co.uk', DEFAULT ,
 INSERT INTO purchases VALUES (DEFAULT, 'test.user.enabled@home.co.uk', DEFAULT , -1);
 INSERT INTO purchases VALUES (DEFAULT, 'test.user.disabled@home.co.uk', DEFAULT , 2);
 
-INSERT INTO events VALUES (0, TIMESTAMP('2017-08-31 12:20:00'), FALSE);
-INSERT INTO events VALUES (1, TIMESTAMP('2017-07-14 13:25:00'), FALSE);
-INSERT INTO events VALUES (2, TIMESTAMP('2017-08-11 14:30:00'), TRUE);
+INSERT INTO events VALUES (0, TIMESTAMP('2017-07-14 13:25:00'), FALSE);
+INSERT INTO events VALUES (1, TIMESTAMP('2017-08-11 14:30:00'), FALSE);
+INSERT INTO events VALUES (2, TIMESTAMP('2017-08-31 12:20:00'), TRUE);
 
 INSERT INTO event_participants VALUES (0, 0);
 INSERT INTO event_participants VALUES (1, 0);

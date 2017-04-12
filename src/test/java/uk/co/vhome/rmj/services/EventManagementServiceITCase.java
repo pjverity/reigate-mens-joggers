@@ -26,11 +26,11 @@ import static org.junit.Assert.*;
 @Transactional
 public class EventManagementServiceITCase
 {
-	private final LocalDateTime TEST_EVENT_DATETIME1 = LocalDateTime.of(2017, 8, 31, 12, 20, 0);
+	private final LocalDateTime TEST_EVENT_DATETIME1 = LocalDateTime.of(2017, 7, 14, 13, 25, 0);
 
-	private final LocalDateTime TEST_EVENT_DATETIME2 = LocalDateTime.of(2017, 7, 14, 13, 25, 0);
+	private final LocalDateTime TEST_EVENT_DATETIME2 = LocalDateTime.of(2017, 8, 11, 14, 30, 0);
 
-	private final LocalDateTime TEST_EVENT_DATETIME3 = LocalDateTime.of(2017, 8, 11, 14, 30, 0);
+	private final LocalDateTime TEST_EVENT_DATETIME3 = LocalDateTime.of(2017, 8, 31, 12, 20, 0);
 
 	@Inject
 	private EventManagementService eventManagementService;
@@ -46,8 +46,8 @@ public class EventManagementServiceITCase
 		assertNotNull(incompleteEvents);
 		assertEquals(2, incompleteEvents.size());
 
-		assertEquals(TEST_EVENT_DATETIME2, incompleteEvents.get(0).getEventDateTime());
-		assertEquals(TEST_EVENT_DATETIME1, incompleteEvents.get(1).getEventDateTime());
+		assertEquals(TEST_EVENT_DATETIME1, incompleteEvents.get(0).getEventDateTime());
+		assertEquals(TEST_EVENT_DATETIME2, incompleteEvents.get(1).getEventDateTime());
 	}
 
 	@Test
@@ -76,8 +76,8 @@ public class EventManagementServiceITCase
 
 		assertEquals(eventDateTime, incompleteEvents.get(0).getEventDateTime());
 		assertEquals(null, incompleteEvents.get(0).getEventInfo().getDistance());
-		assertEquals(TEST_EVENT_DATETIME2, incompleteEvents.get(1).getEventDateTime());
-		assertEquals(TEST_EVENT_DATETIME1, incompleteEvents.get(2).getEventDateTime());
+		assertEquals(TEST_EVENT_DATETIME1, incompleteEvents.get(1).getEventDateTime());
+		assertEquals(TEST_EVENT_DATETIME2, incompleteEvents.get(2).getEventDateTime());
 	}
 
 	@Test
@@ -121,6 +121,34 @@ public class EventManagementServiceITCase
 		assertEquals(1, incompleteEvents.size());
 
 		assertNotEquals(incompleteEvents.get(0).getId(), eventToCancel.getId());
+	}
+
+	@Test
+	@Sql({"/schema.sql", "/data.sql"})
+	public void eventsBeforeDate() throws Exception
+	{
+		List<Event> events = eventManagementService.fetchEventsBefore(TEST_EVENT_DATETIME1, false, false);
+		assertEquals(0, events.size());
+
+		events = eventManagementService.fetchEventsBefore(TEST_EVENT_DATETIME1, true, false);
+		assertEquals(1, events.size());
+
+		events = eventManagementService.fetchEventsBefore(TEST_EVENT_DATETIME3, true, true);
+		assertEquals(1, events.size());
+	}
+
+	@Test
+	@Sql({"/schema.sql", "/data.sql"})
+	public void eventsAfterDate() throws Exception
+	{
+		List<Event> events = eventManagementService.fetchEventsAfter(TEST_EVENT_DATETIME1, false, false);
+		assertEquals(1, events.size());
+
+		events = eventManagementService.fetchEventsAfter(TEST_EVENT_DATETIME1, true, false);
+		assertEquals(2, events.size());
+
+		events = eventManagementService.fetchEventsAfter(TEST_EVENT_DATETIME3, true, true);
+		assertEquals(1, events.size());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
