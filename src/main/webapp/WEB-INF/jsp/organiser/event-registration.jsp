@@ -35,12 +35,14 @@
 
 						<label for="run" class="control-label">Run</label>
 						<c:if test="${empty events}">
-							<p id="run" class="form-control-static">No Events scheduled. Click <a href="<c:url value="/organiser/event-management"/>">here</a> to create one</p>
+							<c:url value='/organiser/event-management' var="url"/>
+							<p id="run" class="form-control-static"><spring:message code="ui.event-registration.NoEvents" arguments="${url}"/> </p>
 						</c:if>
 						<c:if test="${not empty events}">
 							<form:select id="run" cssClass="form-control" path="event">
 								<form:options items="${events}" itemLabel="eventDateTimeFullText"/>
 							</form:select>
+
 							&nbsp;
 
 							<label for="distance" class="control-label">Distance</label>
@@ -109,7 +111,7 @@
 									<h4 class="modal-title">Confirm Completion</h4>
 								</div>
 								<div class="modal-body">
-									Confirm <span id="participantCount"></span> completed the run on <strong><span id="selectedEventDateTime"></span></strong>
+									<spring:message code="ui.event-registration.Confirm" />
 								</div>
 								<div class="modal-footer">
 									<form:button type="button" class="btn btn-default" data-dismiss="modal">Cancel</form:button>

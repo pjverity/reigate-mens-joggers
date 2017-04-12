@@ -110,7 +110,7 @@
 										<h4 class="modal-title">Confirm Cancellation</h4>
 									</div>
 									<div class="modal-body">
-										Are you sure you want to cancel <span id="cancelledEventCount"></span>?
+										<spring:message code="ui.event-management.CreateEvent" />
 									</div>
 									<div class="modal-footer">
 										<form:button type="button" class="btn btn-default" data-dismiss="modal">Cancel</form:button>
