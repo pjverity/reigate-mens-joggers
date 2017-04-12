@@ -79,7 +79,7 @@
 		<div class="col-md-6">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Upcoming Run</h3>
+					<h3 class="panel-title">Upcoming Runs</h3>
 				</div>
 				<div class="panel-body">
 					<c:url var="cancelEventUrl" value="/organiser/cancel-event"/>
