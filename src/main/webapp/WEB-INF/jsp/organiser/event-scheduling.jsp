@@ -110,7 +110,7 @@
 										<h4 class="modal-title">Confirm Cancellation</h4>
 									</div>
 									<div class="modal-body">
-										<spring:message code="ui.event-management.CreateEvent" />
+										<spring:message code="ui.event-scheduling.CreateEvent"/>
 									</div>
 									<div class="modal-footer">
 										<form:button type="button" class="btn btn-default" data-dismiss="modal">Cancel</form:button>
@@ -148,7 +148,7 @@
 						<tr>
 							<td><a href="${url}">${event.eventDateTimeFullText}</a></td>
 							<td><a href="${url}">${fn:length(event.userDetailsEntities)}</a></td>
-							<td><a href="${url}"><fmt:formatNumber type="number" minFractionDigits="3" value="${event.eventInfo.distance}" /></a></td>
+							<td><a href="${url}"><fmt:formatNumber type="number" minFractionDigits="3" value="${event.eventInfo.distance}"/></a></td>
 						</tr>
 					</c:forEach>
 					</tbody>
@@ -169,25 +169,26 @@
 		</div>
 
 	</div>
+</div>
 
-	<script type="text/javascript">
-      var selectedEventCount = 0;
-      $("form input:checkbox").on('click', function () {
-          selectedEventCount += this.checked ? 1 : -1;
-          $('#cancelEventButton').toggleClass('disabled', selectedEventCount === 0);
-      });
+<script type="text/javascript">
+    var selectedEventCount = 0;
+    $("form input:checkbox").on('click', function () {
+        selectedEventCount += this.checked ? 1 : -1;
+        $('#cancelEventButton').toggleClass('disabled', selectedEventCount === 0);
+    });
 
-      $('#confirmModal').on('show.bs.modal', function (e) {
-          var count = 0;
-          var input = $("form input:checkbox").each(function () {
-              if (this.checked) {
-                  ++count;
-              }
-          });
+    $('#confirmModal').on('show.bs.modal', function (e) {
+        var count = 0;
+        var input = $("form input:checkbox").each(function () {
+            if (this.checked) {
+                ++count;
+            }
+        });
 
-          $('#cancelledEventCount').html('<strong>'+count+'</strong> run' + (count === 1 ? '' : 's'));
-      });
-	</script>
+        $('#cancelledEventCount').html('<strong>' + count + '</strong> run' + (count === 1 ? '' : 's'));
+    });
+</script>
 
 </body>
 

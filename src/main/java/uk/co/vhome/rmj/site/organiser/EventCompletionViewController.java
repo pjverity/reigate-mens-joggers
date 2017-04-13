@@ -32,7 +32,7 @@ public class EventCompletionViewController
 	}
 
 	@PostMapping(value = VIEW_NAME)
-	public String post(@Valid EventCompletionFormObject eventCompletionFormObject, BindingResult bindingResult)
+	public String completeEvent(@Valid EventCompletionFormObject eventCompletionFormObject, BindingResult bindingResult)
 	{
 		if ( bindingResult.hasErrors() )
 		{

@@ -42,66 +42,68 @@
 
 			<form:form cssClass="form-inline" modelAttribute="passwordChangeFormObject" method="post">
 
-		<spring:hasBindErrors name="passwordChangeFormObject">
-			<c:set var="formError" value="true"/>
-		</spring:hasBindErrors>
+				<spring:hasBindErrors name="passwordChangeFormObject">
+					<c:set var="formError" value="true"/>
+				</spring:hasBindErrors>
 
-		<div class="row">
-			<spring:bind path="oldPassword">
-				<div class="form-group ${status.error ? 'has-error' : ''} col-xs-12 col-sm-3">
-					<form:label cssClass="sr-only" path="oldPassword">Old Password</form:label>
-					<form:password cssClass="form-control" cssStyle="width: 100%" path="oldPassword" placeholder="Old Password"/>
-				</div>
-			</spring:bind>
+				<div class="row">
+					<spring:bind path="oldPassword">
+						<div class="form-group ${status.error ? 'has-error' : ''} col-xs-12 col-sm-3">
+							<form:label cssClass="sr-only" path="oldPassword">Old Password</form:label>
+							<form:password cssClass="form-control" cssStyle="width: 100%" path="oldPassword" placeholder="Old Password"/>
+						</div>
+					</spring:bind>
 
-			<spring:bind path="newPassword">
-				<div class="form-group ${status.error ? 'has-error' : ''} col-xs-12 col-sm-3">
-					<form:label cssClass="sr-only" path="newPassword">New Password</form:label>
-					<form:password cssClass="form-control" cssStyle="width: 100%" path="newPassword" placeholder="New Password"/>
-				</div>
-			</spring:bind>
+					<spring:bind path="newPassword">
+						<div class="form-group ${status.error ? 'has-error' : ''} col-xs-12 col-sm-3">
+							<form:label cssClass="sr-only" path="newPassword">New Password</form:label>
+							<form:password cssClass="form-control" cssStyle="width: 100%" path="newPassword" placeholder="New Password"/>
+						</div>
+					</spring:bind>
 
-			<spring:bind path="confirmedNewPassword">
-				<div class="form-group ${status.error ? 'has-error' : ''} col-xs-12 col-sm-3">
-					<form:label cssClass="sr-only" path="confirmedNewPassword">Confirm Password</form:label>
-					<form:password cssClass="form-control" cssStyle="width: 100%" path="confirmedNewPassword" placeholder="Confirm Password"/>
-				</div>
-			</spring:bind>
+					<spring:bind path="confirmedNewPassword">
+						<div class="form-group ${status.error ? 'has-error' : ''} col-xs-12 col-sm-3">
+							<form:label cssClass="sr-only" path="confirmedNewPassword">Confirm Password</form:label>
+							<form:password cssClass="form-control" cssStyle="width: 100%" path="confirmedNewPassword" placeholder="Confirm Password"/>
+						</div>
+					</spring:bind>
 
-			<div class="col-xs-12 col-sm-3">
-				<form:button class="btn btn-primary" style="width:100%" type="submit">Change Password</form:button>
-			</div>
-		</div>
-
-		<p></p>
-
-		<div class="row">
-			<c:if test="${passwordChangeFormObject.passwordChanged}">
-				<div class="col-xs-12">
-					<div class="alert alert-success alert-dismissible col-xs-12" role="alert">
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<strong>Done!</strong> Your password has been changed
+					<div class="col-xs-12 col-sm-3">
+						<form:button class="btn btn-primary" style="width:100%" type="submit">Change Password</form:button>
 					</div>
 				</div>
-			</c:if>
 
-			<spring:hasBindErrors name="passwordChangeFormObject">
-				<div class="col-xs-12">
-					<div class="alert alert-danger alert-dismissible" role="alert">
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<strong>Oops!</strong> We couldn't change your password because of the following problems:
-						<ul>
-							<form:errors path="oldPassword" element="li"/>
-							<form:errors path="newPassword" element="li"/>
-							<form:errors path="confirmedNewPassword" element="li"/>
-						</ul>
-					</div>
+				<p></p>
+
+				<div class="row">
+					<c:if test="${passwordChangeFormObject.passwordChanged}">
+						<div class="col-xs-12">
+							<div class="alert alert-success alert-dismissible col-xs-12" role="alert">
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<strong>Done!</strong> Your password has been changed
+							</div>
+						</div>
+					</c:if>
+
+					<spring:hasBindErrors name="passwordChangeFormObject">
+						<div class="col-xs-12">
+							<div class="alert alert-danger alert-dismissible" role="alert">
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<strong>Oops!</strong> We couldn't change your password because of the following problems:
+								<ul>
+									<form:errors path="oldPassword" element="li"/>
+									<form:errors path="newPassword" element="li"/>
+									<form:errors path="confirmedNewPassword" element="li"/>
+								</ul>
+							</div>
+						</div>
+					</spring:hasBindErrors>
 				</div>
-			</spring:hasBindErrors>
+
+			</form:form>
+
 		</div>
-
-	</form:form>
-
+	</div>
 </div>
 
 </body>

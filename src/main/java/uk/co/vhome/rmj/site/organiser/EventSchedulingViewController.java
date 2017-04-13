@@ -27,7 +27,7 @@ public class EventSchedulingViewController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private static final String ERROR_CODE = "uk.co.vhome.rmj.site.organiser.EventManagementViewController.CreateEventFailed";
+	private static final String ERROR_CODE = "uk.co.vhome.rmj.site.organiser.EventSchedulingViewController.CreateEventFailed";
 
 	private static final List<LocalTime> EVENT_TIMES = new ArrayList<>(13);
 
