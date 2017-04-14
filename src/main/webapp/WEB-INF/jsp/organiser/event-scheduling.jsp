@@ -161,7 +161,7 @@
 				</div>
 				<ul class="list-group">
 					<c:forEach var="user" items="${selectedEvent.userDetailsEntities}">
-						<li class="list-group-item">${user.firstName}&nbsp;${user.lastName} (<a href="mailto:${user.username}">${user.username}</a>)</li>
+						<li class="list-group-item"> <a href="mailto:${user.username}">${user.firstName}&nbsp;${user.lastName}</a></li>
 					</c:forEach>
 				</ul>
 				</c:if>
