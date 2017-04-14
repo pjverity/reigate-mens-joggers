@@ -27,8 +27,12 @@
 
 	<form:form modelAttribute="tokenManagementFormObject">
 
-		<div class="table-responsive">
-			<table class="table table-condensed">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Member Balance</h3>
+			</div>
+
+			<table class="table">
 				<thead>
 				<tr>
 					<th>Member</th>
@@ -40,24 +44,27 @@
 				<tbody>
 
 				<c:forEach var="row" items="${tokenManagementFormObject.rows}" varStatus="vs">
-					<tr>
-						<td class="form-control-static">
-								${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}
-						</td>
-						<td class="form-control-static">
-								${row.memberBalance.balance}
-						</td>
-						<td>
-							<form:select path="rows[${vs.index}].quantity" cssClass="form-control input-sm">
-								<form:options items="${creditQuantities}"/>
-							</form:select>
-						</td>
-					</tr>
+					<div class="form-group">
+
+						<tr>
+							<td>
+								<span class="form-control-static">${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}</span>
+							</td>
+							<td>
+								<span class="form-control-static">${row.memberBalance.balance}</span>
+							</td>
+							<td>
+								<form:select path="rows[${vs.index}].quantity" cssClass="form-control input-sm">
+									<form:options items="${creditQuantities}"/>
+								</form:select>
+							</td>
+						</tr>
+					</div>
 				</c:forEach>
 				</tbody>
 			</table>
 		</div>
-		<form:button type="submit" class="btn btn-primary">Update</form:button>
+		<form:button type="submit" class="btn btn-primary">Credit Accounts</form:button>
 	</form:form>
 
 </div>

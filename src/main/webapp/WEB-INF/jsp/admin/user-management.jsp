@@ -27,7 +27,12 @@
 
 	<form:form modelAttribute="userManagementFormObject">
 
-		<table class="table table-condensed">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title">RMJ Users</h3>
+		</div>
+
+		<table class="table">
 			<thead>
 			<tr>
 				<th>Name</th>
@@ -50,10 +55,10 @@
 			</c:forEach>
 			</tbody>
 		</table>
+	</div>
 
 		<form:button type="submit" class="btn btn-primary">Update</form:button>
 	</form:form>
-
 </div>
 
 </body>
