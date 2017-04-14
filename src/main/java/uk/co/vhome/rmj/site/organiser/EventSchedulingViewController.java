@@ -60,13 +60,25 @@ public class EventSchedulingViewController
 
 	@SuppressWarnings("unused")
 	@GetMapping(VIEW_NAME)
-	void get(@Param(value = "eventId") Long eventId, @ModelAttribute("completedEvents") ArrayList<Event> completedEvents, ModelMap modelMap)
+	void get(@Param(value = "eventId") Long eventId,
+	         @Param(value = "cancelEventId") Long cancelEventId,
+	         @ModelAttribute("completedEvents") ArrayList<Event> completedEvents,
+	         @ModelAttribute EventCancellationFormObject eventCancellationFormObject, ModelMap modelMap)
 	{
 		if (eventId != null)
 		{
 			Optional<Event> event = completedEvents.stream().filter(e -> e.getId().equals(eventId)).findFirst();
 			event.ifPresent(e -> modelMap.put("selectedEvent", e));
 		}
+
+		if (cancelEventId != null)
+		{
+			eventCancellationFormObject.getEvents().stream()
+					.filter(e -> e.getId().equals(cancelEventId))
+					.findFirst()
+					.ifPresent(e -> e.setCancelled(true));
+		}
+
 	}
 
 	@SuppressWarnings("unused")

@@ -133,7 +133,10 @@
 						<%-- Cancel Run Link--%>
 
 					<c:if test="${not empty events}">
-						or <a href="<c:url value="/organiser/event-scheduling" />">Cancel Run</a>
+						<c:url value="/organiser/event-scheduling" var="cancelEventUrl">
+							<c:param name="cancelEventId" value=""/>
+						</c:url>
+						or <a id="cancelEventAnchor" href="${cancelEventUrl}">Cancel Run</a>
 					</c:if>
 
 				</div>
@@ -150,29 +153,50 @@
     var runnerCount = 0;
     var runSelected = false;
 
+    const $runDateTimeSelect = $('#runDateTimeSelect');
+    const $cancelEventAnchor = $('#cancelEventAnchor');
+    const $metricRadioButtonGroup = $('#metricRadioButtonGroup');
+    const $completeButton = $('#completeButton');
+    const $runnerCountBadge = $('#runnerCountBadge');
+
     $(function () {
-        $('#completeButton').toggleClass('disabled', true);
+        $completeButton.toggleClass('disabled', true);
 
         $('input[type=radio]').change(function () {
-            runSelected = $('#runDateTimeSelect').find(':selected').length !== 0;
+            runSelected = $runDateTimeSelect.find(':selected').length !== 0;
 
-            $('#metricRadioButtonGroup').removeClass('has-error');
-            $('#completeButton').toggleClass('disabled', !runSelected || runnerCount === 0);
+            $metricRadioButtonGroup.removeClass('has-error');
+            $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0);
         });
 
-        $("form input:checkbox").on('click', function () {
+        $('form input:checkbox').on('click', function () {
             runnerCount += (this.checked ? 1 : -1);
 
-            $('#completeButton').toggleClass('disabled', !runSelected || runnerCount === 0);
-            $('#runnerCountBadge').text(runnerCount);
+            $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0);
+            $runnerCountBadge.text(runnerCount);
         });
+
+        $runDateTimeSelect.change(function (e) {
+
+            const eventId = $(e.target).val();
+
+            // When no run schedules are present, there will be no numeric value for eventId
+            if (!$.isNumeric(eventId))
+            {
+                return;
+            }
+
+            const newHref = $cancelEventAnchor.attr('href').replace(/=.*/, '=' + eventId);
+            $cancelEventAnchor.attr('href', newHref);
+
+        }).trigger('change');
 
     });
 
     $('#confirmModal').on('show.bs.modal', function (e) {
         const distance = $('#distanceSelect').find(':selected').text();
         const metric = $('input[type=radio]:checked').val();
-				const dateTime = $('#runDateTimeSelect').find(':selected').text();
+				const dateTime = $runDateTimeSelect.find(':selected').text();
 
         $('#confirmRunDateTime').text(dateTime);
         $('#confirmRunnerCount').html('<strong>' + runnerCount + '</strong> ' + (runnerCount === 1 ? 'person' : 'people'));

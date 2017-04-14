@@ -172,7 +172,12 @@
 </div>
 
 <script type="text/javascript">
-    var selectedEventCount = 0;
+    var selectedEventCount = $("form input:checkbox:checked").length;
+
+    $(function () {
+        $('#cancelEventButton').toggleClass('disabled', selectedEventCount === 0);
+    });
+
     $("form input:checkbox").on('click', function () {
         selectedEventCount += this.checked ? 1 : -1;
         $('#cancelEventButton').toggleClass('disabled', selectedEventCount === 0);
