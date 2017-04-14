@@ -32,7 +32,7 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title">Confirm Completion</h4>
+					<h4 class="modal-title">Confirm Run Completed</h4>
 				</div>
 				<div class="modal-body">
 					<spring:message code="ui.event-completion.Confirm"/>
@@ -77,39 +77,45 @@
 		</div>
 	</div>
 
-
 	<div class="row">
 		<div class="col-md-12">
 			<div class="well well-sm">
 				<div class="form-inline">
 
-					<div class="form-group">
-						<label for="run" class="control-label">Run Date</label>
-						<c:if test="${empty events}">
-							<c:url value='/organiser/event-scheduling' var="url"/>
-							<p id="run" class="form-control-static"><spring:message code="ui.event-completion.NoEvents" arguments="${url}"/></p>
-						</c:if>
-						<c:if test="${not empty events}">
-							<form:select id="run" cssClass="form-control" path="event">
-								<form:options items="${events}" itemLabel="eventDateTimeFullText"/>
-							</form:select>
-						</c:if>
+
+						<%-- Run Date Selection --%>
+
+					<div class="form-group ${empty events ? 'has-error' : ''}">
+						<label for="runDateTimeSelect" class="control-label">Run Date</label>
+						<c:choose>
+							<c:when test="${empty events}">
+								<c:url value='/organiser/event-scheduling' var="url"/>
+								<div id="runDateTimeSelect" class="form-control-static">
+									<spring:message code="ui.event-completion.NoEvents" arguments="${url}"/>
+								</div>
+							</c:when>
+							<c:otherwise>
+								<form:select id="runDateTimeSelect" cssClass="form-control" path="event">
+									<form:options items="${events}" itemLabel="eventDateTimeFullText"/>
+								</form:select>
+							</c:otherwise>
+						</c:choose>
 					</div>
+
+
+						<%-- Run Distance Selection --%>
 
 					<div class="form-group">
 						<label for="distance" class="control-label">Distance</label>
-						<form:select id="distance" cssClass="form-control" path="distance">
+						<form:select id="distanceSelect" cssClass="form-control" path="distance">
 							<form:options items="${distances}"/>
 						</form:select>
 					</div>
 
-					<spring:bind path="metric">
-						<c:if test="${status.error}">
-							<c:set var="metricError" value="has-error"/>
-						</c:if>
-					</spring:bind>
 
-					<div class="form-group ${metricError}">
+						<%-- Distance Metric --%>
+
+					<div id="metricRadioButtonGroup" class="form-group has-error">
 						<label class="radio-inline">
 							<form:radiobutton path="metric" value="MILES"/> Miles
 						</label>
@@ -118,10 +124,16 @@
 						</label>
 					</div>
 
-					<a id="completeButton" class="btn btn-success" data-target="#confirmModal" data-toggle="modal"><span id="runners" class="badge">0</span> Complete Run</a>
+
+						<%-- Complete Run Button --%>
+
+					<a id="completeButton" class="btn btn-success" data-target="#confirmModal" data-toggle="modal"><span id="runnerCountBadge" class="badge">0</span> Complete Run</a>
+
+
+						<%-- Cancel Run Link--%>
 
 					<c:if test="${not empty events}">
-						or <a href="<c:url value="/organiser/event-scheduling"/>">Cancel Run</a>
+						or <a href="<c:url value="/organiser/event-scheduling" />">Cancel Run</a>
 					</c:if>
 
 				</div>
@@ -135,32 +147,36 @@
 
 <script type="text/javascript">
 
-    var count = 0;
+    var runnerCount = 0;
     var runSelected = false;
 
     $(function () {
         $('#completeButton').toggleClass('disabled', true);
 
         $('input[type=radio]').change(function () {
-            runSelected = $('#run').find(':selected').length !== 0;
-            $('#completeButton').toggleClass('disabled', !runSelected || count === 0);
+            runSelected = $('#runDateTimeSelect').find(':selected').length !== 0;
+
+            $('#metricRadioButtonGroup').removeClass('has-error');
+            $('#completeButton').toggleClass('disabled', !runSelected || runnerCount === 0);
         });
 
         $("form input:checkbox").on('click', function () {
-            count += (this.checked ? 1 : -1);
-            $('#completeButton').toggleClass('disabled', !runSelected || count === 0);
-            $('#runners').text(count);
+            runnerCount += (this.checked ? 1 : -1);
+
+            $('#completeButton').toggleClass('disabled', !runSelected || runnerCount === 0);
+            $('#runnerCountBadge').text(runnerCount);
         });
 
     });
 
     $('#confirmModal').on('show.bs.modal', function (e) {
-        $('#selectedEventDateTime').text($('#run').find(':selected').text());
-
-        const distance = $('#distance').find(':selected').text();
+        const distance = $('#distanceSelect').find(':selected').text();
         const metric = $('input[type=radio]:checked').val();
-        $('#participantCount').html("<strong>" + count + "</strong> " + (count === 1 ? 'person' : 'people'));
-        $('#distanceConfirm').html("<strong>" + distance + ' ' + metric + "</strong> ");
+				const dateTime = $('#runDateTimeSelect').find(':selected').text();
+
+        $('#confirmRunDateTime').text(dateTime);
+        $('#confirmRunnerCount').html('<strong>' + runnerCount + '</strong> ' + (runnerCount === 1 ? 'person' : 'people'));
+        $('#confirmRunDistance').html('<strong>' + distance + ' ' + metric + '</strong> ');
     });
 </script>
 

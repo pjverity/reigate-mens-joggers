@@ -87,8 +87,8 @@
 						<table class="table table-condensed">
 							<thead>
 							<tr>
-								<th>Event Date</th>
-								<th>Cancel Run</th>
+								<th>Date</th>
+								<th>Cancel</th>
 							</tr>
 							</thead>
 							<tbody>
@@ -135,7 +135,7 @@
 				<table class="table">
 					<thead>
 					<tr>
-						<th>Event Date</th>
+						<th>Date</th>
 						<th>Runners</th>
 						<th>Distance (km)</th>
 					</tr>
