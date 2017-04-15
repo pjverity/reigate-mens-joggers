@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<c:set var="pageTitleSuffix" value="Event Completion"/>
+<c:set var="pageTitleSuffix" value="Run Completion"/>
 
 <head>
 	<%@ include file='../head-common.jsp' %>
