@@ -12,7 +12,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<c:set var="pageTitleSuffix" value="Event Management"/>
+<c:set var="pageTitleSuffix" value="Run Scheduling"/>
 
 <head>
 	<%@include file="../head-common.jsp" %>

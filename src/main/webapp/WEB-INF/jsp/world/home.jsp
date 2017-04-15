@@ -97,7 +97,7 @@
 	<div class="row">
 		<div class="media">
 			<div class="media-left text-center">
-				<c:url value="/organiser/profile" var="organiserProfileUrl"/>
+				<c:url value="/world/coach-profile" var="organiserProfileUrl"/>
 				<a href="${organiserProfileUrl}">
 					<img src="<c:url value="/images/richard_feist.png"/>" alt="Coach Richard">Richard Feist
 				</a>

@@ -92,6 +92,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
 		http.authorizeRequests()
 					.antMatchers("/admin/**").hasAuthority(Role.ADMIN)
+					.antMatchers("/organiser/**").hasAuthority(Role.ORGANISER)
 					.antMatchers("/member/**").hasAuthority(Role.MEMBER)
 					.antMatchers("/**").permitAll()
 				.and()

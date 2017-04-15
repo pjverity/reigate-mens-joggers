@@ -27,11 +27,11 @@ public class EventSchedulingViewController
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
+	private static final String VIEW_NAME = "/organiser/event-scheduling";
+
 	private static final String ERROR_CODE = "uk.co.vhome.rmj.site.organiser.EventSchedulingViewController.CreateEventFailed";
 
 	private static final List<LocalTime> EVENT_TIMES = new ArrayList<>(13);
-
-	private static final String VIEW_NAME = "/organiser/event-scheduling";
 
 	private final EventManagementService eventManagementService;
 
@@ -78,7 +78,6 @@ public class EventSchedulingViewController
 					.findFirst()
 					.ifPresent(e -> e.setCancelled(true));
 		}
-
 	}
 
 	@SuppressWarnings("unused")
@@ -97,7 +96,7 @@ public class EventSchedulingViewController
 
 			eventManagementService.createNewEvent(eventDateTime);
 
-			return "redirect:"+VIEW_NAME;
+			return "redirect:" + VIEW_NAME;
 		}
 		catch (DataIntegrityViolationException e)
 		{
@@ -116,7 +115,7 @@ public class EventSchedulingViewController
 				.filter(Event::isCancelled)
 				.forEach(eventManagementService::cancelEvent);
 
-		return "redirect:"+VIEW_NAME;
+		return "redirect:" + VIEW_NAME;
 	}
 
 	@SuppressWarnings("unused")

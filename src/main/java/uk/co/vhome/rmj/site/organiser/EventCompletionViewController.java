@@ -31,7 +31,12 @@ public class EventCompletionViewController
 		this.eventRegistrationService = eventRegistrationService;
 	}
 
-	@PostMapping(value = VIEW_NAME)
+	@GetMapping(VIEW_NAME)
+	public void get()
+	{
+	}
+
+	@PostMapping(VIEW_NAME)
 	public String completeEvent(@Valid EventCompletionFormObject eventCompletionFormObject, BindingResult bindingResult)
 	{
 		if ( bindingResult.hasErrors() )
@@ -58,10 +63,6 @@ public class EventCompletionViewController
 		return "redirect:"+VIEW_NAME;
 	}
 
-	@GetMapping(value = VIEW_NAME)
-	public void get()
-	{
-	}
 
 	@ModelAttribute
 	public EventCompletionFormObject eventRegistrationFormObject()
