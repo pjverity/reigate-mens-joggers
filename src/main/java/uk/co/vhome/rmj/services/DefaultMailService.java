@@ -6,11 +6,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
-import uk.co.vhome.rmj.security.Group;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
@@ -18,6 +18,7 @@ import javax.mail.internet.InternetAddress;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 
 @Service
 public class DefaultMailService implements MailService
@@ -32,57 +33,52 @@ public class DefaultMailService implements MailService
 
 	private static final String FROM_NAME = "Reigate Mens Joggers";
 
-	private static final String QUERY_ENABLED_ADMINS = "SELECT u.username FROM users u, group_members gm, groups g WHERE" +
-			                                                   " u.enabled = TRUE AND" +
-			                                                   " u.username = gm.username AND" +
-			                                                   " gm.group_id = g.id AND" +
-			                                                   " g.group_name = ?";
-
-	private final JdbcUserDetailsManager userDetailsManager;
-
-	private final UserAccountManagementService userAccountManagementService;
-
 	private final JavaMailSender javaMailSender;
 
 	private final Configuration freemarkerConfiguration;
 
+	private final ExecutorService executorService;
+
 	@Inject
-	public DefaultMailService(JdbcUserDetailsManager userDetailsManager, UserAccountManagementService userAccountManagementService, JavaMailSender javaMailSender, Configuration freemarkerConfiguration)
+	public DefaultMailService(JavaMailSender javaMailSender, Configuration freemarkerConfiguration, ExecutorService executorService)
 	{
-		this.userDetailsManager = userDetailsManager;
-		this.userAccountManagementService = userAccountManagementService;
 		this.javaMailSender = javaMailSender;
 		this.freemarkerConfiguration = freemarkerConfiguration;
+		this.executorService = executorService;
 	}
 
+	/*
+	 * Do not call as part of a transaction. If the mail fails to send we don't want the successful
+	 * registration to roll back. Also, sending mail notifications is slow, so don't hold up the UI
+	 * by hogging the request thread waiting for this to finish, execute mail sending tasks in another
+	 * thread.
+	 */
 	@Override
-	public void sendRegistrationMail(UserDetailsEntity newUserDetails)
+	@Transactional(propagation = Propagation.NOT_SUPPORTED)
+	public void sendRegistrationMail(UserDetailsEntity newUserDetails, Set<UserDetailsEntity> enabledAdminDetails)
 	{
-		Map<String, Object> templateProperties = new HashMap<>();
+		executorService.submit(() ->
+		                       {
+			                       Map<String, Object> templateProperties = new HashMap<>();
 
-		templateProperties.put("firstName", newUserDetails.getFirstName());
+			                       templateProperties.put("firstName", newUserDetails.getFirstName());
 
-		sendMailUsingTemplate(Collections.singletonList(newUserDetails),
-		                      "Welcome to Reigate Mens Joggers!",
-		                      templateProperties,
-		                      EMAIL_REGISTRATION_TEMPLATE);
+			                       sendMailUsingTemplate(Collections.singletonList(newUserDetails),
+			                                             "Welcome to Reigate Mens Joggers!",
+			                                             templateProperties,
+			                                             EMAIL_REGISTRATION_TEMPLATE);
+
+			                       sendAdministratorMail(newUserDetails, enabledAdminDetails);
+		                       });
 	}
 
-	@Override
-	public void sendAdministratorNotification(UserDetailsEntity newUserDetails)
+	private void sendAdministratorMail(UserDetailsEntity newUserDetails, Set<UserDetailsEntity> enabledAdminDetails)
 	{
 		Map<String, Object> templateProperties = new HashMap<>();
 
 		templateProperties.put("user", newUserDetails);
 
-		// TODO - Create a proper ORM entity model and interfaces to run these queries rather than using JDBC queries
-		List<String> enabledUsersInGroup = userDetailsManager.getJdbcTemplate().queryForList(QUERY_ENABLED_ADMINS,
-		                                                                                     new String[]{Group.ADMIN},
-		                                                                                     String.class);
-
-		Set<UserDetailsEntity> administrators = userAccountManagementService.findAllUserDetailsIn((new HashSet<>(enabledUsersInGroup)));
-
-		sendMailUsingTemplate(administrators,
+		sendMailUsingTemplate(enabledAdminDetails,
 		                      "New User Registered",
 		                      templateProperties,
 		                      EMAIL_NOTIFICATION_TEMPLATE);
@@ -106,23 +102,23 @@ public class DefaultMailService implements MailService
 	private void sendMail(Collection<UserDetailsEntity> userDetailEntities, String subject, String messageContent)
 	{
 		javaMailSender.send(mimeMessage ->
-		{
-			MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-			message.setFrom(new InternetAddress(FROM_ADDRESS, FROM_NAME));
-			userDetailEntities.forEach(details ->
-			                                {
-				                                try
-				                                {
-					                                message.addTo(details.getUsername(), String.join(" ", details.getFirstName(), details.getLastName()));
-				                                }
-				                                catch (MessagingException | UnsupportedEncodingException e)
-				                                {
-					                                LOGGER.error("Failed to add recipient", e);
-				                                }
-			                                });
-			message.setSubject(subject);
-			message.setText(messageContent, true);
-		});
+		                    {
+			                    MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+			                    message.setFrom(new InternetAddress(FROM_ADDRESS, FROM_NAME));
+			                    userDetailEntities.forEach(details ->
+			                                               {
+				                                               try
+				                                               {
+					                                               message.addTo(details.getUsername(), String.join(" ", details.getFirstName(), details.getLastName()));
+				                                               }
+				                                               catch (MessagingException | UnsupportedEncodingException e)
+				                                               {
+					                                               LOGGER.error("Failed to add recipient", e);
+				                                               }
+			                                               });
+			                    message.setSubject(subject);
+			                    message.setText(messageContent, true);
+		                    });
 	}
 
 }

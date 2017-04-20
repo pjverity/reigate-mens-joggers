@@ -3,12 +3,18 @@ package uk.co.vhome.rmj.security;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+
 /**
- * Helper class to put an authenticated user in the current security context before executing
- * the given task. Clears the context when the task completes. Required when calling methods
- * that require a given level of authentication, or to 'Run As' a particular user.
+ * Helper class to temporarily replace the user in the current security context before executing
+ * a given task. Restores the original context when the task completes. Required when calling methods
+ * that require a given level of authentication.
+ *
+ * Todo - Look in to using role hierarchies
  */
 public class AuthenticatedUser
 {
@@ -19,32 +25,39 @@ public class AuthenticatedUser
 	                                                                                                                            Role.ADMIN,
 	                                                                                                                            Role.ORGANISER,
 	                                                                                                                            Role.MEMBER,
-	                                                                                                                            Role.ANON));
+	                                                                                                                            Role.ANONYMOUS));
 
-	private static final Authentication ANON_USER = new UsernamePasswordAuthenticationToken("anon",
-	                                                                                       "",
-	                                                                                       AuthorityUtils.createAuthorityList(Role.ANON));
+
+	public static <V> V callAsSystemUser(Callable<V> task) throws Exception
+	{
+		return callAs(SYSTEM_USER, task);
+	}
 
 	public static void runWithSystemUser(Runnable task)
 	{
-		runWith(SYSTEM_USER, task);
-	}
-
-	public static void runWithAnonUser(Runnable task)
-	{
-		runWith(ANON_USER, task);
-	}
-
-	private static void runWith(Authentication authentication, Runnable task)
-	{
 		try
 		{
+			callAs(SYSTEM_USER, Executors.callable(task));
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static <V> V callAs(Authentication authentication, Callable<V> task) throws Exception
+	{
+		SecurityContext origCtx = SecurityContextHolder.getContext();
+
+		try
+		{
+			SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-			task.run();
+			return task.call();
 		}
 		finally
 		{
-			SecurityContextHolder.clearContext();
+			SecurityContextHolder.setContext(origCtx);
 		}
 	}
 }

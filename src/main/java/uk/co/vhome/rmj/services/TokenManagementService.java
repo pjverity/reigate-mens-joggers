@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface TokenManagementService
 {
-	@Secured({Role.ADMIN})
+	@Secured({Role.ADMIN, Role.RUN_AS_NEW_USER})
 	Purchase creditAccount(String username, @Min(value = 1, message = "{validation.constraint.Min.creditBalance}") int quantity);
 
 	@Secured({Role.ORGANISER})

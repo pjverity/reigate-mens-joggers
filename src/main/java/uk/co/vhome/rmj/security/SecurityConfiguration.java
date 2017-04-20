@@ -168,7 +168,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 	 * Spring will component scan this as a bean. The alternative is to put it in a top level class
 	 * an @Import it from the outer class.
 	 */
-	@EnableGlobalMethodSecurity(jsr250Enabled = true, securedEnabled = true, order = 0)
+	@EnableGlobalMethodSecurity(jsr250Enabled = true, securedEnabled = true)
 	public class MethodSecurity extends GlobalMethodSecurityConfiguration
 	{
 		@Override

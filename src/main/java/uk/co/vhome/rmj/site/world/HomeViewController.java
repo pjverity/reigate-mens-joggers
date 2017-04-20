@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uk.co.vhome.rmj.config.ServletContextConfiguration;
 import uk.co.vhome.rmj.entities.Event;
+import uk.co.vhome.rmj.entities.UserDetailsEntity;
 import uk.co.vhome.rmj.services.controller.HomeViewControllerService;
 
 import javax.inject.Inject;
@@ -120,17 +120,16 @@ public class HomeViewController
 
 		try
 		{
-			homeViewControllerService.registerNewUser(userRegistrationFormObject.getEmailAddress(),
-			                                          userRegistrationFormObject.getFirstName(),
-			                                          userRegistrationFormObject.getLastName(),
-			                                          userRegistrationFormObject.getPassword());
+			UserDetailsEntity userDetailsEntity = homeViewControllerService.registerNewUser(userRegistrationFormObject.getEmailAddress(),
+			                                                                                userRegistrationFormObject.getFirstName(),
+			                                                                                userRegistrationFormObject.getLastName(),
+			                                                                                userRegistrationFormObject.getPassword());
 
 			// This appears to by-pass the login handler, so have to duplicate setting the session variables here
-			httpServletRequest.login(userRegistrationFormObject.getConfirmEmailAddress(), userRegistrationFormObject.getPassword());
+			httpServletRequest.login(userDetailsEntity.getUsername(), userRegistrationFormObject.getPassword());
 			HttpSession httpSession = httpServletRequest.getSession();
-			httpSession.setAttribute(ServletContextConfiguration.USER_FIRST_NAME_SESSION_ATTRIBUTE, StringUtils.capitalize(userRegistrationFormObject.getFirstName()));
-			httpSession.setAttribute(ServletContextConfiguration.USER_LAST_NAME_SESSION_ATTRIBUTE, StringUtils.capitalize(userRegistrationFormObject.getLastName()));
-			httpSession.setAttribute("isNewUser", true);
+			httpSession.setAttribute(ServletContextConfiguration.USER_FIRST_NAME_SESSION_ATTRIBUTE, userDetailsEntity.getFirstName());
+			httpSession.setAttribute(ServletContextConfiguration.USER_LAST_NAME_SESSION_ATTRIBUTE, userDetailsEntity.getLastName());
 
 			populatePageModelForRegistration(model, true, null, null);
 		}

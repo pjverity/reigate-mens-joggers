@@ -2,7 +2,6 @@ package uk.co.vhome.rmj.services;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
@@ -15,13 +14,14 @@ import org.springframework.util.StringUtils;
 import uk.co.vhome.rmj.config.InitialSiteUser;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
 import uk.co.vhome.rmj.repositories.UserDetailsRepository;
+import uk.co.vhome.rmj.security.AuthenticatedUser;
 import uk.co.vhome.rmj.security.Group;
 import uk.co.vhome.rmj.security.Role;
-import uk.co.vhome.rmj.security.RunAs;
 
 import javax.inject.Inject;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -33,6 +33,13 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
+	private static final String QUERY_ENABLED_ADMINS = "SELECT u.username FROM users u, group_members gm, groups g WHERE" +
+			                                                   " u.enabled = TRUE AND" +
+			                                                   " u.username = gm.username AND" +
+			                                                   " gm.group_id = g.id AND" +
+			                                                   " g.group_name = ?";
+
+	private final MailService mailService;
 
 	private final JdbcUserDetailsManager userDetailsManager;
 
@@ -43,11 +50,12 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	private InitialSiteUser initialSiteUser;
 
 	@Inject
-	public DefaultUserAccountManagementService(InitialSiteUser initialSiteUser,
+	public DefaultUserAccountManagementService(MailService mailService, InitialSiteUser initialSiteUser,
 	                                           JdbcUserDetailsManager userDetailsManager,
 	                                           UserDetailsRepository userDetailsRepository,
 	                                           SessionRegistry sessionRegistry)
 	{
+		this.mailService = mailService;
 		this.userDetailsManager = userDetailsManager;
 		this.userDetailsRepository = userDetailsRepository;
 
@@ -82,20 +90,22 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	/*
 	 * Preconditions: Registration form validation must check that the service is valid, that the
 	 * email address is not already in use, and that all parameters are sane.
-	 *
-	 * In order to 'Run As' the system user to call the MailService interface, we have to have an
-	 * authenticated user in the context, but as anyone can register, then use an 'Anonymous' user role
 	 */
 	@Override
 	@Transactional(timeout = 15)
-	@Secured({RunAs.SYSTEM, Role.ANON})
 	public UserDetailsEntity registerNewUser(String username, String firstName, String lastName, String password)
 	{
 		LOGGER.info("Registering new user {}", username);
 
-		createUser(username, firstName, lastName, password, Group.MEMBER);
+		try
+		{
+			return AuthenticatedUser.callAsSystemUser(() -> createUser(username, firstName, lastName, password, Group.MEMBER));
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
 
-		return userDetailsRepository.findByUsername(username);
 	}
 
 	@Override
@@ -108,7 +118,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 	@Override
 	@Transactional(timeout = 15)
-	public void createUser(String username, String firstName, String lastName, String password, String groupName)
+	public UserDetailsEntity createUser(String username, String firstName, String lastName, String password, String groupName)
 	{
 		LOGGER.info("Creating new user {} in group {}", username, groupName);
 
@@ -121,7 +131,11 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 		userDetailsManager.addUserToGroup(username, groupName);
 
-		updateUserDetails(username, firstName, lastName);
+		UserDetailsEntity userDetailsEntity = updateUserDetails(username, firstName, lastName);
+
+		mailService.sendRegistrationMail(userDetailsEntity, findEnabledAdminDetails());
+
+		return userDetailsEntity;
 	}
 
 	@Override
@@ -163,19 +177,30 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	}
 
 	@Override
+	public Set<UserDetailsEntity> findEnabledAdminDetails()
+	{
+		// TODO - Create a proper ORM entity model and interfaces to run these queries rather than using JDBC queries
+		List<String> enabledUsersInGroup = userDetailsManager.getJdbcTemplate().queryForList(QUERY_ENABLED_ADMINS,
+		                                                                                     new String[]{Group.ADMIN},
+		                                                                                     String.class);
+
+		return findAllUserDetailsIn((new HashSet<>(enabledUsersInGroup)));
+	}
+
+	@Override
 	public void updateLastLogin(String username, long timestamp)
 	{
 		userDetailsRepository.updateLastLogin(username, Instant.ofEpochMilli(timestamp));
 	}
 
-	private void updateUserDetails(String username, String firstName, String lastName)
+	private UserDetailsEntity updateUserDetails(String username, String firstName, String lastName)
 	{
 		UserDetailsEntity userDetailsEntity = userDetailsRepository.findByUsername(username);
 
 		userDetailsEntity.setFirstName(StringUtils.capitalize(firstName));
 		userDetailsEntity.setLastName(StringUtils.capitalize(lastName));
 
-		userDetailsRepository.save(userDetailsEntity);
+		return userDetailsRepository.save(userDetailsEntity);
 	}
 
 	private void invalidateSession(String username)

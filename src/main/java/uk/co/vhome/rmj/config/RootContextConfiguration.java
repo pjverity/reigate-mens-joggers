@@ -30,6 +30,8 @@ import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Configuration
 @EnableTransactionManagement //p.607
@@ -45,6 +47,8 @@ public class RootContextConfiguration
 	private static final String POSTGRESQL94_DIALECT = "org.hibernate.dialect.PostgreSQL94Dialect";
 
 	private static final String SCHEMA_GENERATION_KEY = "javax.persistence-schema-generation.database.action";
+
+	private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
 
 	// Configure our Datasource (ie, the connection to the Database) See p.602
 	@Bean
@@ -181,4 +185,9 @@ public class RootContextConfiguration
 		return bean;
 	}
 
+	@Bean
+	ExecutorService executorService()
+	{
+		return EXECUTOR_SERVICE;
+	}
 }

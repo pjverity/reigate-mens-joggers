@@ -16,10 +16,11 @@ public interface UserAccountManagementService
 	@Secured({Role.SYSTEM})
 	void createBasicDefaultAccounts();
 
+	@Secured({Role.ANONYMOUS, Role.RUN_AS_NEW_USER})
 	UserDetailsEntity registerNewUser(String username, String firstName, String lastName, String password);
 
 	@Secured({Role.ADMIN})
-	void createUser(String username, String firstName, String lastName, String password, String groupName);
+	UserDetailsEntity createUser(String username, String firstName, String lastName, String password, String groupName);
 
 	@Secured({Role.MEMBER})
 	void changePassword(String username, String oldPassword, String newPassword);
@@ -36,6 +37,9 @@ public interface UserAccountManagementService
 	@Secured({Role.ADMIN})
 	Set<UserDetailsEntity> findAllUserDetailsIn(Collection<String> usernames);
 
-	@Secured({Role.MEMBER})
+	@Secured({Role.ORGANISER, Role.RUN_AS_NEW_USER})
 	UserDetailsEntity findUserDetails(String username);
+
+	@Secured({Role.ADMIN})
+	Set<UserDetailsEntity> findEnabledAdminDetails();
 }
