@@ -33,12 +33,6 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private static final String QUERY_ENABLED_ADMINS = "SELECT u.username FROM users u, group_members gm, groups g WHERE" +
-			                                                   " u.enabled = TRUE AND" +
-			                                                   " u.username = gm.username AND" +
-			                                                   " gm.group_id = g.id AND" +
-			                                                   " g.group_name = ?";
-
 	private final MailService mailService;
 
 	private final JdbcUserDetailsManager userDetailsManager;
@@ -179,10 +173,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	@Override
 	public Set<UserDetailsEntity> findEnabledAdminDetails()
 	{
-		// TODO - Create a proper ORM entity model and interfaces to run these queries rather than using JDBC queries
-		List<String> enabledUsersInGroup = userDetailsManager.getJdbcTemplate().queryForList(QUERY_ENABLED_ADMINS,
-		                                                                                     new String[]{Group.ADMIN},
-		                                                                                     String.class);
+		List<String> enabledUsersInGroup = userDetailsRepository.enabledUsersInGroup(true, Group.ADMIN);
 
 		return findAllUserDetailsIn((new HashSet<>(enabledUsersInGroup)));
 	}
