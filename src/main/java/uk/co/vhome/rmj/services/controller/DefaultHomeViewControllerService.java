@@ -7,6 +7,7 @@ import uk.co.vhome.rmj.services.EventManagementService;
 import uk.co.vhome.rmj.services.TokenManagementService;
 import uk.co.vhome.rmj.services.UserAccountManagementService;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -28,7 +29,7 @@ public class DefaultHomeViewControllerService implements HomeViewControllerServi
 	@Override
 	public Optional<Event> findNextEvent()
 	{
-		return eventManagementService.findAllIncompleteEvents().stream().findFirst();
+		return eventManagementService.fetchEventsAfter(LocalDateTime.now(), true, false).stream().findFirst();
 	}
 
 	@Override
