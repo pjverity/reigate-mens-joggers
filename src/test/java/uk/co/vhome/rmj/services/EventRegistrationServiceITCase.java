@@ -48,8 +48,8 @@ public class EventRegistrationServiceITCase
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 
-		Set<String> usernames = new HashSet<>();
-		usernames.add(ENABLED_USER_ID);
+		Set<Long> userIds = new HashSet<>();
+		userIds.add(ENABLED_USER_ID);
 
 		int initialBalance = tokenManagementService.balanceForMember(ENABLED_USER_ID);
 
@@ -57,7 +57,7 @@ public class EventRegistrationServiceITCase
 
 		Event eventToComplete = incompleteEvents.get(0);
 
-		eventRegistrationService.completeEventAndDebitMemberAccounts(eventToComplete, usernames);
+		eventRegistrationService.completeEventAndDebitMemberAccounts(eventToComplete, userIds);
 
 		int finalBalance = tokenManagementService.balanceForMember(ENABLED_USER_ID);
 

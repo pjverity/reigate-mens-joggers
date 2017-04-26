@@ -125,9 +125,11 @@ public class HomeViewController
 			                                                                                userRegistrationFormObject.getLastName(),
 			                                                                                userRegistrationFormObject.getPassword());
 
-			// This appears to by-pass the login handler, so have to duplicate setting the session variables here
+			// This appears to by-pass the SecurityConfiguration.authenticationSuccessHandler() handler, so have to duplicate
+			// setting the session variables here
 			httpServletRequest.login(userDetailsEntity.getUsername(), userRegistrationFormObject.getPassword());
 			HttpSession httpSession = httpServletRequest.getSession();
+			httpSession.setAttribute(ServletContextConfiguration.USER_ID_SESSION_ATTRIBUTE, userDetailsEntity.getId());
 			httpSession.setAttribute(ServletContextConfiguration.USER_FIRST_NAME_SESSION_ATTRIBUTE, userDetailsEntity.getFirstName());
 			httpSession.setAttribute(ServletContextConfiguration.USER_LAST_NAME_SESSION_ATTRIBUTE, userDetailsEntity.getLastName());
 

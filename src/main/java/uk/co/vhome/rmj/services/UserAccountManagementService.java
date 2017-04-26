@@ -38,7 +38,7 @@ public interface UserAccountManagementService
 	Set<UserDetailsEntity> findAllUserDetailsIn(Collection<String> usernames);
 
 	@Secured({Role.ORGANISER, Role.RUN_AS_NEW_USER})
-	UserDetailsEntity findUserDetails(String username);
+	UserDetailsEntity findUserDetails(Long userId);
 
 	@Secured({Role.ADMIN})
 	Set<UserDetailsEntity> findEnabledAdminDetails();

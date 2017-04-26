@@ -11,10 +11,10 @@ import java.util.Objects;
 		// cast() is required as PostgreSQL sum() function returns a bigint, which translates to a BigDecimal and so doesn't match
 		// the ctor signature. {h-schema} is a Hibernate construct used for native queries, it substitutes in the default schema name
 		// specified by the hibernate.default_schema JPA property. (This is done automatically for normal entity queries (HQL? JQL?))
-		query = "SELECT u.username, u.first_name, u.last_name, cast(sum(p.quantity) as INTEGER) as balance FROM {h-schema}users u, {h-schema}purchases p" +
-				        " WHERE u.username = p.username" +
+		query = "SELECT u.id, u.first_name, u.last_name, cast(sum(p.quantity) as INTEGER) as balance FROM {h-schema}users u, {h-schema}purchases p" +
+				        " WHERE u.id = p.user_id" +
 				        " AND u.enabled = TRUE" +
-				        " GROUP BY u.username, first_name, last_name",
+				        " GROUP BY u.id, first_name, last_name",
 		resultSetMapping = "QueryResultMapping"
 )
 
@@ -24,7 +24,7 @@ import java.util.Objects;
 				@ConstructorResult(
 					targetClass = MemberBalance.class,
 					columns = {
-							@ColumnResult(name = "username"),
+							@ColumnResult(name = "id", type = Long.class),
 							@ColumnResult(name = "first_name"),
 							@ColumnResult(name = "last_name"),
 							@ColumnResult(name = "balance")
@@ -37,7 +37,7 @@ public class MemberBalance
 {
 	public static final String ALL_ENABLED_MEMBERS_BALANCE_QUERY = "AllEnabledMembersBalanceQuery";
 
-	private final String username;
+	private final Long userId;
 
 	private final String firstName;
 
@@ -45,17 +45,17 @@ public class MemberBalance
 
 	private final Integer balance;
 
-	public MemberBalance(String username, String firstName, String lastName, Integer balance)
+	public MemberBalance(Long userId, String firstName, String lastName, Integer balance)
 	{
-		this.username = username;
+		this.userId = userId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.balance = balance;
 	}
 
-	public String getUsername()
+	public Long getUserId()
 	{
-		return username;
+		return userId;
 	}
 
 	public String getFirstName()
@@ -81,12 +81,12 @@ public class MemberBalance
 
 		MemberBalance that = (MemberBalance) o;
 
-		return Objects.equals(this.username, that.username);
+		return Objects.equals(this.userId, that.userId);
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(username);
+		return Objects.hash(userId);
 	}
 }

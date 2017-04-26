@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 @Service
@@ -36,13 +35,13 @@ public class DefaultEventRegistrationService implements EventRegistrationService
 
 	@Override
 	@Transactional
-	public void completeEventAndDebitMemberAccounts(Event event, Collection<String> usernames)
+	public void completeEventAndDebitMemberAccounts(Event event, Collection<Long> userIds)
 	{
-		Set<UserDetailsEntity> userDetailsEntities = userDetailsRepository.findByUsernameIn(usernames);
+		List<UserDetailsEntity> userDetailsEntities = userDetailsRepository.findAll(userIds);
 
 		event.setUserDetailsEntities(userDetailsEntities);
 
-		usernames.forEach(u -> tokenManagementService.debitAccount(u, 1));
+		userDetailsEntities.forEach(u -> tokenManagementService.debitAccount(u.getId(), 1));
 
 		eventManagementService.completeEvent(event);
 	}

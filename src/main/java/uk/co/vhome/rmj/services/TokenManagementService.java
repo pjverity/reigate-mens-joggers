@@ -14,13 +14,13 @@ import java.util.List;
 public interface TokenManagementService
 {
 	@Secured({Role.ADMIN, Role.RUN_AS_NEW_USER})
-	Purchase creditAccount(String username, @Min(value = 1, message = "{validation.constraint.Min.creditBalance}") int quantity);
+	Purchase creditAccount(Long userId, @Min(value = 1, message = "{validation.constraint.Min.creditBalance}") int quantity);
 
 	@Secured({Role.ORGANISER})
-	Purchase debitAccount(String username, @Min(value = 1, message = "{validation.constraint.Min.debitBalance}") int quantity);
+	Purchase debitAccount(Long userId, @Min(value = 1, message = "{validation.constraint.Min.debitBalance}") int quantity);
 
 	@Secured({Role.MEMBER})
-	Integer balanceForMember(String username);
+	Integer balanceForMember(Long userId);
 
 	@Secured({Role.ORGANISER})
 	List<MemberBalance> balancesForAllEnabledMembers();

@@ -94,47 +94,47 @@ public class DefaultTokenManagementService implements TokenManagementService
 	}
 
 	@Override
-	public Purchase creditAccount(String username, int quantity)
+	public Purchase creditAccount(Long userId, int quantity)
 	{
 		assert quantity > 0;
 
-		if ( !creditWithLimit(quantity) || !creditWithinBalanceLimit(username, quantity) )
+		if ( !creditWithLimit(quantity) || !creditWithinBalanceLimit(userId, quantity) )
 		{
 			return null;
 		}
 
-		return doTransaction(username, quantity);
+		return doTransaction(userId, quantity);
 	}
 
 	@Override
-	public Purchase debitAccount(String username, int quantity)
+	public Purchase debitAccount(Long userId, int quantity)
 	{
 		assert quantity > 0;
 
-		if ( !debitWithLimit(quantity) || !debitWithinBalanceLimit(username, quantity) )
+		if ( !debitWithLimit(quantity) || !debitWithinBalanceLimit(userId, quantity) )
 		{
 			return null;
 		}
 
-		return doTransaction(username, -quantity);
+		return doTransaction(userId, -quantity);
 	}
 
 	@Override
-	public Integer balanceForMember(String username)
+	public Integer balanceForMember(Long userId)
 	{
-		Integer balance = purchaseRepository.calculateBalanceForUser(username);
+		Integer balance = purchaseRepository.calculateBalanceForUser(userId);
 
 		return balance != null ? balance : 0;
 	}
 
-	private Purchase doTransaction(String username, int quantity)
+	private Purchase doTransaction(Long userId, int quantity)
 	{
-		if (!isUserEnabled(username))
+		if (!isUserEnabled(userId))
 		{
 			return null;
 		}
 
-		Purchase purchase = new Purchase(username, quantity);
+		Purchase purchase = new Purchase(userId, quantity);
 		purchaseRepository.save(purchase);
 
 		LOGGER.info("Purchase complete: {}", purchase);
@@ -148,23 +148,23 @@ public class DefaultTokenManagementService implements TokenManagementService
 		return ((List<MemberBalance>) entityManager.createNamedQuery(MemberBalance.ALL_ENABLED_MEMBERS_BALANCE_QUERY).getResultList());
 	}
 
-	private boolean isUserEnabled(String username)
+	private boolean isUserEnabled(Long userId)
 	{
-		UserDetailsEntity userDetails = userAccountManagementService.findUserDetails(username);
+		UserDetailsEntity userDetails = userAccountManagementService.findUserDetails(userId);
 
 		return userDetails != null && userDetails.isEnabled();
 	}
 
-	private boolean creditWithinBalanceLimit(String username, int quantity)
+	private boolean creditWithinBalanceLimit(Long userId, int quantity)
 	{
-		Integer currentBalance = balanceForMember(username);
+		Integer currentBalance = balanceForMember(userId);
 
 		return currentBalance + quantity <= getBalanceUpperLimit();
 	}
 
-	private boolean debitWithinBalanceLimit(String username, int quantity)
+	private boolean debitWithinBalanceLimit(Long userId, int quantity)
 	{
-		Integer currentBalance = balanceForMember(username);
+		Integer currentBalance = balanceForMember(userId);
 
 		return currentBalance - quantity >= getBalanceLowerLimit();
 	}

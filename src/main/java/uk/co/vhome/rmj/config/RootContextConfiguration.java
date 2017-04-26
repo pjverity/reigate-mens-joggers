@@ -93,6 +93,7 @@ public class RootContextConfiguration
 		Map<String, Object> properties = new Hashtable<>();
 		properties.put(SCHEMA_GENERATION_KEY, "none");
 		properties.put("hibernate.default_schema", "public");
+		properties.put("hibernate.jdbc.time_zone", "UTC");
 
 		HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
 		adapter.setDatabasePlatform(POSTGRESQL94_DIALECT);

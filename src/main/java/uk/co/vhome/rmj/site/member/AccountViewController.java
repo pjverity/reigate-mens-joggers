@@ -8,12 +8,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import uk.co.vhome.rmj.services.TokenManagementService;
 import uk.co.vhome.rmj.services.UserAccountManagementService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.security.Principal;
+
+import static uk.co.vhome.rmj.config.ServletContextConfiguration.USER_ID_SESSION_ATTRIBUTE;
 
 /**
  * Controller for maintaining user account details
@@ -74,9 +77,9 @@ public class AccountViewController
 
 	@SuppressWarnings("unused")
 	@ModelAttribute("tokenBalance")
-	Integer tokenBalance(@AuthenticationPrincipal Principal principal)
+	Integer tokenBalance(@AuthenticationPrincipal Principal principal, @SessionAttribute(USER_ID_SESSION_ATTRIBUTE) Long userId)
 	{
-		return tokenManagementService.balanceForMember(principal.getName());
+		return tokenManagementService.balanceForMember(userId);
 	}
 
 }

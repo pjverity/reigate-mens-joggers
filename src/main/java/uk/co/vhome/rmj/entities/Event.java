@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "events")
@@ -25,7 +25,7 @@ public class Event
 	@JoinTable(name = "event_participants",
 		joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
 		inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-	private Set<UserDetailsEntity> userDetailsEntities;
+	private List<UserDetailsEntity> userDetailsEntities;
 
 	@Basic
 	private boolean completed;
@@ -92,12 +92,12 @@ public class Event
 		this.cancelled = cancelled;
 	}
 
-	public Set<UserDetailsEntity> getUserDetailsEntities()
+	public List<UserDetailsEntity> getUserDetailsEntities()
 	{
 		return userDetailsEntities;
 	}
 
-	public void setUserDetailsEntities(Set<UserDetailsEntity> userDetailsEntities)
+	public void setUserDetailsEntities(List<UserDetailsEntity> userDetailsEntities)
 	{
 		this.userDetailsEntities = userDetailsEntities;
 	}

@@ -90,7 +90,7 @@ public class DefaultTokenManagementServiceTest
 	@Test
 	public void creditOrDebitFailsForInvalidUser()
 	{
-		String randomUserId = "random";
+		Long randomUserId = 4L;
 
 		// Unknown user - Credit
 		when(mockUserAccountManagementService.findUserDetails(randomUserId)).thenReturn(null);
@@ -98,7 +98,7 @@ public class DefaultTokenManagementServiceTest
 		assertNull(randomUserId + " should not be able to purchase tokens", purchase);
 
 		// Unknown user - Debit
-		when(mockUserAccountManagementService.findUserDetails("random")).thenReturn(null);
+		when(mockUserAccountManagementService.findUserDetails(randomUserId)).thenReturn(null);
 		purchase = tokenManagementService.debitAccount(randomUserId, 1);
 		assertNull(randomUserId + " should not be able to purchase tokens", purchase);
 

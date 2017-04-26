@@ -39,15 +39,15 @@ public class EventCompletionViewController
 	@PostMapping(VIEW_NAME)
 	public String completeEvent(@Valid EventCompletionFormObject eventCompletionFormObject, BindingResult bindingResult)
 	{
-		if ( bindingResult.hasErrors() )
+		if (bindingResult.hasErrors())
 		{
 			return VIEW_NAME;
 		}
 
-		Set<String> usernames = eventCompletionFormObject.getRows().stream()
-				                        .filter(EventCompletionFormRow::isPresent)
-				                        .map(r -> r.getMemberBalance().getUsername())
-				                        .collect(Collectors.toSet());
+		Set<Long> userIds = eventCompletionFormObject.getRows().stream()
+				                    .filter(EventCompletionFormRow::isPresent)
+				                    .map(r -> r.getMemberBalance().getUserId())
+				                    .collect(Collectors.toSet());
 
 
 		Distance distanceInGivenMetric = new Distance(eventCompletionFormObject.getDistance(),
@@ -58,9 +58,9 @@ public class EventCompletionViewController
 		Event event = eventCompletionFormObject.getEvent();
 		event.getEventInfo().setDistance(distanceInKm);
 
-		eventRegistrationService.completeEventAndDebitMemberAccounts(event, usernames);
+		eventRegistrationService.completeEventAndDebitMemberAccounts(event, userIds);
 
-		return "redirect:"+VIEW_NAME;
+		return "redirect:" + VIEW_NAME;
 	}
 
 
@@ -68,8 +68,8 @@ public class EventCompletionViewController
 	public EventCompletionFormObject eventRegistrationFormObject()
 	{
 		List<EventCompletionFormRow> rows = eventRegistrationService.fetchMemberBalances()
-				                                      .map(EventCompletionFormRow::new)
-				                                      .collect(Collectors.toList());
+				                                    .map(EventCompletionFormRow::new)
+				                                    .collect(Collectors.toList());
 
 		return new EventCompletionFormObject(rows);
 	}

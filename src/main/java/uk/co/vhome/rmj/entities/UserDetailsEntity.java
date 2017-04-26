@@ -38,8 +38,9 @@ public class UserDetailsEntity
 	@ManyToMany(mappedBy = "userDetailsEntities")
 	private Set<Event> events;
 
-	public UserDetailsEntity(String username, boolean enabled)
+	public UserDetailsEntity(Long userId, String username, boolean enabled)
 	{
+		this.id = userId;
 		this.username = username;
 		this.enabled = enabled;
 	}

@@ -165,9 +165,9 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	}
 
 	@Override
-	public UserDetailsEntity findUserDetails(String username)
+	public UserDetailsEntity findUserDetails(Long userId)
 	{
-		return userDetailsRepository.findByUsername(username);
+		return userDetailsRepository.findOne(userId);
 	}
 
 	@Override

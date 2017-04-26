@@ -37,7 +37,7 @@ public class DefaultHomeViewControllerService implements HomeViewControllerServi
 	{
 		UserDetailsEntity userEntity = userAccountManagementService.registerNewUser(username, firstName, lastName, password);
 
-		tokenManagementService.creditAccount(userEntity.getUsername(), 1);
+		tokenManagementService.creditAccount(userEntity.getId(), 1);
 
 		return userEntity;
 	}

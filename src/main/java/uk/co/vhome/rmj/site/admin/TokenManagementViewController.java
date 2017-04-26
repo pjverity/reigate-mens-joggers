@@ -55,14 +55,14 @@ public class TokenManagementViewController
 
 		formObject.getRows().stream()
 				.filter(r -> r.getQuantity() != null)
-				.forEach(r -> adjustBalance(r.getMemberBalance().getUsername(), r.getQuantity()));
+				.forEach(r -> adjustBalance(r.getMemberBalance().getUserId(), r.getQuantity()));
 
 		return "redirect:/admin/token-management";
 	}
 
-	private void adjustBalance(String username, int quantity)
+	private void adjustBalance(Long userId, int quantity)
 	{
-		tokenManagementService.creditAccount(username, quantity);
+		tokenManagementService.creditAccount(userId, quantity);
 	}
 
 	@GetMapping(value = "/admin/token-management")

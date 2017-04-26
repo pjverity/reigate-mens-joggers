@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 public interface EventRegistrationService
 {
-	void completeEventAndDebitMemberAccounts(Event event, Collection<String> usernames);
+	void completeEventAndDebitMemberAccounts(Event event, Collection<Long> userIds);
 
 	Stream<MemberBalance> fetchMemberBalances();
 

@@ -91,10 +91,10 @@ public class DefaultTokenManagementServiceITCase
 
 		assertEquals(1, memberBalance.size());
 
-		assertEquals(ENABLED_USER_ID, memberBalance.get(0).getUsername());
+		assertEquals(ENABLED_USER_ID, memberBalance.get(0).getUserId());
 		assertEquals("Test", memberBalance.get(0).getFirstName());
 		assertEquals("User (Enabled)", memberBalance.get(0).getLastName());
-		assertEquals(7L, (long) memberBalance.get(0).getBalance());
+		assertEquals(7, (int) memberBalance.get(0).getBalance());
 	}
 
 }
