@@ -62,13 +62,11 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	@Transactional
 	public void createBasicDefaultAccounts()
 	{
-		if (userDetailsManager.findAllGroups().isEmpty())
-		{
-			LOGGER.info("No group authorities found. Creating minimal accounts...");
+		List<String> enabledAdmins = userDetailsRepository.enabledUsersInGroup(true, Group.ADMIN);
 
-			userDetailsManager.createGroup(Group.ADMIN, AuthorityUtils.createAuthorityList(Role.ADMIN, Role.MEMBER, Role.ORGANISER));
-			userDetailsManager.createGroup(Group.ORGANISER, AuthorityUtils.createAuthorityList(Role.ORGANISER, Role.MEMBER));
-			userDetailsManager.createGroup(Group.MEMBER, AuthorityUtils.createAuthorityList(Role.MEMBER));
+		if (enabledAdmins.isEmpty())
+		{
+			LOGGER.info("Creating initial admin account");
 
 			createUser(initialSiteUser.getId(),
 			           initialSiteUser.getFirstName(),
@@ -137,7 +135,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	{
 		UserDetailsEntity user = userDetailsRepository.findOne(id);
 
-		if ( user.isEnabled() == enable )
+		if (user.isEnabled() == enable)
 		{
 			return;
 		}
@@ -146,7 +144,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 		userDetailsRepository.save(user);
 
-		if ( !enable )
+		if (!enable)
 		{
 			invalidateSession(user.getUsername());
 		}

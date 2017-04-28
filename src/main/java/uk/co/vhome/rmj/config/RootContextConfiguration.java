@@ -1,9 +1,11 @@
 package uk.co.vhome.rmj.config;
 
+import org.flywaydb.core.Flyway;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
@@ -50,6 +52,14 @@ public class RootContextConfiguration
 
 	private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
 
+	@Bean(initMethod = "migrate")
+	public Flyway flyway()
+	{
+		Flyway flyway = new Flyway();
+		flyway.setDataSource(dataSource());
+		return flyway;
+	}
+
 	// Configure our Datasource (ie, the connection to the Database) See p.602
 	@Bean
 	public DataSource dataSource()
@@ -88,6 +98,7 @@ public class RootContextConfiguration
 	// Configure the persistence unit (Which manages our entities and configures the JPA implementation
 	// (Hibernate O/RM being the chosen JPA implementation) (p604)
 	@Bean
+	@DependsOn("flyway")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory()
 	{
 		Map<String, Object> properties = new Hashtable<>();
@@ -158,7 +169,7 @@ public class RootContextConfiguration
 	 * This will look for methods annotated with @Validated or @ValidateOnExecution and proxies
 	 * them so that validation on annotated parameters and return values are executed at the right time
 	 * (before and after method execution)
-	 *
+	 * <p>
 	 * Ensure it uses our configured bean validator rather than the default on on the classpath
 	 * which isn't configured to use a message source
 	 */
@@ -180,7 +191,8 @@ public class RootContextConfiguration
 	}
 
 	@Bean
-	public FreeMarkerConfigurationFactoryBean getFreeMarkerConfiguration() {
+	public FreeMarkerConfigurationFactoryBean getFreeMarkerConfiguration()
+	{
 		FreeMarkerConfigurationFactoryBean bean = new FreeMarkerConfigurationFactoryBean();
 		bean.setTemplateLoaderPath("/WEB-INF/fmtemplates");
 		return bean;
