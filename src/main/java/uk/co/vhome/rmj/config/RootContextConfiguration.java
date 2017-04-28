@@ -1,10 +1,8 @@
 package uk.co.vhome.rmj.config;
 
+import org.flywaydb.core.Flyway;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -49,6 +47,14 @@ public class RootContextConfiguration //implements TransactionManagementConfigur
 
 	private static final String SCHEMA_GENERATION_KEY = "javax.persistence-schema-generation.database.action";
 
+	@Bean(initMethod = "migrate")
+	public Flyway flyway()
+	{
+		Flyway flyway = new Flyway();
+		flyway.setDataSource(dataSource());
+		return flyway;
+	}
+
 	// Configure our Datasource (ie, the connection to the Database) See p.602
 	@Bean
 	public DataSource dataSource()
@@ -87,10 +93,12 @@ public class RootContextConfiguration //implements TransactionManagementConfigur
 	// Configure the persistence unit (Which manages our entities and configures the JPA implementation
 	// (Hibernate O/RM being the chosen JPA implementation) (p604)
 	@Bean
+	@DependsOn("flyway")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean()
 	{
 		Map<String, Object> properties = new Hashtable<>();
 		properties.put(SCHEMA_GENERATION_KEY, "none");
+		properties.put("hibernate.jdbc.time_zone", "UTC");
 
 		HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
 		adapter.setDatabasePlatform(HIBERNATE_DIALECT);
@@ -152,7 +160,7 @@ public class RootContextConfiguration //implements TransactionManagementConfigur
 	 * This will look for methods annotated with @Validated or @ValidateOnExecution and proxies
 	 * them so that validation on annotated parameters and return values are executed at the right time
 	 * (before and after method execution)
-	 *
+	 * <p>
 	 * Ensure it uses our configured bean validator rather than the default on on the classpath
 	 * which isn't configured to use a message source
 	 */
@@ -174,7 +182,8 @@ public class RootContextConfiguration //implements TransactionManagementConfigur
 	}
 
 	@Bean
-	public FreeMarkerConfigurationFactoryBean getFreeMarkerConfiguration() {
+	public FreeMarkerConfigurationFactoryBean getFreeMarkerConfiguration()
+	{
 		FreeMarkerConfigurationFactoryBean bean = new FreeMarkerConfigurationFactoryBean();
 		bean.setTemplateLoaderPath("/WEB-INF/fmtemplates");
 		return bean;

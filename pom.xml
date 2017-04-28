@@ -87,6 +87,13 @@
 			<version>1.2</version>
 		</dependency>
 
+		<!-- Database migration tool -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>4.2.0</version>
+		</dependency>
+
 		<!--
 			A JPA implementation used for persistence. JPA (Java Persistence API) is a standardised interface for O/RM providers.
 			EclipseLink is the reference implementation of the JPA (p550, p564) org.eclipse.persistence:javax.persistence.

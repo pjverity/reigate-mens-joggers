@@ -32,10 +32,10 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final String QUERY_ENABLED_ADMINS = "SELECT u.username FROM users u, group_members gm, groups g WHERE" +
-			                                                                                     " u.enabled = TRUE AND" +
-			                                                                                     " u.username = gm.username AND" +
-			                                                                                     " gm.group_id = g.id AND" +
-			                                                                                     " g.group_name = ?";
+			                                                   " u.enabled = TRUE AND" +
+			                                                   " u.username = gm.username AND" +
+			                                                   " gm.group_id = g.id AND" +
+			                                                   " g.group_name = ?";
 
 	private final MailService mailService;
 
@@ -66,13 +66,13 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	@Transactional
 	public void createBasicDefaultAccounts()
 	{
-		if (userDetailsManager.findAllGroups().isEmpty())
-		{
-			LOGGER.info("No group authorities found. Creating minimal accounts...");
+		List<String> enabledAdmins = userDetailsManager.getJdbcTemplate().queryForList(QUERY_ENABLED_ADMINS,
+		                                                                               new String[]{Group.ADMIN},
+		                                                                               String.class);
 
-			userDetailsManager.createGroup(Group.ADMIN, AuthorityUtils.createAuthorityList(Role.ADMIN, Role.MEMBER, Role.ORGANISER));
-			userDetailsManager.createGroup(Group.ORGANISER, AuthorityUtils.createAuthorityList(Role.ORGANISER, Role.MEMBER));
-			userDetailsManager.createGroup(Group.MEMBER, AuthorityUtils.createAuthorityList(Role.MEMBER));
+		if (enabledAdmins.isEmpty())
+		{
+			LOGGER.info("Creating initial admin account");
 
 			createUser(initialSiteUser.getId(),
 			           initialSiteUser.getFirstName(),
@@ -142,7 +142,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	{
 		UserDetailsEntity user = userDetailsRepository.findOne(id);
 
-		if ( user.isEnabled() == enable )
+		if (user.isEnabled() == enable)
 		{
 			return;
 		}
@@ -151,7 +151,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 		userDetailsRepository.save(user);
 
-		if ( !enable )
+		if (!enable)
 		{
 			invalidateSession(user.getUsername());
 		}
