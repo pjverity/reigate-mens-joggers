@@ -8,12 +8,12 @@ import java.math.BigDecimal;
 public class EventInfo
 {
 	@Id
-	@Column(name = "event_id")
+	@Column(name = "events_id")
 	private Long eventId;
 
 	@OneToOne
 	@MapsId
-	@JoinColumn(name = "event_id")
+	@JoinColumn(name = "events_id")
 	private Event event;
 
 	@Basic

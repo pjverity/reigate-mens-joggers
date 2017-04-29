@@ -12,7 +12,7 @@ import java.util.Objects;
 		// the ctor signature. {h-schema} is a Hibernate construct used for native queries, it substitutes in the default schema name
 		// specified by the hibernate.default_schema JPA property. (This is done automatically for normal entity queries (HQL? JQL?))
 		query = "SELECT u.id, u.first_name, u.last_name, cast(sum(p.quantity) as INTEGER) as balance FROM {h-schema}users u, {h-schema}purchases p" +
-				        " WHERE u.id = p.user_id" +
+				        " WHERE u.id = p.users_id" +
 				        " AND u.enabled = TRUE" +
 				        " GROUP BY u.id, first_name, last_name",
 		resultSetMapping = "QueryResultMapping"

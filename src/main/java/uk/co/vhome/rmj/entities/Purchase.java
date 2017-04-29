@@ -10,7 +10,7 @@ import java.time.Instant;
  * Entity for persisting token purchases
  */
 @Entity
-@Table(name = "purchases", indexes = @Index(columnList = "user_id"))
+@Table(name = "purchases", indexes = @Index(columnList = "users_id"))
 public class Purchase
 {
 	@Id
@@ -23,7 +23,7 @@ public class Purchase
 	private Instant purchaseTime;
 
 	@Basic(optional = false)
-	@Column(name = "user_id", nullable = false, updatable = false)
+	@Column(name = "users_id", nullable = false, updatable = false)
 	private Long userId;
 
 	@Basic(optional = false)

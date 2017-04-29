@@ -22,9 +22,9 @@ public class Event
 	private LocalDateTime eventDateTime;
 
 	@ManyToMany
-	@JoinTable(name = "event_participants",
-		joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
-		inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+	@JoinTable(name = "events_participants",
+		joinColumns = @JoinColumn(name = "events_id", referencedColumnName = "id"),
+		inverseJoinColumns = @JoinColumn(name = "users_id", referencedColumnName = "id"))
 	private List<UserDetailsEntity> userDetailsEntities;
 
 	@Basic
