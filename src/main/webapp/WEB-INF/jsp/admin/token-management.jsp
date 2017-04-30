@@ -51,7 +51,7 @@
 								<span class="form-control-static">${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}</span>
 							</td>
 							<td>
-								<span class="form-control-static">${row.memberBalance.balance}</span>
+								<span class="form-control-static">${row.memberBalance.balance == null ? 0 : row.memberBalance.balance}</span>
 							</td>
 							<td>
 								<form:select path="rows[${vs.index}].quantity" cssClass="form-control input-sm">

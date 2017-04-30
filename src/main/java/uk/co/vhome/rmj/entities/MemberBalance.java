@@ -1,5 +1,7 @@
 package uk.co.vhome.rmj.entities;
 
+import uk.co.vhome.rmj.security.Group;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -11,9 +13,10 @@ import java.util.Objects;
 		// cast() is required as PostgreSQL sum() function returns a bigint, which translates to a BigDecimal and so doesn't match
 		// the ctor signature. {h-schema} is a Hibernate construct used for native queries, it substitutes in the default schema name
 		// specified by the hibernate.default_schema JPA property. (This is done automatically for normal entity queries (HQL? JQL?))
-		query = "SELECT u.id, u.first_name, u.last_name, cast(sum(p.quantity) as INTEGER) as balance FROM {h-schema}users u, {h-schema}purchases p" +
-				        " WHERE u.id = p.users_id" +
-				        " AND u.enabled = TRUE" +
+		query = "SELECT u.id, u.first_name, u.last_name, cast(sum(p.quantity) as INTEGER) as balance FROM {h-schema}group_members gm, {h-schema}users u LEFT JOIN {h-schema}purchases p" +
+				        " ON u.id = p.users_id" +
+				        " WHERE u.enabled = TRUE" +
+				        " AND u.username = gm.username AND gm.group_id = (SELECT id from groups where group_name = '" + Group.MEMBER + "')" +
 				        " GROUP BY u.id, first_name, last_name",
 		resultSetMapping = "QueryResultMapping"
 )

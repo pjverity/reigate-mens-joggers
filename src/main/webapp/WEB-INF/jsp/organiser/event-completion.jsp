@@ -67,7 +67,7 @@
 						<tr>
 							<td class="form-control-static">${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}</td>
 							<td><form:checkbox cssClass="checkbox" path="rows[${vs.index}].present" name="present" value="${row.present}"/></td>
-							<td class="form-control-static">${row.memberBalance.balance}</td>
+							<td class="form-control-static">${row.memberBalance.balance == null ? 0 : row.memberBalance.balance}</td>
 						</tr>
 					</c:forEach>
 					</tbody>

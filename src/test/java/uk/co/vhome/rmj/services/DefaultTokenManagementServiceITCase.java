@@ -19,6 +19,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 import static uk.co.vhome.rmj.UserConfigurations.ENABLED_USER;
 import static uk.co.vhome.rmj.UserConfigurations.ENABLED_USER_ID;
@@ -42,7 +43,7 @@ public class DefaultTokenManagementServiceITCase
 	}
 
 	@Test
-	@Sql({"/schema.sql", "/data.sql"})
+	@Sql({"/schema.sql", "/data.sql", "/purchases.sql"})
 	public void returnsCorrectBalanceForCredit()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
@@ -54,7 +55,7 @@ public class DefaultTokenManagementServiceITCase
 	}
 
 	@Test
-	@Sql({"/schema.sql", "/data.sql"})
+	@Sql({"/schema.sql", "/data.sql", "/purchases.sql"})
 	public void returnsCorrectBalanceForDebit()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
@@ -63,6 +64,38 @@ public class DefaultTokenManagementServiceITCase
 		assertNotNull(ENABLED_USER_ID + " should be able to use 1 token", purchase);
 
 		assertEquals(6L, (long)tokenManagementService.balanceForMember(ENABLED_USER_ID));
+	}
+
+	@Test
+	@Sql({"/schema.sql", "/data.sql", "/purchases.sql"})
+	public void returnsExpectedBalanceForAllEnabledMembers()
+	{
+		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
+
+		List<MemberBalance> memberBalance = tokenManagementService.balancesForAllEnabledMembers();
+
+		assertEquals(1, memberBalance.size());
+
+		assertEquals(ENABLED_USER_ID, memberBalance.get(0).getUserId());
+		assertEquals("Test", memberBalance.get(0).getFirstName());
+		assertEquals("User (Enabled)", memberBalance.get(0).getLastName());
+		assertEquals(7, (int) memberBalance.get(0).getBalance());
+	}
+
+	@Test
+	@Sql({"/schema.sql", "/data.sql"})
+	public void returnsZeroBalanceForAllEnabledMembersWithNoPurchaseHistory()
+	{
+		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
+
+		List<MemberBalance> memberBalance = tokenManagementService.balancesForAllEnabledMembers();
+
+		assertEquals(1, memberBalance.size());
+
+		assertEquals(ENABLED_USER_ID, memberBalance.get(0).getUserId());
+		assertEquals("Test", memberBalance.get(0).getFirstName());
+		assertEquals("User (Enabled)", memberBalance.get(0).getLastName());
+		assertNull(memberBalance.get(0).getBalance());
 	}
 
 	@Test(expected = ConstraintViolationException.class)
@@ -79,22 +112,6 @@ public class DefaultTokenManagementServiceITCase
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 
 		tokenManagementService.debitAccount(ENABLED_USER_ID, 0);
-	}
-
-	@Test
-	@Sql({"/schema.sql", "/data.sql"})
-	public void returnsExpectedBalanceForAllEnabledMembers()
-	{
-		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
-
-		List<MemberBalance> memberBalance = tokenManagementService.balancesForAllEnabledMembers();
-
-		assertEquals(1, memberBalance.size());
-
-		assertEquals(ENABLED_USER_ID, memberBalance.get(0).getUserId());
-		assertEquals("Test", memberBalance.get(0).getFirstName());
-		assertEquals("User (Enabled)", memberBalance.get(0).getLastName());
-		assertEquals(7, (int) memberBalance.get(0).getBalance());
 	}
 
 }
