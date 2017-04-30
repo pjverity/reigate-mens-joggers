@@ -148,7 +148,7 @@
 						<tr>
 							<td><a href="${url}">${event.eventDateTimeFullText}</a></td>
 							<td><a href="${url}">${fn:length(event.userDetailsEntities)}</a></td>
-							<td><a href="${url}"><fmt:formatNumber type="number" minFractionDigits="3" value="${event.eventInfo.distance}"/></a></td>
+							<td><a href="${url}"><fmt:formatNumber type="number" maxFractionDigits="2" value="${event.eventInfo.distance}"/></a></td>
 						</tr>
 					</c:forEach>
 					</tbody>

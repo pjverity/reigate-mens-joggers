@@ -3,6 +3,7 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -63,13 +64,13 @@
 					<c:forEach var="event" items="${completedEvents}">
 						<tr>
 							<td>${event.eventDateTimeText}</td>
-							<td>${event.eventInfo.distance}</td>
+							<td><fmt:formatNumber type="number" maxFractionDigits="2" value="${event.eventInfo.distance}"/></td>
 						</tr>
 					</c:forEach>
 					</tbody>
 					<tfoot>
 					<tr class="success">
-						<td colspan="2">Total distance ran: <strong>${totalDistance} km</strong></td>
+						<td colspan="2">Total distance ran: <strong><fmt:formatNumber type="number" maxFractionDigits="2" value="${totalDistance}"/>km</strong></td>
 					</tr>
 					</tfoot>
 				</table>

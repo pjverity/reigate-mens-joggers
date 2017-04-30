@@ -57,7 +57,7 @@
 					<thead>
 					<tr>
 						<th>Member</th>
-						<th>Completed</th>
+						<th>Finished?</th>
 						<th>Token Balance</th>
 					</tr>
 					</thead>
