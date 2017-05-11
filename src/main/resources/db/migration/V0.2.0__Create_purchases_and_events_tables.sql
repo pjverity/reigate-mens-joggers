@@ -14,7 +14,6 @@ CREATE TABLE events
 CREATE UNIQUE INDEX events_event_datetime_uidx
   ON events (event_datetime);
 
-
 -- Further details about the associated event
 CREATE TABLE event_info
 (
@@ -27,7 +26,6 @@ CREATE TABLE event_info
 
 CREATE UNIQUE INDEX event_info_events_id_uidx
   ON event_info (events_id);
-
 
 -- Join table for events and users
 CREATE TABLE events_participants
@@ -46,16 +44,17 @@ CREATE TABLE events_participants
 CREATE UNIQUE INDEX events_participants_events_id_users_id_uidx
   ON events_participants (events_id, users_id);
 
-
 -- Records purchases in terms of quantities of 'tokens'
 CREATE TABLE purchases
 (
-  id            SERIAL                                              NOT NULL
+  id            SERIAL                                   NOT NULL
     CONSTRAINT purchases_pkey
     PRIMARY KEY,
-  purchase_time TIMESTAMP DEFAULT timezone('UTC', now())            NOT NULL,
-  quantity      INTEGER                                             NOT NULL,
-  users_id      INTEGER                                             NOT NULL
+  purchase_time TIMESTAMP DEFAULT timezone('UTC', now()) NOT NULL,
+  quantity      INTEGER                                  NOT NULL
+    CONSTRAINT purchases_quantity_not_zero_check
+    CHECK (quantity != 0),
+  users_id      INTEGER                                  NOT NULL
     CONSTRAINT purchases_users_id_fkey
     REFERENCES users
     ON DELETE CASCADE

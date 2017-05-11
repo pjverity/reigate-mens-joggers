@@ -33,10 +33,6 @@ public class DefaultTokenManagementServiceTest
 		MockitoAnnotations.initMocks(this);
 
 		tokenManagementService = new DefaultTokenManagementService(mockPurchaseRepository, mockUserAccountManagementService, mockEntityManager);
-		tokenManagementService.setBalanceLowerLimit(-5);
-		tokenManagementService.setBalanceUpperLimit(20);
-		tokenManagementService.setCreditLimit(10);
-		tokenManagementService.setDebitLimit(1);
 	}
 
 	@Test(expected = AssertionError.class)
@@ -71,18 +67,6 @@ public class DefaultTokenManagementServiceTest
 
 		Purchase purchase = tokenManagementService.creditAccount(ENABLED_USER_ID, 5);
 		assertNull(ENABLED_USER_ID + " should not be able to purchase tokens that would exceed balance limit", purchase);
-
-		verify(mockPurchaseRepository, never()).save(any(Purchase.class));
-	}
-
-	@Test
-	public void debitFailsWhenBelowBalanceThreshold()
-	{
-		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
-		when(mockPurchaseRepository.calculateBalanceForUser(ENABLED_USER_ID)).thenReturn(-5);
-
-		Purchase purchase = tokenManagementService.debitAccount(ENABLED_USER_ID, 1);
-		assertNull(ENABLED_USER_ID + " should not be able to use tokens", purchase);
 
 		verify(mockPurchaseRepository, never()).save(any(Purchase.class));
 	}

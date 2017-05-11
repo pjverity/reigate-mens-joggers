@@ -42,21 +42,18 @@
 				</thead>
 
 				<tbody>
-
 				<c:forEach var="row" items="${tokenManagementFormObject.rows}" varStatus="vs">
 					<div class="form-group">
-
 						<tr>
 							<td>
-								<span class="form-control-static">${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}</span>
+								<a href="mailto:${row.memberBalance.username}">${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}</a>
 							</td>
 							<td>
 								<span class="form-control-static">${row.memberBalance.balance == null ? 0 : row.memberBalance.balance}</span>
 							</td>
 							<td>
-								<form:select path="rows[${vs.index}].quantity" cssClass="form-control input-sm">
-									<form:options items="${creditQuantities}"/>
-								</form:select>
+								<form:input path="rows[${vs.index}].quantity" cssClass="form-control input-sm"/>
+								<form:errors path="rows[${vs.index}].quantity" cssClass="text-danger"/>
 							</td>
 						</tr>
 					</div>

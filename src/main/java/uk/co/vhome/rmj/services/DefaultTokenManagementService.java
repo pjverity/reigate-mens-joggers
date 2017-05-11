@@ -22,14 +22,6 @@ public class DefaultTokenManagementService implements TokenManagementService
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private int balanceUpperLimit;
-
-	private int balanceLowerLimit;
-
-	private int creditLimit;
-
-	private int debitLimit;
-
 	private final EntityManager entityManager;
 
 	private final PurchaseRepository purchaseRepository;
@@ -42,66 +34,12 @@ public class DefaultTokenManagementService implements TokenManagementService
 		this.purchaseRepository = purchaseRepository;
 		this.userAccountManagementService = userAccountManagementService;
 		this.entityManager = entityManager;
-
-		setBalanceLowerLimit(-5);
-		setBalanceUpperLimit(20);
-
-		/*
-		 * Take note of UI options in TokenManagementViewController
-		 */
-		setCreditLimit(10);
-		setDebitLimit(1);
-	}
-
-	public int getBalanceUpperLimit()
-	{
-		return balanceUpperLimit;
-	}
-
-	public void setBalanceUpperLimit(int balanceUpperLimit)
-	{
-		this.balanceUpperLimit = balanceUpperLimit;
-	}
-
-	public int getBalanceLowerLimit()
-	{
-		return balanceLowerLimit;
-	}
-
-	public void setBalanceLowerLimit(int balanceLowerLimit)
-	{
-		this.balanceLowerLimit = balanceLowerLimit;
-	}
-
-	public int getCreditLimit()
-	{
-		return creditLimit;
-	}
-
-	public void setCreditLimit(int creditLimit)
-	{
-		this.creditLimit = creditLimit;
-	}
-
-	public int getDebitLimit()
-	{
-		return debitLimit;
-	}
-
-	public void setDebitLimit(int debitLimit)
-	{
-		this.debitLimit = debitLimit;
 	}
 
 	@Override
 	public Purchase creditAccount(Long userId, int quantity)
 	{
-		assert quantity > 0;
-
-		if ( !creditWithLimit(quantity) || !creditWithinBalanceLimit(userId, quantity) )
-		{
-			return null;
-		}
+		assert quantity != 0;
 
 		return doTransaction(userId, quantity);
 	}
@@ -109,12 +47,7 @@ public class DefaultTokenManagementService implements TokenManagementService
 	@Override
 	public Purchase debitAccount(Long userId, int quantity)
 	{
-		assert quantity > 0;
-
-		if ( !debitWithLimit(quantity) || !debitWithinBalanceLimit(userId, quantity) )
-		{
-			return null;
-		}
+		assert quantity != 0;
 
 		return doTransaction(userId, -quantity);
 	}
@@ -155,27 +88,4 @@ public class DefaultTokenManagementService implements TokenManagementService
 		return userDetails != null && userDetails.isEnabled();
 	}
 
-	private boolean creditWithinBalanceLimit(Long userId, int quantity)
-	{
-		Integer currentBalance = balanceForMember(userId);
-
-		return currentBalance + quantity <= getBalanceUpperLimit();
-	}
-
-	private boolean debitWithinBalanceLimit(Long userId, int quantity)
-	{
-		Integer currentBalance = balanceForMember(userId);
-
-		return currentBalance - quantity >= getBalanceLowerLimit();
-	}
-
-	private boolean creditWithLimit(int quantity)
-	{
-		return quantity <= creditLimit;
-	}
-
-	private boolean debitWithLimit(int quantity)
-	{
-		return quantity <= debitLimit;
-	}
 }
