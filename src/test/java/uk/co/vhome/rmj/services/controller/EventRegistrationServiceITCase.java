@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.services;
+package uk.co.vhome.rmj.services.controller;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,8 +9,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.co.vhome.rmj.IntegrationTestConfiguration;
 import uk.co.vhome.rmj.entities.Event;
-import uk.co.vhome.rmj.services.controller.DefaultEventRegistrationService;
-import uk.co.vhome.rmj.services.controller.EventRegistrationService;
+import uk.co.vhome.rmj.services.DefaultEventManagementService;
+import uk.co.vhome.rmj.services.DefaultTokenManagementService;
+import uk.co.vhome.rmj.services.TokenManagementService;
+import uk.co.vhome.rmj.services.UserAccountManagementService;
 
 import javax.inject.Inject;
 import java.util.HashSet;

@@ -21,9 +21,10 @@ INSERT INTO group_members VALUES (DEFAULT, 'organiser.user@home.co.uk', 1);
 INSERT INTO group_members VALUES (DEFAULT, 'test.user.enabled@home.co.uk', 2);
 INSERT INTO group_members VALUES (DEFAULT, 'test.user.disabled@home.co.uk', 2);
 
-INSERT INTO events VALUES (0, TIMESTAMP('2017-07-14 13:25:00'), FALSE);
-INSERT INTO events VALUES (1, TIMESTAMP('2017-08-11 14:30:00'), FALSE);
-INSERT INTO events VALUES (2, TIMESTAMP('2017-08-31 12:20:00'), TRUE);
+INSERT INTO events VALUES (0, TIMESTAMP('2016-12-31 13:25:00'), FALSE);
+INSERT INTO events VALUES (1, TIMESTAMP('2017-01-01 14:30:00'), FALSE);
+INSERT INTO events VALUES (2, TIMESTAMP('2017-01-02 00:00:00'), TRUE);
+INSERT INTO events VALUES (3, TIMESTAMP('2017-01-02 12:20:00'), TRUE);
 
 INSERT INTO events_participants VALUES (0, 0);
 INSERT INTO events_participants VALUES (1, 0);

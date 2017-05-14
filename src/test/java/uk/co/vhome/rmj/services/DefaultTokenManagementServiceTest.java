@@ -1,8 +1,8 @@
 package uk.co.vhome.rmj.services;
 
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.co.vhome.rmj.entities.Purchase;
@@ -11,10 +11,11 @@ import uk.co.vhome.rmj.repositories.PurchaseRepository;
 import javax.persistence.EntityManager;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static uk.co.vhome.rmj.UserConfigurations.*;
 
-public class DefaultTokenManagementServiceTest
+class DefaultTokenManagementServiceTest
 {
 	@Mock
 	private EntityManager mockEntityManager;
@@ -27,32 +28,32 @@ public class DefaultTokenManagementServiceTest
 
 	private DefaultTokenManagementService tokenManagementService;
 
-	@Before
-	public void init()
+	@BeforeEach
+	void init()
 	{
 		MockitoAnnotations.initMocks(this);
 
 		tokenManagementService = new DefaultTokenManagementService(mockPurchaseRepository, mockUserAccountManagementService, mockEntityManager);
 	}
 
-	@Test(expected = AssertionError.class)
-	public void creditZeroTokensFails()
+	@Test
+	void creditZeroTokensFails()
 	{
-		tokenManagementService.creditAccount(ENABLED_USER_ID, 0);
-
-		verifyZeroInteractions(mockPurchaseRepository);
-	}
-
-	@Test(expected = AssertionError.class)
-	public void debitZeroTokensFails()
-	{
-		tokenManagementService.debitAccount(ENABLED_USER_ID, 0);
+		assertThrows(AssertionError.class, () -> tokenManagementService.creditAccount(ENABLED_USER_ID, 0));
 
 		verifyZeroInteractions(mockPurchaseRepository);
 	}
 
 	@Test
-	public void creditFailsWhenPurchaseLimitExceeded()
+	void debitZeroTokensFails()
+	{
+		assertThrows(AssertionError.class, () -> tokenManagementService.debitAccount(ENABLED_USER_ID, 0));
+
+		verifyZeroInteractions(mockPurchaseRepository);
+	}
+
+	@Test
+	void creditFailsWhenPurchaseLimitExceeded()
 	{
 		Purchase purchase = tokenManagementService.creditAccount(ENABLED_USER_ID, 11);
 		assertNull(ENABLED_USER_ID + " should not be able to purchase >10 tokens", purchase);
@@ -61,7 +62,7 @@ public class DefaultTokenManagementServiceTest
 	}
 
 	@Test
-	public void creditFailsWhenBalanceLimitExceeded()
+	void creditFailsWhenBalanceLimitExceeded()
 	{
 		when(mockPurchaseRepository.calculateBalanceForUser(ENABLED_USER_ID)).thenReturn(16);
 
@@ -72,7 +73,7 @@ public class DefaultTokenManagementServiceTest
 	}
 
 	@Test
-	public void creditOrDebitFailsForInvalidUser()
+	void creditOrDebitFailsForInvalidUser()
 	{
 		Long randomUserId = 4L;
 
@@ -100,7 +101,7 @@ public class DefaultTokenManagementServiceTest
 	}
 
 	@Test
-	public void creditSucceeds()
+	void creditSucceeds()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 		when(mockPurchaseRepository.calculateBalanceForUser(ENABLED_USER_ID)).thenReturn(5);
@@ -114,7 +115,7 @@ public class DefaultTokenManagementServiceTest
 	}
 
 	@Test
-	public void creditSucceedsWithNoPreviousBalance()
+	void creditSucceedsWithNoPreviousBalance()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 		when(mockPurchaseRepository.calculateBalanceForUser(ENABLED_USER_ID)).thenReturn(null);
@@ -128,7 +129,7 @@ public class DefaultTokenManagementServiceTest
 	}
 
 	@Test
-	public void debitSucceeds()
+	void debitSucceeds()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 		when(mockPurchaseRepository.calculateBalanceForUser(ENABLED_USER_ID)).thenReturn(5);

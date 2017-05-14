@@ -12,8 +12,12 @@ public interface EventRepository extends JpaRepository<Event, Long>
 
 	List<Event> findTop10ByCompletedTrueOrderByEventDateTimeDesc();
 
-	List<Event> findAllByCompletedAndEventDateTimeAfter(boolean completed, LocalDateTime beforeDateTime);
+	List<Event> findAllByCompletedAndEventDateTimeAfterOrEventDateTime(boolean completed, LocalDateTime afterDateTime, LocalDateTime dateTime);
 
-	List<Event> findAllByCompletedAndEventDateTimeBefore(boolean completed, LocalDateTime beforeDateTime);
+	List<Event> findAllByCompletedAndEventDateTimeAfter(boolean completed, LocalDateTime afterDateTime);
+
+	List<Event> findAllByCompletedAndEventDateTimeBeforeOrEventDateTime(boolean completed, LocalDateTime beforeDateTime, LocalDateTime dateTime);
+
+	List<Event> findAllByCompletedAndEventDateTimeBefore(boolean completed, LocalDateTime deforeDateTime);
 
 }

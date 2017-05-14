@@ -67,16 +67,22 @@ public class DefaultEventManagementService implements EventManagementService
 	@Override
 	public List<Event> fetchEventsAfter(LocalDateTime dateTime, boolean inclusive, boolean completed)
 	{
-		LocalDateTime adjustedDateTime = inclusive ? dateTime.minusDays(1) : dateTime;
+		if (inclusive)
+		{
+			return eventRepository.findAllByCompletedAndEventDateTimeAfterOrEventDateTime(completed, dateTime, dateTime);
+		}
 
-		return eventRepository.findAllByCompletedAndEventDateTimeAfter(completed, adjustedDateTime);
+		return eventRepository.findAllByCompletedAndEventDateTimeAfter(completed, dateTime);
 	}
 
 	@Override
 	public List<Event> fetchEventsBefore(LocalDateTime dateTime, boolean inclusive, boolean completed)
 	{
-		LocalDateTime adjustedDateTime = inclusive ? dateTime.plusDays(1) : dateTime;
+		if (inclusive)
+		{
+			return eventRepository.findAllByCompletedAndEventDateTimeBeforeOrEventDateTime(completed, dateTime, dateTime);
+		}
 
-		return eventRepository.findAllByCompletedAndEventDateTimeBefore(completed, adjustedDateTime);
+		return eventRepository.findAllByCompletedAndEventDateTimeBefore(completed, dateTime);
 	}
 }
