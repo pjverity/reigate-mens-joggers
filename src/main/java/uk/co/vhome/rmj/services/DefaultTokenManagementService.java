@@ -7,6 +7,8 @@ import org.springframework.validation.annotation.Validated;
 import uk.co.vhome.rmj.entities.MemberBalance;
 import uk.co.vhome.rmj.entities.Purchase;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
+import uk.co.vhome.rmj.notifications.BalanceUpdatedNotification;
+import uk.co.vhome.rmj.notifications.LowBalanceNotification;
 import uk.co.vhome.rmj.repositories.PurchaseRepository;
 
 import javax.inject.Inject;
@@ -28,12 +30,15 @@ public class DefaultTokenManagementService implements TokenManagementService
 
 	private final UserAccountManagementService userAccountManagementService;
 
+	private final NotificationService notificationService;
+
 	@Inject
-	public DefaultTokenManagementService(PurchaseRepository purchaseRepository, UserAccountManagementService userAccountManagementService, EntityManager entityManager)
+	public DefaultTokenManagementService(PurchaseRepository purchaseRepository, UserAccountManagementService userAccountManagementService, EntityManager entityManager, NotificationService notificationService)
 	{
 		this.purchaseRepository = purchaseRepository;
 		this.userAccountManagementService = userAccountManagementService;
 		this.entityManager = entityManager;
+		this.notificationService = notificationService;
 	}
 
 	@Override
@@ -69,6 +74,19 @@ public class DefaultTokenManagementService implements TokenManagementService
 
 		Purchase purchase = new Purchase(userId, quantity);
 		purchaseRepository.save(purchase);
+
+		Integer newBalance = balanceForMember(userId);
+
+		// TODO - Derive action to perform from user preferences
+		UserDetailsEntity userDetails = userAccountManagementService.findUserDetails(userId);
+		if (quantity < 0 && newBalance <= 3)
+		{
+			notificationService.postNotification(new LowBalanceNotification(userDetails, quantity, newBalance));
+		}
+		else
+		{
+			notificationService.postNotification(new BalanceUpdatedNotification(userDetails, quantity, newBalance));
+		}
 
 		LOGGER.info("Purchase complete: {}", purchase);
 

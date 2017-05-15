@@ -26,6 +26,9 @@ class DefaultTokenManagementServiceTest
 	@Mock
 	private UserAccountManagementService mockUserAccountManagementService;
 
+	@Mock
+	private NotificationService notificationService;
+
 	private DefaultTokenManagementService tokenManagementService;
 
 	@BeforeEach
@@ -33,7 +36,7 @@ class DefaultTokenManagementServiceTest
 	{
 		MockitoAnnotations.initMocks(this);
 
-		tokenManagementService = new DefaultTokenManagementService(mockPurchaseRepository, mockUserAccountManagementService, mockEntityManager);
+		tokenManagementService = new DefaultTokenManagementService(mockPurchaseRepository, mockUserAccountManagementService, mockEntityManager, notificationService);
 	}
 
 	@Test

@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import uk.co.vhome.rmj.config.InitialSiteUser;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
+import uk.co.vhome.rmj.notifications.NewUserNotification;
 import uk.co.vhome.rmj.repositories.UserDetailsRepository;
 import uk.co.vhome.rmj.security.AuthenticatedUser;
 import uk.co.vhome.rmj.security.Group;
-import uk.co.vhome.rmj.security.Role;
 
 import javax.inject.Inject;
 import java.time.Instant;
@@ -33,7 +33,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final MailService mailService;
+	private final NotificationService notificationService;
 
 	private final JdbcUserDetailsManager userDetailsManager;
 
@@ -44,12 +44,13 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	private InitialSiteUser initialSiteUser;
 
 	@Inject
-	public DefaultUserAccountManagementService(MailService mailService, InitialSiteUser initialSiteUser,
+	public DefaultUserAccountManagementService(NotificationService notificationService,
+	                                           InitialSiteUser initialSiteUser,
 	                                           JdbcUserDetailsManager userDetailsManager,
 	                                           UserDetailsRepository userDetailsRepository,
 	                                           SessionRegistry sessionRegistry)
 	{
-		this.mailService = mailService;
+		this.notificationService = notificationService;
 		this.userDetailsManager = userDetailsManager;
 		this.userDetailsRepository = userDetailsRepository;
 
@@ -125,7 +126,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 		UserDetailsEntity userDetailsEntity = updateUserDetails(username, firstName, lastName);
 
-		mailService.sendRegistrationMail(userDetailsEntity, findEnabledAdminDetails());
+		notificationService.postNotification(new NewUserNotification(userDetailsEntity, findEnabledAdminDetails()));
 
 		return userDetailsEntity;
 	}

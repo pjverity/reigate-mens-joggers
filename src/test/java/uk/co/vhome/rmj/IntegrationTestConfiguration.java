@@ -1,5 +1,6 @@
 package uk.co.vhome.rmj;
 
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
+import uk.co.vhome.rmj.services.NotificationService;
 import uk.co.vhome.rmj.services.UserAccountManagementService;
 
 import javax.persistence.EntityManagerFactory;
@@ -75,5 +77,11 @@ public class IntegrationTestConfiguration
 	public UserAccountManagementService userAccountManagementService()
 	{
 		return Mockito.mock(UserAccountManagementService.class);
+	}
+
+	@Bean
+	public NotificationService notificationService()
+	{
+		return Mockito.mock(NotificationService.class);
 	}
 }
