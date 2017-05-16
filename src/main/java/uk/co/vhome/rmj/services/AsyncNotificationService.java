@@ -3,28 +3,31 @@ package uk.co.vhome.rmj.services;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import uk.co.vhome.rmj.notifications.NotificationTask;
-import uk.co.vhome.rmj.notifications.notifiers.MailNotifier;
+import uk.co.vhome.rmj.notifications.BalanceUpdatedNotification;
+import uk.co.vhome.rmj.notifications.LowBalanceNotification;
+import uk.co.vhome.rmj.notifications.NewUserNotification;
+import uk.co.vhome.rmj.notifications.notifiers.Notifier;
+import uk.co.vhome.rmj.security.AuthenticatedUser;
 
 import javax.inject.Inject;
 import java.util.concurrent.ExecutorService;
 
 /**
  * Simple notification service that currently uses a single-threaded executor to
- * execute implementations of {@link NotificationTask}'s. The only notification mechanism
+ * execute notification events. The only notification mechanism
  * is currently a mail based service which is supplied to the task before execution.
  */
 @Service
 public class AsyncNotificationService implements NotificationService
 {
-	private final MailNotifier mailNotifier;
+	private final Notifier notifier;
 
 	private final ExecutorService executorService;
 
 	@Inject
-	public AsyncNotificationService(MailNotifier mailNotifier, ExecutorService executorService)
+	public AsyncNotificationService(Notifier notifier, ExecutorService executorService)
 	{
-		this.mailNotifier = mailNotifier;
+		this.notifier = notifier;
 		this.executorService = executorService;
 	}
 
@@ -36,10 +39,24 @@ public class AsyncNotificationService implements NotificationService
 	 */
 	@Override
 	@Transactional(propagation = Propagation.NOT_SUPPORTED)
-	public void postNotification(NotificationTask notificationTask)
+	public void postNotification(Object notification)
 	{
-		notificationTask.setMailNotifier(mailNotifier);
-		executorService.submit(notificationTask);
+		executorService.submit(() ->
+				                       AuthenticatedUser.runWithSystemUser(() ->
+				                                                           {
+					                                                           if (notification instanceof NewUserNotification)
+					                                                           {
+						                                                           notifier.on(((NewUserNotification) notification));
+					                                                           }
+					                                                           else if (notification instanceof LowBalanceNotification)
+					                                                           {
+						                                                           notifier.on(((LowBalanceNotification) notification));
+					                                                           }
+					                                                           else if (notification instanceof BalanceUpdatedNotification)
+					                                                           {
+						                                                           notifier.on(((BalanceUpdatedNotification) notification));
+					                                                           }
+				                                                           }));
 	}
 
 }
