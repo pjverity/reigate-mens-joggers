@@ -56,8 +56,29 @@
 
 						<div class="form-group">
 							<label for="timePicker">Time</label>
-							<form:select cssClass="form-control" path="eventTime" id="timePicker">
-								<form:options items="${eventTimes}"/>
+							<form:select cssClass="form-control" path="eventHour" id="timePicker">
+								<form:option value="6" label="06"/>
+								<form:option value="7" label="07"/>
+								<form:option value="8" label="08"/>
+								<form:option value="9" label="09"/>
+								<form:option value="10"/>
+								<form:option value="11"/>
+								<form:option value="12"/>
+								<form:option value="13"/>
+								<form:option value="14"/>
+								<form:option value="15"/>
+								<form:option value="16"/>
+								<form:option value="17"/>
+								<form:option value="18"/>
+								<form:option value="19"/>
+								<form:option value="20"/>
+							</form:select>
+							:
+							<form:select cssClass="form-control" path="eventMinutes">
+								<form:option value="0" label="00"/>
+								<form:option value="15"/>
+								<form:option value="30"/>
+								<form:option value="45"/>
 							</form:select>
 						</div>
 

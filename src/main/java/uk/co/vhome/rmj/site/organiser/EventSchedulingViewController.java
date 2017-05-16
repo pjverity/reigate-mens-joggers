@@ -31,26 +31,7 @@ public class EventSchedulingViewController
 
 	private static final String ERROR_CODE = "uk.co.vhome.rmj.site.organiser.EventSchedulingViewController.CreateEventFailed";
 
-	private static final List<LocalTime> EVENT_TIMES = new ArrayList<>(13);
-
 	private final EventManagementService eventManagementService;
-
-	static
-	{
-		EVENT_TIMES.add(LocalTime.of(7, 0));
-		EVENT_TIMES.add(LocalTime.of(8, 0));
-		EVENT_TIMES.add(LocalTime.of(9, 0));
-		EVENT_TIMES.add(LocalTime.of(10, 0));
-		EVENT_TIMES.add(LocalTime.of(11, 0));
-		EVENT_TIMES.add(LocalTime.of(12, 0));
-		EVENT_TIMES.add(LocalTime.of(13, 0));
-		EVENT_TIMES.add(LocalTime.of(14, 0));
-		EVENT_TIMES.add(LocalTime.of(15, 0));
-		EVENT_TIMES.add(LocalTime.of(16, 0));
-		EVENT_TIMES.add(LocalTime.of(17, 0));
-		EVENT_TIMES.add(LocalTime.of(18, 0));
-		EVENT_TIMES.add(LocalTime.of(19, 0));
-	}
 
 	@Inject
 	public EventSchedulingViewController(EventManagementService eventManagementService)
@@ -91,8 +72,8 @@ public class EventSchedulingViewController
 
 		try
 		{
-			LocalDateTime eventDateTime = LocalDateTime.of(eventCreationFormObject.getEventDate(),
-			                                               eventCreationFormObject.getEventTime());
+			LocalTime localTime = LocalTime.of(eventCreationFormObject.getEventHour(), eventCreationFormObject.getEventMinutes());
+			LocalDateTime eventDateTime = LocalDateTime.of(eventCreationFormObject.getEventDate(), localTime);
 
 			eventManagementService.createNewEvent(eventDateTime);
 
@@ -116,13 +97,6 @@ public class EventSchedulingViewController
 				.forEach(eventManagementService::cancelEvent);
 
 		return "redirect:" + VIEW_NAME;
-	}
-
-	@SuppressWarnings("unused")
-	@ModelAttribute("eventTimes")
-	List<LocalTime> eventTimes()
-	{
-		return EVENT_TIMES;
 	}
 
 	@SuppressWarnings("unused")

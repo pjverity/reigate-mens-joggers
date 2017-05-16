@@ -3,9 +3,10 @@ package uk.co.vhome.rmj.site.organiser;
 import org.springframework.format.annotation.DateTimeFormat;
 import uk.co.vhome.rmj.site.form.validation.NotPastLocalDate;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class EventCreationFormObject
 {
@@ -15,7 +16,13 @@ public class EventCreationFormObject
 	private LocalDate eventDate;
 
 	@NotNull
-	private LocalTime eventTime;
+	@Min(0)
+	@Max(23)
+	private Integer eventHour;
+
+	@Min(0)
+	@Max(60)
+	private Integer eventMinutes;
 
 	public LocalDate getEventDate()
 	{
@@ -27,13 +34,24 @@ public class EventCreationFormObject
 		this.eventDate = eventDate;
 	}
 
-	public LocalTime getEventTime()
+	public Integer getEventHour()
 	{
-		return eventTime;
+		return eventHour;
 	}
 
-	public void setEventTime(LocalTime eventTime)
+	public void setEventHour(Integer eventHour)
 	{
-		this.eventTime = eventTime;
+		this.eventHour = eventHour;
 	}
+
+	public Integer getEventMinutes()
+	{
+		return eventMinutes;
+	}
+
+	public void setEventMinutes(Integer eventMinutes)
+	{
+		this.eventMinutes = eventMinutes;
+	}
+
 }
