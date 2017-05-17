@@ -3,6 +3,8 @@ package uk.co.vhome.rmj.site.organiser;
 import org.springframework.data.geo.Metrics;
 import uk.co.vhome.rmj.entities.Event;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -17,6 +19,8 @@ public class EventCompletionFormObject
 	private Event event;
 
 	@NotNull
+	@Min(1)
+	@Max(100)
 	private Double distance;
 
 	@NotNull(message = "{uk.co.vhome.rmj.site.organiser.EventCompletionFormObject.metric.Null}")

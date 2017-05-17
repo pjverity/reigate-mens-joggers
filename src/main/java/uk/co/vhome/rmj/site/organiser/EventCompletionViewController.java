@@ -80,10 +80,4 @@ public class EventCompletionViewController
 		return eventRegistrationService.fetchIncompleteEventsOnOrBeforeToday();
 	}
 
-	@ModelAttribute("distances")
-	public List<Double> distances()
-	{
-		return Arrays.asList(2.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0);
-	}
-
 }

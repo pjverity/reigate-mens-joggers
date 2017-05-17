@@ -66,7 +66,7 @@
 					<c:forEach var="row" items="${eventCompletionFormObject.rows}" varStatus="vs">
 						<tr>
 							<td class="form-control-static">
-									<a href="mailto:${row.memberBalance.username}">${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}</a>
+								<a href="mailto:${row.memberBalance.username}">${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}</a>
 							</td>
 							<td><form:checkbox cssClass="checkbox" path="rows[${vs.index}].present" name="present" value="${row.present}"/></td>
 							<td class="form-control-static">${row.memberBalance.balance == null ? 0 : row.memberBalance.balance}</td>
@@ -88,7 +88,7 @@
 						<%-- Run Date Selection --%>
 
 					<div class="form-group ${empty events ? 'has-error' : ''}">
-						<label for="runDateTimeSelect" class="control-label">Run Date</label>
+						<label for="runDateTimeSelect" class="control-label">Completion Date</label>
 						<c:choose>
 							<c:when test="${empty events}">
 								<c:url value='/organiser/event-scheduling' var="url"/>
@@ -107,17 +107,15 @@
 
 						<%-- Run Distance Selection --%>
 
-					<div class="form-group">
+					<div id="distanceGroup" class="form-group">
 						<label for="distance" class="control-label">Distance</label>
-						<form:select id="distanceSelect" cssClass="form-control" path="distance">
-							<form:options items="${distances}"/>
-						</form:select>
+						<form:input cssClass="form-control" id="distanceInput" path="distance"/>
 					</div>
 
 
 						<%-- Distance Metric --%>
 
-					<div id="metricRadioButtonGroup" class="form-group has-error">
+					<div id="metricRadioButtonGroup" class="form-group">
 						<label class="radio-inline">
 							<form:radiobutton path="metric" value="MILES"/> Miles
 						</label>
@@ -146,64 +144,99 @@
 		</div>
 	</div>
 
+	<spring:hasBindErrors name="eventCompletionFormObject">
+	<div class="row">
+		<div class="col-md-12">
+
+			<div class="alert alert-danger" role="alert">
+				<span><strong>Invalid input</strong></span>
+				<ul>
+					<c:forEach var="error" items="${errors.fieldErrors}">
+						<li>${error.field}&nbsp;${error.defaultMessage}</li>
+					</c:forEach>
+				</ul>
+			</div>
+		</div>
+	</div>
+	</spring:hasBindErrors>
 	</form:form>
 
 </body>
 
 <script type="text/javascript">
 
-    var runnerCount = 0;
-    var runSelected = false;
-
     const $runDateTimeSelect = $('#runDateTimeSelect');
     const $cancelEventAnchor = $('#cancelEventAnchor');
     const $metricRadioButtonGroup = $('#metricRadioButtonGroup');
     const $completeButton = $('#completeButton');
     const $runnerCountBadge = $('#runnerCountBadge');
+    const $distanceGroup = $('#distanceGroup');
+    const $distanceInput = $('#distanceInput');
+
+    var runnerCount = $('form input:checkbox:checked').length;
+    var runSelected = $runDateTimeSelect.find(':selected').length > 0;
+    var metricSelected = $('input[type=radio]:checked').length > 0;
+    var distanceEntered = $.isNumeric($distanceInput.val());
 
     $(function () {
-        $completeButton.toggleClass('disabled', true);
+        $runnerCountBadge.text(runnerCount);
+        $distanceGroup.toggleClass('has-error', !distanceEntered);
+        $metricRadioButtonGroup.toggleClass('has-error', !metricSelected);
 
-        $('input[type=radio]').change(function () {
-            runSelected = $runDateTimeSelect.find(':selected').length !== 0;
-
-            $metricRadioButtonGroup.removeClass('has-error');
-            $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0);
-        });
-
-        $('form input:checkbox').on('click', function () {
-            runnerCount += (this.checked ? 1 : -1);
-
-            $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0);
-            $runnerCountBadge.text(runnerCount);
-        });
-
-        $runDateTimeSelect.change(function (e) {
-
-            const eventId = $(e.target).val();
-
-            // When no run schedules are present, there will be no numeric value for eventId
-            if (!$.isNumeric(eventId))
-            {
-                return;
-            }
-
-            const newHref = $cancelEventAnchor.attr('href').replace(/=.*/, '=' + eventId);
-            $cancelEventAnchor.attr('href', newHref);
-
-        }).trigger('change');
-
+        $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered);
     });
 
+    $('input[type=radio]').change(function () {
+        metricSelected = true;
+        $metricRadioButtonGroup.removeClass('has-error');
+
+        $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered);
+    });
+
+    $('form input:checkbox').on('click', function () {
+        runnerCount += this.checked ? 1 : -1;
+
+        $runnerCountBadge.text(runnerCount);
+        $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered);
+    });
+
+    $runDateTimeSelect.change(function (e) {
+
+        const eventId = $(e.target).val();
+
+        // When no run schedules are present, there will be no numeric value for eventId
+        if (!$.isNumeric(eventId)) {
+            return;
+        }
+
+        const newHref = $cancelEventAnchor.attr('href').replace(/=.*/, '=' + eventId);
+        $cancelEventAnchor.attr('href', newHref);
+
+    }).trigger('change');
+
+    $distanceInput
+        .on('keyup', function (e) {
+            distanceEntered = $.isNumeric($(this).val());
+            $distanceGroup.toggleClass('has-error', !distanceEntered);
+
+            $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered);
+        })
+        .on('keydown', function (e) {
+            if (!$.isNumeric(e.key) && e.keyCode !== 8 && e.keyCode !== 37 && e.keyCode !== 39 && e.keyCode !== 190) {
+                e.preventDefault();
+            }
+        });
+
     $('#confirmModal').on('show.bs.modal', function (e) {
-        const distance = $('#distanceSelect').find(':selected').text();
+        const distance = $distanceInput.val();
         const metric = $('input[type=radio]:checked').val();
-				const dateTime = $runDateTimeSelect.find(':selected').text();
+        const dateTime = $runDateTimeSelect.find(':selected').text();
 
         $('#confirmRunDateTime').text(dateTime);
         $('#confirmRunnerCount').html('<strong>' + runnerCount + '</strong> ' + (runnerCount === 1 ? 'person' : 'people'));
         $('#confirmRunDistance').html('<strong>' + distance + ' ' + metric + '</strong> ');
     });
+
 </script>
 
 </html>
