@@ -8,27 +8,51 @@
 	      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
 </head>
-<body>
+<body style="margin-top: 1em">
 <div class="container">
-	<p>
-		Hi ${firstName},
-	</p>
-	<p>
-		You account has been ${creditedOrDebited} <strong>${quantity}</strong>, and your balance currently stands at <strong>${balance}</strong>.
-	</p>
+	<div class="row">
+		<div class="col-sm-12">
+			<p>
+				Hi ${firstName},
+			</p>
+			<p>
+				You account has been successfully ${creditedOrDebited}.
+			</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<p>
+				Quantity ${creditedOrDebited}:&nbsp;<strong>${quantity}</strong>
+				<br/>
+				Balance:&nbsp;<strong>${balance}</strong>
+			</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<p>
+				If you have any questions or concerns in the meantime, drop <a
+							href="mailto:anna@reigateladiesjoggers.co.uk (Anna),emma@reigateladiesjoggers.co.uk (Emma)?cc=administrator@reigatemensjoggers.co.uk (RMJ Admin)&subject=Account%20Query">our
+				team</a> a mail and we'll get back to you as soon as possible.
+			</p>
 
-	<p>
-		Don't forget, you can keep track of your account balance by logging in to <a href="http://www.reigatemensjoggers.co.uk">http://www.reigatemensjoggers.co.uk</a>
-		and selecting 'Account' from the navigation menu.
-	</p>
+			<h4 style="margin-top: 1em">Reigate Mens Joggers</h4>
+		</div>
+	</div>
 
-	<p>
-		Happy running!
-	</p>
+	<div class="row" style="margin-top: 1em">
+		<div class="col-sm-12">
+			<div class="alert alert-success" role="alert">
+				<i class="glyphicon glyphicon-info-sign"></i> <strong>View Your Balance</strong>
+				<p style="margin-top: 1em">
+					You can view your balance by logging on to <a href="http://www.reigatemensjoggers.co.uk">reigatemensjoggers.co.uk</a>
+					and selecting <strong>Account</strong> from the navigation menu.
+				</p>
+			</div>
+		</div>
+	</div>
 
-	<p>
-		<strong>Reigate Mens Joggers</strong>
-	</p>
 </div>
 </body>
 </html>

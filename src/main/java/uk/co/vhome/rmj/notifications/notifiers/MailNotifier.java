@@ -63,11 +63,13 @@ public class MailNotifier implements Notifier
 		String balance = TOKENS_FORMAT.format(new Object[]{notification.getCurrentBalance()});
 
 		templateProperties.put("firstName", notification.getUserDetails().getFirstName());
+		templateProperties.put("lastName", notification.getUserDetails().getLastName());
+
 		templateProperties.put("quantity", quantity);
 		templateProperties.put("balance", balance);
 
 		sendMailUsingTemplate(Collections.singletonList(notification.getUserDetails()),
-		                      "Low Balance Alert!",
+		                      "Low balance alert",
 		                      templateProperties,
 		                      LOW_BALANCE_NOTIFICATION_TEMPLATE);
 
@@ -81,15 +83,17 @@ public class MailNotifier implements Notifier
 		String quantity = TOKENS_FORMAT.format(new Object[]{Math.abs(notification.getQuantity())});
 		String balance = TOKENS_FORMAT.format(new Object[]{notification.getBalance()});
 
-		String creditedOrDebited = notification.getQuantity() < 0 ? "debited by" : "credited with";
+		String creditedOrDebited = notification.getQuantity() < 0 ? "debited" : "credited";
 
 		templateProperties.put("firstName", notification.getUserDetails().getFirstName());
+		templateProperties.put("lastName", notification.getUserDetails().getLastName());
+
 		templateProperties.put("quantity", quantity);
 		templateProperties.put("balance", balance);
 		templateProperties.put("creditedOrDebited", creditedOrDebited);
 
 		sendMailUsingTemplate(Collections.singletonList(notification.getUserDetails()),
-		                      "Your balance has been updated",
+		                      "Your account has been " + creditedOrDebited,
 		                      templateProperties,
 		                      BALANCE_UPDATE_NOTIFICATION_TEMPLATE);
 

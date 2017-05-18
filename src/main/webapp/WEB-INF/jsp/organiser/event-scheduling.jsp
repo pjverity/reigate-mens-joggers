@@ -57,6 +57,14 @@
 						<div class="form-group">
 							<label for="timePicker">Time</label>
 							<form:select cssClass="form-control" path="eventHour" id="timePicker">
+<%--
+								<form:option value="0" label="00"/>
+								<form:option value="1" label="01"/>
+								<form:option value="2" label="02"/>
+								<form:option value="3" label="03"/>
+								<form:option value="4" label="04"/>
+								<form:option value="5" label="05"/>
+--%>
 								<form:option value="6" label="06"/>
 								<form:option value="7" label="07"/>
 								<form:option value="8" label="08"/>
