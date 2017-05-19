@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface EventManagementService
 {
-	@Secured({Role.ADMIN})
+	@Secured({Role.ORGANISER})
 	Event createNewEvent(LocalDateTime eventDateTime);
 
-	@Secured({Role.ADMIN})
+	@Secured({Role.ORGANISER})
 	void completeEvent(Event event);
 
-	@Secured({Role.ADMIN})
+	@Secured({Role.ORGANISER})
 	void cancelEvent(Event event);
 
 	List<Event> findAllIncompleteEvents();
