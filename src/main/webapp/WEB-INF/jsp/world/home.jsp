@@ -125,6 +125,7 @@
 		<li data-target="gallery-carousel" data-slide-to="0" class="active"></li>
 		<li data-target="gallery-carousel" data-slide-to="1"></li>
 		<li data-target="gallery-carousel" data-slide-to="2"></li>
+		<li data-target="gallery-carousel" data-slide-to="3"></li>
 	</ol>
 
 	<!-- Wrapper for slides -->
@@ -134,6 +135,9 @@
 			<div class="carousel-caption">
 				RMJ's First Run
 			</div>
+		</div>
+		<div class="item">
+			<img src="<c:url value="/images/gallery/4.jpeg"/>" alt="RMJ Gallery Run">
 		</div>
 		<div class="item">
 			<img src="<c:url value="/images/gallery/2.jpeg"/>" alt="RMJ Gallery Run">
