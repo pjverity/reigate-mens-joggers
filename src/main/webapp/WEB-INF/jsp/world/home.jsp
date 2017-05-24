@@ -17,9 +17,23 @@
 
 <%@include file="../navigation.jsp" %>
 
-<div class="container text-center">
+<div class="container-fluid">
 
-	<div class="row">
+	<c:if test="${!cookiesAccepted}">
+		<div id="cookieAlert" class="alert alert-info alert-dismissible" role="alert" style="margin-top: 0.5em">
+			<button id="acceptCookies" type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<strong>Cookies</strong>
+			<p>
+			Our site uses cookies to allow access to certain areas of the site. No personal information is stored in the cookies we use. By continuing to use our site you agree to our use of cookies.</p>
+		<br/>
+		</div>
+	</c:if>
+</div>
+
+<div class="container text-center">
+		<div class="row">
 		<img class="img-responsive center-block" src="<c:url value="/images/logo-and-name.svg"/>" width="320px">
 	</div>
 
@@ -177,5 +191,16 @@
 </security:authorize>
 
 </body>
+
+<script type="text/javascript">
+    $('#acceptCookies').on('click', function () {
+        console.log("Accept");
+        var d = new Date();
+        d.setTime(d.getTime() + (365*24*60*60*1000));
+        var expires = "expires="+ d.toUTCString();
+        document.cookie = 'cookiesAccepted=true;' + expires;
+        $('#cookieAlert').alert('close');
+    });
+</script>
 
 </html>

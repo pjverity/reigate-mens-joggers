@@ -8,10 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import uk.co.vhome.rmj.config.ServletContextConfiguration;
 import uk.co.vhome.rmj.entities.Event;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
@@ -79,9 +76,10 @@ public class HomeViewController
 	}
 
 	@RequestMapping(path = "/", method = RequestMethod.GET)
-	public String get(ModelMap model)
+	public String get(ModelMap model, @CookieValue(name = "cookiesAccepted", defaultValue = "false") Boolean cookiesAccepted)
 	{
 		model.put("form", new UserRegistrationFormObject());
+		model.put("cookiesAccepted", cookiesAccepted);
 
 		return VIEW_NAME;
 	}
