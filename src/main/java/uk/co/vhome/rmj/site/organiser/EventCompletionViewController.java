@@ -8,12 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import uk.co.vhome.rmj.entities.Event;
-import uk.co.vhome.rmj.services.controller.EventRegistrationService;
+import uk.co.vhome.rmj.site.organiser.services.EventRegistrationService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

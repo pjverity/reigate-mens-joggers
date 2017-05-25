@@ -13,6 +13,8 @@ import uk.co.vhome.rmj.services.DefaultEventManagementService;
 import uk.co.vhome.rmj.services.DefaultTokenManagementService;
 import uk.co.vhome.rmj.services.TokenManagementService;
 import uk.co.vhome.rmj.services.UserAccountManagementService;
+import uk.co.vhome.rmj.site.organiser.services.DefaultEventRegistrationService;
+import uk.co.vhome.rmj.site.organiser.services.EventRegistrationService;
 
 import javax.inject.Inject;
 import java.util.HashSet;

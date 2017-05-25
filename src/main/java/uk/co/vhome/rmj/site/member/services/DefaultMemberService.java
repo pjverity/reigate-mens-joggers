@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.services.controller;
+package uk.co.vhome.rmj.site.member.services;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.services.controller;
+package uk.co.vhome.rmj.site.world.services;
 
 import org.springframework.stereotype.Service;
 import uk.co.vhome.rmj.entities.Event;

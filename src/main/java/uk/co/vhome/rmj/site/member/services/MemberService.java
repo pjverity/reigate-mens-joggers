@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.services.controller;
+package uk.co.vhome.rmj.site.member.services;
 
 import uk.co.vhome.rmj.entities.Event;
 

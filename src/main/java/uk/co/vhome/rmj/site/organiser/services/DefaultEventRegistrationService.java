@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.services.controller;
+package uk.co.vhome.rmj.site.organiser.services;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

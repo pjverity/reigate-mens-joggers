@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import uk.co.vhome.rmj.config.ServletContextConfiguration;
 import uk.co.vhome.rmj.entities.Event;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
-import uk.co.vhome.rmj.services.controller.HomeViewControllerService;
+import uk.co.vhome.rmj.site.world.services.HomeViewControllerService;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
