@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -8,15 +9,31 @@
 
 <c:set var="pageTitleSuffix" value="Reigate Mens Joggers"/>
 
-<%@include file="../head.jsp" %>
+<head>
+<%@include file="../head-common.jsp" %>
+</head>
 
 <body>
 
 <%@include file="../navigation.jsp" %>
 
-<div class="container text-center">
+<div class="container-fluid">
 
-	<div class="row">
+	<c:if test="${!cookiesAccepted}">
+		<div id="cookieAlert" class="alert alert-info alert-dismissible" role="alert" style="margin-top: 0.5em">
+			<button id="acceptCookies" type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<strong>Cookies</strong>
+			<p>
+			Our site uses cookies to allow access to certain areas of the site. No personal information is stored in the cookies we use. By continuing to use our site you agree to our use of cookies.</p>
+		<br/>
+		</div>
+	</c:if>
+</div>
+
+<div class="container text-center">
+		<div class="row">
 		<img class="img-responsive center-block" src="<c:url value="/images/logo-and-name.svg"/>" width="320px">
 	</div>
 
@@ -32,6 +49,20 @@
 		<a href="https://twitter.com/MensJoggers" class="glyphicon fa fa-2x fa-twitter social-buttons" style="background-color: #55ACEE"></a>
 	</div>
 
+	<br/>
+
+	<div class="row">
+		<div class="col-sm-3"></div>
+		<div class="col-sm-6">
+			<div class="panel panel-info">
+				<div class="panel-heading">Next Run</div>
+				<div class="panel-body">
+					<h4>${nextEvent}</h4>
+				</div>
+			</div>
+		<div class="col-sm-3"></div>
+		</div>
+	</div>
 </div>
 
 <hr/>
@@ -80,7 +111,7 @@
 	<div class="row">
 		<div class="media">
 			<div class="media-left text-center">
-				<c:url value="/organiser/profile" var="organiserProfileUrl"/>
+				<c:url value="/world/coach-profile" var="organiserProfileUrl"/>
 				<a href="${organiserProfileUrl}">
 					<img src="<c:url value="/images/richard_feist.png"/>" alt="Coach Richard">Richard Feist
 				</a>
@@ -108,6 +139,7 @@
 		<li data-target="gallery-carousel" data-slide-to="0" class="active"></li>
 		<li data-target="gallery-carousel" data-slide-to="1"></li>
 		<li data-target="gallery-carousel" data-slide-to="2"></li>
+		<li data-target="gallery-carousel" data-slide-to="3"></li>
 	</ol>
 
 	<!-- Wrapper for slides -->
@@ -117,6 +149,9 @@
 			<div class="carousel-caption">
 				RMJ's First Run
 			</div>
+		</div>
+		<div class="item">
+			<img src="<c:url value="/images/gallery/4.jpeg"/>" alt="RMJ Gallery Run">
 		</div>
 		<div class="item">
 			<img src="<c:url value="/images/gallery/2.jpeg"/>" alt="RMJ Gallery Run">
@@ -151,15 +186,21 @@
 	</div>
 </div>
 
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-        crossorigin="anonymous"></script>
-
 <security:authorize access="!isAuthenticated()">
 	<%@include file="../signup-dialog.jsp" %>
 </security:authorize>
 
 </body>
+
+<script type="text/javascript">
+    $('#acceptCookies').on('click', function () {
+        console.log("Accept");
+        var d = new Date();
+        d.setTime(d.getTime() + (365*24*60*60*1000));
+        var expires = "expires="+ d.toUTCString();
+        document.cookie = 'cookiesAccepted=true;' + expires;
+        $('#cookieAlert').alert('close');
+    });
+</script>
 
 </html>

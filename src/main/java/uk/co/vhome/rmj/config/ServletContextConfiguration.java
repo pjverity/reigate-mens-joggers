@@ -23,6 +23,8 @@ import javax.inject.Inject;
 @EnableSpringDataWebSupport
 public class ServletContextConfiguration extends WebMvcConfigurerAdapter
 {
+	public static final String USER_ID_SESSION_ATTRIBUTE = "userId";
+
 	public static final String USER_FIRST_NAME_SESSION_ATTRIBUTE = "userFirstName";
 
 	public static final String USER_LAST_NAME_SESSION_ATTRIBUTE = "userLastName";
@@ -39,8 +41,7 @@ public class ServletContextConfiguration extends WebMvcConfigurerAdapter
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry)
 	{
-		registry.addViewController("/member/home").setViewName("member/home");
-		registry.addViewController("/organiser/profile").setViewName("organiser/profile");
+		registry.addViewController("/world/coach-profile").setViewName("world/coach-profile");
 	}
 
 	/**

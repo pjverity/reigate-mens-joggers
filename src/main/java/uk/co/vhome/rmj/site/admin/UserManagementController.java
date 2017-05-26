@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * Secured administration functions
  */
 @Controller
-@RequestMapping("admin/usermanagement")
+@RequestMapping("admin/user-management")
 @SuppressWarnings("unused")
 public class UserManagementController
 {
@@ -40,15 +40,15 @@ public class UserManagementController
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	String updateModel(UserManagementForm userManagementForm)
+	String updateModel(UserManagementFormObject userManagementForm)
 	{
 		userManagementForm.getUserManagementFormRows().forEach(r -> userAccountManagementService.setUserEnabled(r.getId(), r.isEnabled()));
 
-		return "redirect:/admin/usermanagement";
+		return "redirect:/admin/user-management";
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	UserManagementForm getView(ModelMap modelMap)
+	UserManagementFormObject getView(ModelMap modelMap)
 	{
 		Map<String, Boolean> activeSessions = new HashMap<>();
 
@@ -65,7 +65,7 @@ public class UserManagementController
 				                                 .collect(Collectors.toList());
 		modelMap.put("userDetails", sorted);
 
-		UserManagementForm userManagementForm = new UserManagementForm();
+		UserManagementFormObject userManagementForm = new UserManagementFormObject();
 
 		List<UserManagementFormRow> formRows = sorted.stream()
 				                                       .map(UserManagementFormRow::new)

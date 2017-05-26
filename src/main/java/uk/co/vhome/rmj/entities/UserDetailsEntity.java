@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenerationTime;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Entity representing additional information about users
@@ -16,7 +17,7 @@ public class UserDetailsEntity
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long Id;
+	private Long id;
 
 	@Column(updatable = false, nullable = false, unique = true)
 	private String username;
@@ -34,11 +35,14 @@ public class UserDetailsEntity
 	@Generated(GenerationTime.INSERT)
 	private Instant lastLogin;
 
-	public UserDetailsEntity(String username, String firstName, String lastName)
+	@ManyToMany(mappedBy = "userDetailsEntities")
+	private Set<Event> events;
+
+	public UserDetailsEntity(Long userId, String username, boolean enabled)
 	{
+		this.id = userId;
 		this.username = username;
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this.enabled = enabled;
 	}
 
 	public UserDetailsEntity()
@@ -47,12 +51,12 @@ public class UserDetailsEntity
 
 	public Long getId()
 	{
-		return Id;
+		return id;
 	}
 
 	public void setId(Long id)
 	{
-		Id = id;
+		this.id = id;
 	}
 
 	public String getUsername()
@@ -105,8 +109,41 @@ public class UserDetailsEntity
 		this.lastLogin = lastLogin;
 	}
 
+	public Set<Event> getEvents()
+	{
+		return events;
+	}
+
+	public void setEvents(Set<Event> events)
+	{
+		this.events = events;
+	}
+
 	public Date getLastLoginAsDate()
 	{
 		return Date.from(lastLogin);
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o)
+		{
+			return true;
+		}
+		if (o == null || getClass() != o.getClass())
+		{
+			return false;
+		}
+
+		UserDetailsEntity that = (UserDetailsEntity) o;
+
+		return id != null ? id.equals(that.id) : that.id == null;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return id != null ? id.hashCode() : 0;
 	}
 }

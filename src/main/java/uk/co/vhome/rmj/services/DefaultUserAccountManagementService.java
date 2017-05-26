@@ -2,7 +2,6 @@ package uk.co.vhome.rmj.services;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
@@ -14,14 +13,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import uk.co.vhome.rmj.config.InitialSiteUser;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
+import uk.co.vhome.rmj.notifications.NewUserNotification;
 import uk.co.vhome.rmj.repositories.UserDetailsRepository;
+import uk.co.vhome.rmj.security.AuthenticatedUser;
 import uk.co.vhome.rmj.security.Group;
-import uk.co.vhome.rmj.security.Role;
-import uk.co.vhome.rmj.security.RunAs;
 
 import javax.inject.Inject;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Default implementation of the {@link UserAccountManagementService} service interface
@@ -31,13 +33,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private static final String QUERY_ENABLED_ADMINS = "SELECT u.username FROM users u, group_members gm, groups g WHERE" +
-			                                                   " u.enabled = TRUE AND" +
-			                                                   " u.username = gm.username AND" +
-			                                                   " gm.group_id = g.id AND" +
-			                                                   " g.group_name = ?";
-
-	private final MailService mailService;
+	private final NotificationService notificationService;
 
 	private final JdbcUserDetailsManager userDetailsManager;
 
@@ -48,12 +44,13 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	private InitialSiteUser initialSiteUser;
 
 	@Inject
-	public DefaultUserAccountManagementService(InitialSiteUser initialSiteUser,
-	                                           MailService mailService,
+	public DefaultUserAccountManagementService(NotificationService notificationService,
+	                                           InitialSiteUser initialSiteUser,
 	                                           JdbcUserDetailsManager userDetailsManager,
-	                                           UserDetailsRepository userDetailsRepository, SessionRegistry sessionRegistry)
+	                                           UserDetailsRepository userDetailsRepository,
+	                                           SessionRegistry sessionRegistry)
 	{
-		this.mailService = mailService;
+		this.notificationService = notificationService;
 		this.userDetailsManager = userDetailsManager;
 		this.userDetailsRepository = userDetailsRepository;
 
@@ -66,9 +63,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	@Transactional
 	public void createBasicDefaultAccounts()
 	{
-		List<String> enabledAdmins = userDetailsManager.getJdbcTemplate().queryForList(QUERY_ENABLED_ADMINS,
-		                                                                               new String[]{Group.ADMIN},
-		                                                                               String.class);
+		List<String> enabledAdmins = userDetailsRepository.enabledUsersInGroup(true, Group.ADMIN);
 
 		if (enabledAdmins.isEmpty())
 		{
@@ -88,27 +83,22 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	/*
 	 * Preconditions: Registration form validation must check that the service is valid, that the
 	 * email address is not already in use, and that all parameters are sane.
-	 *
-	 * In order to 'Run As' the system user to call the MailService interface, we have to have an
-	 * authenticated user in the context, but as anyone can register, then use an 'Anonymous' user role
 	 */
 	@Override
 	@Transactional(timeout = 15)
-	@Secured({RunAs.SYSTEM, Role.ANON})
-	public void registerNewUser(String username, String firstName, String lastName, String password)
+	public UserDetailsEntity registerNewUser(String username, String firstName, String lastName, String password)
 	{
 		LOGGER.info("Registering new user {}", username);
 
-		createUser(username, firstName, lastName, password, Group.MEMBER);
+		try
+		{
+			return AuthenticatedUser.callAsSystemUser(() -> createUser(username, firstName, lastName, password, Group.MEMBER));
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
 
-		UserDetailsEntity userDetailsEntity = userDetailsRepository.findByUsername(username);
-
-		mailService.sendRegistrationMail(userDetailsEntity);
-
-		// TODO - Don't put this in the same transaction. If the notification sends to the
-		// user Ok and fails to sent to the admin, then whole thing rolls back leaving the
-		// user wondering why they can't log in to their account!
-		sendAdministratorNotification(userDetailsEntity);
 	}
 
 	@Override
@@ -121,7 +111,7 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 	@Override
 	@Transactional(timeout = 15)
-	public void createUser(String username, String firstName, String lastName, String password, String groupName)
+	public UserDetailsEntity createUser(String username, String firstName, String lastName, String password, String groupName)
 	{
 		LOGGER.info("Creating new user {} in group {}", username, groupName);
 
@@ -134,7 +124,11 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 		userDetailsManager.addUserToGroup(username, groupName);
 
-		updateUserDetails(username, firstName, lastName);
+		UserDetailsEntity userDetailsEntity = updateUserDetails(username, firstName, lastName);
+
+		notificationService.postNotification(new NewUserNotification(userDetailsEntity, findEnabledAdminDetails()));
+
+		return userDetailsEntity;
 	}
 
 	@Override
@@ -164,9 +158,23 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 	}
 
 	@Override
-	public UserDetailsEntity findUserDetails(String username)
+	public Set<UserDetailsEntity> findAllUserDetailsIn(Collection<String> usernames)
 	{
-		return userDetailsRepository.findByUsername(username);
+		return userDetailsRepository.findByUsernameIn(usernames);
+	}
+
+	@Override
+	public UserDetailsEntity findUserDetails(Long userId)
+	{
+		return userDetailsRepository.findOne(userId);
+	}
+
+	@Override
+	public Set<UserDetailsEntity> findEnabledAdminDetails()
+	{
+		List<String> enabledUsersInGroup = userDetailsRepository.enabledUsersInGroup(true, Group.ADMIN);
+
+		return findAllUserDetailsIn((new HashSet<>(enabledUsersInGroup)));
 	}
 
 	@Override
@@ -175,25 +183,14 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 		userDetailsRepository.updateLastLogin(username, Instant.ofEpochMilli(timestamp));
 	}
 
-	private void updateUserDetails(String username, String firstName, String lastName)
+	private UserDetailsEntity updateUserDetails(String username, String firstName, String lastName)
 	{
 		UserDetailsEntity userDetailsEntity = userDetailsRepository.findByUsername(username);
 
 		userDetailsEntity.setFirstName(StringUtils.capitalize(firstName));
 		userDetailsEntity.setLastName(StringUtils.capitalize(lastName));
 
-		userDetailsRepository.save(userDetailsEntity);
-	}
-
-	private void sendAdministratorNotification(UserDetailsEntity newUserDetails)
-	{
-		// TODO - Create a proper ORM entity model and interfaces to run these queries rather than using JDBC queries
-		List<String> enabledUsersInGroup = userDetailsManager.getJdbcTemplate().queryForList(QUERY_ENABLED_ADMINS,
-		                                                                                     new String[]{Group.ADMIN},
-		                                                                                     String.class);
-
-		List<UserDetailsEntity> administrators = userDetailsRepository.findByUsernameIn(enabledUsersInGroup);
-		mailService.sendAdministratorNotification(administrators, newUserDetails);
+		return userDetailsRepository.save(userDetailsEntity);
 	}
 
 	private void invalidateSession(String username)

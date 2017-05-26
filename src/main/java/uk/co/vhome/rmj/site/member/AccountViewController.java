@@ -8,11 +8,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import uk.co.vhome.rmj.services.TokenManagementService;
 import uk.co.vhome.rmj.services.UserAccountManagementService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.security.Principal;
+
+import static uk.co.vhome.rmj.config.ServletContextConfiguration.USER_ID_SESSION_ATTRIBUTE;
 
 /**
  * Controller for maintaining user account details
@@ -24,10 +28,14 @@ public class AccountViewController
 
 	private final UserAccountManagementService userAccountManagementService;
 
+	private final TokenManagementService tokenManagementService;
+
 	@Inject
-	public AccountViewController(UserAccountManagementService userAccountManagementService)
+	public AccountViewController(UserAccountManagementService userAccountManagementService,
+	                             TokenManagementService tokenManagementService)
 	{
 		this.userAccountManagementService = userAccountManagementService;
+		this.tokenManagementService = tokenManagementService;
 	}
 
 	@GetMapping("/member/account")
@@ -65,6 +73,13 @@ public class AccountViewController
 	PasswordChangeFormObject passwordChangeFormObject()
 	{
 		return new PasswordChangeFormObject();
+	}
+
+	@SuppressWarnings("unused")
+	@ModelAttribute("tokenBalance")
+	Integer tokenBalance(@AuthenticationPrincipal Principal principal, @SessionAttribute(USER_ID_SESSION_ATTRIBUTE) Long userId)
+	{
+		return tokenManagementService.balanceForMember(userId);
 	}
 
 }

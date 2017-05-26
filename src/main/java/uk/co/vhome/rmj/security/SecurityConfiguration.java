@@ -92,6 +92,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
 		http.authorizeRequests()
 					.antMatchers("/admin/**").hasAuthority(Role.ADMIN)
+					.antMatchers("/organiser/**").hasAuthority(Role.ORGANISER)
 					.antMatchers("/member/**").hasAuthority(Role.MEMBER)
 					.antMatchers("/**").permitAll()
 				.and()
@@ -149,6 +150,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
 				UserDetailsEntity details = userDetailsRepository.findByUsername(authentication.getName());
 				HttpSession httpSession = request.getSession();
+				httpSession.setAttribute(ServletContextConfiguration.USER_ID_SESSION_ATTRIBUTE, details.getId());
 				httpSession.setAttribute(ServletContextConfiguration.USER_FIRST_NAME_SESSION_ATTRIBUTE, details.getFirstName());
 				httpSession.setAttribute(ServletContextConfiguration.USER_LAST_NAME_SESSION_ATTRIBUTE, details.getLastName());
 
@@ -167,7 +169,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 	 * Spring will component scan this as a bean. The alternative is to put it in a top level class
 	 * an @Import it from the outer class.
 	 */
-	@EnableGlobalMethodSecurity(jsr250Enabled = true, securedEnabled = true, order = 0)
+	@EnableGlobalMethodSecurity(jsr250Enabled = true, securedEnabled = true)
 	public class MethodSecurity extends GlobalMethodSecurityConfiguration
 	{
 		@Override

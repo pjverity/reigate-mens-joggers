@@ -61,7 +61,7 @@
 
 					<div class="modal-footer">
 						<form:button id="signup-cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancel</form:button>
-						<form:button type="submit" class="btn btn-primary">Sign Up! <i id="signup-spinner" class="fa fa-circle-o-notch fa-spin" ></i></form:button>
+						<form:button type="submit" class="btn btn-primary">Sign Up! <i id="signup-spinner" class="fa fa-circle-o-notch fa-spin" style="display: inline-block"></i></form:button>
 					</div>
 				</form:form>
 

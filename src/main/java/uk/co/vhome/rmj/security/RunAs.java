@@ -5,5 +5,5 @@ package uk.co.vhome.rmj.security;
  */
 public class RunAs
 {
-	public static final String SYSTEM = "RUN_AS_SYSTEM";
+	public static final String NEW_USER = "RUN_AS_NEW_USER";
 }

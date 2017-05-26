@@ -5,7 +5,7 @@
 	<groupId>uk.co.vhome</groupId>
 	<artifactId>rmj</artifactId>
 	<packaging>war</packaging>
-	<version>0.1.1-SNAPSHOT</version>
+	<version>0.2.0-SNAPSHOT</version>
 
 	<name>Reigate Mens Joggers</name>
 
@@ -16,6 +16,15 @@
 		<developerConnection>scm:git:https://github.com/pjverity/rmj.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
+
+	<properties>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<junit.version>4.12</junit.version>
+		<junit.jupiter.version>5.0.0-M4</junit.jupiter.version>
+		<junit.vintage.version>${junit.version}.0-M4</junit.vintage.version>
+		<junit.platform.version>1.0.0-M4</junit.platform.version>
+	</properties>
 
 	<profiles>
 		<profile>
@@ -40,21 +49,21 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-framework-bom</artifactId>
-				<version>4.3.5.RELEASE</version>
+				<version>4.3.7.RELEASE</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.data</groupId>
 				<artifactId>spring-data-releasetrain</artifactId>
-				<version>Hopper-SR7</version>
+				<version>Ingalls-SR1</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-bom</artifactId>
-				<version>4.1.1.RELEASE</version>
+				<version>4.2.2.RELEASE</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
@@ -108,7 +117,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>5.2.7.Final</version>
+			<version>5.2.9.Final</version>
 		</dependency>
 
 		<!--
@@ -179,7 +188,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>5.2.2.Final</version>
+			<version>5.4.1.Final</version>
 			<!--<scope>runtime</scope>-->
 		</dependency>
 
@@ -249,10 +258,46 @@
 		<!--
 			Testing frameworks
 		-->
+		<!-- Usually provided by the container, but required at runtime in the integration tests-->
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.el</artifactId>
+			<version>3.0.1-b08</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- In memory DB implementation-->
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>10.13.1.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Spring Testing Support -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>${junit.jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>2.7.17</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -287,6 +332,43 @@
 					<server>TomcatServer</server>
 					<path>/${project.artifactId}</path>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.20</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-surefire-provider</artifactId>
+						<version>${junit.platform.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.junit.jupiter</groupId>
+						<artifactId>junit-jupiter-engine</artifactId>
+						<version>${junit.jupiter.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.junit.vintage</groupId>
+						<artifactId>junit-vintage-engine</artifactId>
+						<version>${junit.vintage.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.20</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<!-- Currently no remote repository to deploy artifacts to, so configure the plugin to skip deployment -->

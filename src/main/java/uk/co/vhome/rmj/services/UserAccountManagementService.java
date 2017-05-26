@@ -4,7 +4,9 @@ import org.springframework.security.access.annotation.Secured;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
 import uk.co.vhome.rmj.security.Role;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Service interface for user account management
@@ -14,10 +16,11 @@ public interface UserAccountManagementService
 	@Secured({Role.SYSTEM})
 	void createBasicDefaultAccounts();
 
-	void registerNewUser(String username, String firstName, String lastName, String password);
+	@Secured({Role.ANONYMOUS, Role.RUN_AS_NEW_USER})
+	UserDetailsEntity registerNewUser(String username, String firstName, String lastName, String password);
 
 	@Secured({Role.ADMIN})
-	void createUser(String username, String firstName, String lastName, String password, String groupName);
+	UserDetailsEntity createUser(String username, String firstName, String lastName, String password, String groupName);
 
 	@Secured({Role.MEMBER})
 	void changePassword(String username, String oldPassword, String newPassword);
@@ -31,6 +34,12 @@ public interface UserAccountManagementService
 	@Secured({Role.ADMIN})
 	List<UserDetailsEntity> findAllUserDetails();
 
-	@Secured({Role.MEMBER})
-	UserDetailsEntity findUserDetails(String username);
+	@Secured({Role.ADMIN})
+	Set<UserDetailsEntity> findAllUserDetailsIn(Collection<String> usernames);
+
+	@Secured({Role.ORGANISER, Role.RUN_AS_NEW_USER})
+	UserDetailsEntity findUserDetails(Long userId);
+
+	@Secured({Role.ADMIN})
+	Set<UserDetailsEntity> findEnabledAdminDetails();
 }
