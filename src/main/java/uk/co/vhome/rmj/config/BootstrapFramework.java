@@ -17,7 +17,7 @@ import java.util.EnumSet;
 /**
  * This is called once when the container initialises the application, before any Listeners
  * are called. This is the earliest point of initialisation. How does it get called? Well...
- * <p/>
+ * <p>
  * Servlet 3.0+ containers use the Java Service Provider API to locate classes that
  * implement the ServletContainerInitializer interface. It then instantiates them
  * and calls their onStartup() method. To hook in to Java's SPI loading framework so
@@ -25,22 +25,25 @@ import java.util.EnumSet;
  * containing a META-INF/services/javax.servlet.ServletContainerInitializer file that
  * lists the FQN of the concrete classes in the JAR implementing that interface. This
  * JAR then has to be packaged and placed in the web applications /lib directory.
- * <p/>
+ * </p>
+ * <p>
  * To avoid all the pain of creating and deploying that JAR, the spring-web JAR on the
  * applications class path already provides this via the SpringServletContainerInitializer.
  * The JAR contains the META-INF/services file listing SpringServletContainerInitializer as the
  * concrete class implementing ServletContainerInitializer.
- * <p/>
+ * </p>
+ * <p>
  * The implementation of SpringServletContainerInitializer declares that it can handle classes
  * of type WebApplicationInitializer. The container scans for classes implementing this
  * and provides them to the onStartup() method, SpringServletContainerInitializer then
  * instantiates them and calls onStartup() on those instances... So, all we have to do
  * is implement WebApplicationInitializer and allow classpath scanning to find us and
  * for SpringServletContainerInitializer to call us!
- * <p/>
+ * </p>
+ * <p>
  * And so that is how we get to initialise our Spring app contexts, Servlets, Filters etc
  * programmatically at start-up!
- *
+ * </p>
  * <p><strong>Bootstrap order</strong>: {@link WebApplicationInitializer}'s must be called
  * in the corrected order. Without specifying the order, it is possible the Security initialiser
  * is called before this and subsequently fails</p>

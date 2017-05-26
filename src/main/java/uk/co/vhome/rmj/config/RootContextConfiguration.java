@@ -128,7 +128,7 @@ public class RootContextConfiguration
 		return new JpaTransactionManager(entityManagerFactory);
 	}
 
-	/**
+	/*
 	 * Used in places where granular transaction management is required
 	 */
 	@Bean
@@ -137,7 +137,7 @@ public class RootContextConfiguration
 		return new TransactionTemplate(platformTransactionManager);
 	}
 
-	/**
+	/*
 	 * Used by the validators to supply internationalised error messages
 	 */
 	@Bean
@@ -153,7 +153,7 @@ public class RootContextConfiguration
 		return messageSource;
 	}
 
-	/**
+	/*
 	 * Support for bean validation
 	 */
 	@Bean
@@ -164,7 +164,7 @@ public class RootContextConfiguration
 		return validatorFactoryBean;
 	}
 
-	/**
+	/*
 	 * Create a post processor which is used to proxy the execution of validation methods (p.449)
 	 * This will look for methods annotated with @Validated or @ValidateOnExecution and proxies
 	 * them so that validation on annotated parameters and return values are executed at the right time
@@ -172,6 +172,7 @@ public class RootContextConfiguration
 	 * <p>
 	 * Ensure it uses our configured bean validator rather than the default on on the classpath
 	 * which isn't configured to use a message source
+	 * </p>
 	 */
 	@Bean
 	public MethodValidationPostProcessor methodValidationPostProcessor()
@@ -181,7 +182,7 @@ public class RootContextConfiguration
 		return validationPostProcessor;
 	}
 
-	/**
+	/*
 	 * Used to validate reCaptcha responses
 	 */
 	@Bean
