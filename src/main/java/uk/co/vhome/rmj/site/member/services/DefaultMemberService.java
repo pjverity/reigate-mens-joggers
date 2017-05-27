@@ -9,6 +9,7 @@ import uk.co.vhome.rmj.entities.UserDetailsEntity;
 import uk.co.vhome.rmj.repositories.UserDetailsRepository;
 import uk.co.vhome.rmj.services.EventManagementService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -39,8 +40,8 @@ public class DefaultMemberService implements MemberService
 	}
 
 	@Override
-	public List<Event> findAllIncompleteEvents()
+	public List<Event> findUpcomingEvents()
 	{
-		return eventManagementService.findAllIncompleteEvents();
+		return eventManagementService.fetchEventsAfter(LocalDateTime.now(), true, false);
 	}
 }

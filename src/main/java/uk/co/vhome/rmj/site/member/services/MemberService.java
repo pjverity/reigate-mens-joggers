@@ -9,5 +9,5 @@ public interface MemberService
 {
 	Set<Event> completedEvents();
 
-	List<Event> findAllIncompleteEvents();
+	List<Event> findUpcomingEvents();
 }

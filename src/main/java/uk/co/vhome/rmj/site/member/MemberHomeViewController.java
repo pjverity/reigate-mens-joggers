@@ -42,7 +42,7 @@ public class MemberHomeViewController
 	@ModelAttribute("upcomingEvents")
 	List<Event> upcomingEvents()
 	{
-		return memberService.findAllIncompleteEvents();
+		return memberService.findUpcomingEvents();
 	}
 
 	@SuppressWarnings("unused")
