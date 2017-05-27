@@ -49,22 +49,20 @@
 
 					<form:form cssClass="form-inline" modelAttribute="eventCreationFormObject" action="${createEventUrl}">
 
+						<%-- The hours:mins controls are inline-blocks to prevent them from spanning the entire column on small viewports.
+									In doing so, their labels are aligned with the control. The form-inline class will only style controls as
+									inline-block's when the viewport >=768px. So this means in some cases the 'Date' label will be above the
+									control and looks out of place with the Time label which is always in line. Force  the date control an
+									inline-block all the time
+						--%>
 						<div class="form-group">
 							<label for="datepicker">Date</label>
-							<form:input cssClass="form-control" path="eventDate" type="text" id="datepicker"/>
+							<form:input cssClass="form-control" path="eventDate" type="text" id="datepicker" cssStyle="width: 9em; display: inline-block"/>
 						</div>
 
 						<div class="form-group">
 							<label for="timePicker">Time</label>
-							<form:select cssClass="form-control" path="eventHour" id="timePicker">
-<%--
-								<form:option value="0" label="00"/>
-								<form:option value="1" label="01"/>
-								<form:option value="2" label="02"/>
-								<form:option value="3" label="03"/>
-								<form:option value="4" label="04"/>
-								<form:option value="5" label="05"/>
---%>
+							<form:select cssClass="form-control" path="eventHour" id="timePicker" cssStyle="width: 4em; display: inline-block">
 								<form:option value="6" label="06"/>
 								<form:option value="7" label="07"/>
 								<form:option value="8" label="08"/>
@@ -82,7 +80,7 @@
 								<form:option value="20"/>
 							</form:select>
 							:
-							<form:select cssClass="form-control" path="eventMinutes">
+							<form:select cssClass="form-control" path="eventMinutes" cssStyle="width: 4em; display: inline-block">
 								<form:option value="0" label="00"/>
 								<form:option value="15"/>
 								<form:option value="30"/>
@@ -190,7 +188,7 @@
 				</div>
 				<ul class="list-group">
 					<c:forEach var="user" items="${selectedEvent.userDetailsEntities}">
-						<li class="list-group-item"> <a href="mailto:${user.username}">${user.firstName}&nbsp;${user.lastName}</a></li>
+						<li class="list-group-item"><a href="mailto:${user.username}">${user.firstName}&nbsp;${user.lastName}</a></li>
 					</c:forEach>
 				</ul>
 				</c:if>
