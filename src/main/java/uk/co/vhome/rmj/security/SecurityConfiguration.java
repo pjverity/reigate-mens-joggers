@@ -35,8 +35,6 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 
-import static uk.co.vhome.rmj.config.BootstrapFramework.ADDITIONAL_RESOURCE_PATHS;
-
 /*
  * Configure web security for the site
  */
@@ -129,7 +127,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 		LOGGER.info("Configuring Web security...");
 
 		// Bypass the security filters for efficiency
-		web.ignoring().antMatchers(ADDITIONAL_RESOURCE_PATHS);
+		web.ignoring().antMatchers(ServletContextConfiguration.ADDITIONAL_RESOURCE_MATCHERS);
 	}
 
 	/*

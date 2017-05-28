@@ -60,25 +60,9 @@ public class BootstrapFramework implements WebApplicationInitializer
 
 	private static final String SERVLET_REST_DISPATCHER_NAME = "springRestDispatcher";
 
-	/*
-	 * /images are not packaged with the war, but are served by Tomcat from a directory on the filesystem
-	 * This is configured in a /Context/Resources/PreResource element in context.xml.
-	 *
-	 * The element accepts a filesystem path and a url that will cause the container to load
-	 * the resource from the filesystem rather than from the contents of the web app.
-	 */
-	public static final String[] ADDITIONAL_RESOURCE_PATHS = {"/css/*",
-	                                                          "/images/*",
-	                                                          "/js/*",
-	                                                          "/font-awesome-4.6.3/*",
-	                                                          "/sitemap.xml"};
-
 	public void onStartup(ServletContext servletContext) throws ServletException
 	{
 		LOGGER.info("Configuring Servlet...");
-
-		// All servlets should have access to resources at these paths
-		servletContext.getServletRegistration(DEFAULT_SERVLET_NAME).addMapping(ADDITIONAL_RESOURCE_PATHS);
 
 		// Create a root application context from which all sub-contexts inherit. Use annotated classes rather than
 		// spring XML context files to configure the application context
