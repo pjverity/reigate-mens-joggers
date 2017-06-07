@@ -2,6 +2,7 @@ package uk.co.vhome.rmj.site.organiser;
 
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,8 +32,12 @@ public class EventCompletionViewController
 	}
 
 	@GetMapping(VIEW_NAME)
-	public void get()
+	public void get(@Param(value = "eventId") Long eventId, @ModelAttribute("events") List<Event> events, EventCompletionFormObject formObject)
 	{
+		events.stream()
+				.filter(e -> e.getId().equals(eventId))
+				.findFirst()
+				.ifPresent(formObject::setEvent);
 	}
 
 	@PostMapping(VIEW_NAME)

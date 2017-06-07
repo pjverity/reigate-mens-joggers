@@ -112,6 +112,11 @@ public class Event
 		return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.SHORT).format(eventDateTime);
 	}
 
+	public boolean hasStarted()
+	{
+		return !isCompleted() && eventDateTime.isBefore(LocalDateTime.now());
+	}
+
 	@Override
 	public boolean equals(Object o)
 	{

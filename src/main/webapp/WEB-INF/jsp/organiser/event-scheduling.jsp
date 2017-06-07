@@ -111,6 +111,10 @@
 				<div class="panel-body">
 					<c:url var="cancelEventUrl" value="/organiser/cancel-event"/>
 					<form:form modelAttribute="eventCancellationFormObject" action="${cancelEventUrl}">
+
+
+						<%-- Upcoming Runs Table--%>
+
 						<table class="table table-condensed">
 							<thead>
 							<tr>
@@ -121,7 +125,19 @@
 							<tbody>
 							<c:forEach var="event" items="${eventCancellationFormObject.events}" varStatus="vs">
 								<tr>
-									<td>${event.eventDateTimeFullText}</td>
+									<td>
+										<c:choose>
+											<c:when test="${event.hasStarted()}">
+												<c:url var="eventCompletionUrl" value="/organiser/event-completion">
+													<c:param name="eventId" value="${event.id}"/>
+												</c:url>
+												<a href="${eventCompletionUrl}">${event.eventDateTimeFullText}</a>
+											</c:when>
+											<c:otherwise>
+												${event.eventDateTimeFullText}
+											</c:otherwise>
+										</c:choose>
+									</td>
 									<td>
 										<form:checkbox path="events[${vs.index}].cancelled"/>
 									</td>
@@ -129,6 +145,14 @@
 							</c:forEach>
 							</tbody>
 						</table>
+
+
+						<%-- Cancel Event Button --%>
+
+						<a id="cancelEventButton" class="btn btn-danger disabled" data-target="#confirmModal" data-toggle="modal">Cancel Selected Runs</a>
+
+
+						<%-- Cancellation Confirmation Dialog --%>
 
 						<div id="confirmModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static">
 							<div class="modal-dialog" role="document">
@@ -147,8 +171,6 @@
 							</div>
 						</div>
 
-						<a id="cancelEventButton" class="btn btn-danger disabled" data-target="#confirmModal" data-toggle="modal">Cancel Selected Runs</a>
-
 					</form:form>
 				</div>
 			</div>
@@ -159,6 +181,10 @@
 				<div class="panel-heading">
 					<h3 class="panel-title">Completed Runs (10 Most Recent)</h3>
 				</div>
+
+
+				<%-- Completed Runs Table--%>
+
 				<table class="table">
 					<thead>
 					<tr>
@@ -181,6 +207,10 @@
 					</tbody>
 				</table>
 			</div>
+
+
+			<%-- Selected Complete Run Details --%>
+
 			<c:if test="${not empty selectedEvent}">
 			<div class=" panel panel-success">
 				<div class="panel-heading">
