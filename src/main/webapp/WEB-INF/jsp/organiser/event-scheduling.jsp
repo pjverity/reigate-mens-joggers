@@ -185,7 +185,7 @@
 
 				<%-- Completed Runs Table--%>
 
-				<table class="table">
+				<table class="table table-hover">
 					<thead>
 					<tr>
 						<th>Date</th>
@@ -198,10 +198,10 @@
 						<c:url value="/organiser/event-scheduling" var="url">
 							<c:param name="eventId" value="${event.id}"/>
 						</c:url>
-						<tr>
-							<td><a href="${url}">${event.eventDateTimeFullText}</a></td>
-							<td><a href="${url}">${fn:length(event.userDetailsEntities)}</a></td>
-							<td><a href="${url}"><fmt:formatNumber type="number" maxFractionDigits="2" value="${event.eventInfo.distance}"/></a></td>
+						<tr onclick="window.location.href='${url}'" style="cursor: pointer">
+							<td>${event.eventDateTimeFullText}</td>
+							<td>${fn:length(event.userDetailsEntities)}</td>
+							<td><fmt:formatNumber type="number" maxFractionDigits="2" value="${event.eventInfo.distance}"/></td>
 						</tr>
 					</c:forEach>
 					</tbody>
