@@ -195,7 +195,7 @@
 					</thead>
 					<tbody>
 					<c:forEach var="event" items="${completedEvents}">
-						<c:url value="/organiser/event-scheduling" var="url">
+						<c:url value="/organiser/event-scheduling" var="url" context="/">
 							<c:param name="eventId" value="${event.id}"/>
 						</c:url>
 						<tr onclick="window.location.href='${url}'" style="cursor: pointer">
