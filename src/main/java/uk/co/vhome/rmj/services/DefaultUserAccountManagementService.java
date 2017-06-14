@@ -122,9 +122,9 @@ public class DefaultUserAccountManagementService implements UserAccountManagemen
 
 		userDetailsManager.createUser(user);
 
-		userDetailsManager.addUserToGroup(username, groupName);
+		userDetailsManager.addUserToGroup(user.getUsername(), groupName);
 
-		UserDetailsEntity userDetailsEntity = updateUserDetails(username, firstName, lastName);
+		UserDetailsEntity userDetailsEntity = updateUserDetails(user.getUsername(), firstName, lastName);
 
 		notificationService.postNotification(new NewUserNotification(userDetailsEntity, findEnabledAdminDetails()));
 
