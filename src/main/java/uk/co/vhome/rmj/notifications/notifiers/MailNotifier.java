@@ -4,6 +4,7 @@ import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -139,23 +140,30 @@ public class MailNotifier implements Notifier
 
 	private void sendMail(Collection<UserDetailsEntity> userDetailEntities, String subject, String messageContent)
 	{
-		javaMailSender.send(mimeMessage ->
-		                    {
-			                    MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-			                    message.setFrom(new InternetAddress(FROM_ADDRESS, FROM_NAME));
-			                    userDetailEntities.forEach(details ->
-			                                               {
-				                                               try
+		try
+		{
+			javaMailSender.send(mimeMessage ->
+			                    {
+				                    MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+				                    message.setFrom(new InternetAddress(FROM_ADDRESS, FROM_NAME));
+				                    userDetailEntities.forEach(details ->
 				                                               {
-					                                               message.addTo(details.getUsername(), String.join(" ", details.getFirstName(), details.getLastName()));
-				                                               }
-				                                               catch (MessagingException | UnsupportedEncodingException e)
-				                                               {
-					                                               LOGGER.error("Failed to add recipient", e);
-				                                               }
-			                                               });
-			                    message.setSubject(subject);
-			                    message.setText(messageContent, true);
-		                    });
+					                                               try
+					                                               {
+						                                               message.addTo(details.getUsername(), String.join(" ", details.getFirstName(), details.getLastName()));
+					                                               }
+					                                               catch (MessagingException | UnsupportedEncodingException e)
+					                                               {
+						                                               LOGGER.error("Failed to add recipient", e);
+					                                               }
+				                                               });
+				                    message.setSubject(subject);
+				                    message.setText(messageContent, true);
+			                    });
+		}
+		catch (MailException e)
+		{
+			LOGGER.error("Failed to send mail notification", e);
+		}
 	}
 }
