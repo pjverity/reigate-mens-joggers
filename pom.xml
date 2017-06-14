@@ -5,7 +5,7 @@
 	<groupId>uk.co.vhome</groupId>
 	<artifactId>rmj</artifactId>
 	<packaging>war</packaging>
-	<version>0.2.0-SNAPSHOT</version>
+	<version>0.2.0</version>
 
 	<name>Reigate Mens Joggers</name>
 
@@ -14,7 +14,7 @@
 	<scm>
 		<connection>scm:git:https://github.com/pjverity/rmj.git</connection>
 		<developerConnection>scm:git:https://github.com/pjverity/rmj.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>rmj-0.2.0</tag>
 	</scm>
 
 	<properties>
