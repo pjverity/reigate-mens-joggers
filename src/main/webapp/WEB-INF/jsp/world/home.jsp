@@ -133,6 +133,8 @@
 
 <div class="container">
 
+	<h1 class="text-center"><a href="<c:url value="/world/gallery"/>">Full Gallery</a></h1>
+
 <div id="gallery-carousel" class="carousel slide" data-ride="carousel">
 	<!-- Indicators -->
 	<ol class="carousel-indicators">

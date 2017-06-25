@@ -44,13 +44,11 @@
 <script type="text/javascript">
 
     $(function () {
-
         var $grid = $('.grid').imagesLoaded( function() {
             $grid.masonry({
                 itemSelector: '.grid-item'
             });
         });
-
     });
 
 </script>

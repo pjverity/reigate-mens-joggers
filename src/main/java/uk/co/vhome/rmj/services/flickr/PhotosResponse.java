@@ -7,9 +7,9 @@ import java.util.List;
 /**
  * A POJO representation of a response message returned from making a query for Flickr Photos
  */
-class PhotosResponse
+public class PhotosResponse
 {
-	static class Photo
+	public static class Photo
 	{
 		@JsonProperty("id")
 		String id;
@@ -43,9 +43,64 @@ class PhotosResponse
 
 		@JsonProperty("dateadded")
 		String dateAdded;
+
+		public String getId()
+		{
+			return id;
+		}
+
+		public String getOwner()
+		{
+			return owner;
+		}
+
+		public String getSecret()
+		{
+			return secret;
+		}
+
+		public String getServer()
+		{
+			return server;
+		}
+
+		public Integer getFarm()
+		{
+			return farm;
+		}
+
+		public String getTitle()
+		{
+			return title;
+		}
+
+		public Boolean isPublic()
+		{
+			return _public;
+		}
+
+		public Boolean getFriend()
+		{
+			return friend;
+		}
+
+		public Boolean getFamily()
+		{
+			return family;
+		}
+
+		public String getOwnerName()
+		{
+			return ownerName;
+		}
+
+		public String getDateAdded()
+		{
+			return dateAdded;
+		}
 	}
 
-	static class PhotoCollectionInfo
+	public static class PhotoCollectionInfo
 	{
 		@JsonProperty("page")
 		Integer page;
@@ -61,6 +116,31 @@ class PhotosResponse
 
 		@JsonProperty("photo")
 		List<Photo> photos;
+
+		public Integer getPage()
+		{
+			return page;
+		}
+
+		public Integer getPages()
+		{
+			return pages;
+		}
+
+		public Integer getPerPage()
+		{
+			return perPage;
+		}
+
+		public String getTotal()
+		{
+			return total;
+		}
+
+		public List<Photo> getPhotos()
+		{
+			return photos;
+		}
 	}
 
 	@JsonProperty("photos")
@@ -68,4 +148,14 @@ class PhotosResponse
 
 	@JsonProperty("stat")
 	String status;
+
+	public PhotoCollectionInfo getPhotoCollectionInfo()
+	{
+		return photoCollectionInfo;
+	}
+
+	public String getStatus()
+	{
+		return status;
+	}
 }

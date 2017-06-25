@@ -3,9 +3,12 @@ package uk.co.vhome.rmj.site.admin;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import uk.co.vhome.rmj.services.flickr.FlickrService;
+import uk.co.vhome.rmj.services.flickr.GroupsResponse;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class SiteManagementViewController
@@ -46,6 +49,15 @@ public class SiteManagementViewController
 	@ResponseBody
 	public Map<String, String> flickerGroupsSearch(@RequestParam("searchText") String searchText)
 	{
-		return flickrService.groupsSearch(searchText);
+		GroupsResponse groupsResponse = flickrService.groupsSearch(searchText);
+
+		if (groupsResponse == null)
+		{
+			return Collections.emptyMap();
+		}
+
+		return groupsResponse.getGroupCollectionInfo().getGroups().stream()
+				       .collect(Collectors.toMap(GroupsResponse.Group::getName, GroupsResponse.Group::getNsid));
+
 	}
 }

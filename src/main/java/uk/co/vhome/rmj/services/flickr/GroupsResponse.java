@@ -7,9 +7,9 @@ import java.util.List;
 /**
  * A POJO representation of a response message returned from making a query for Flicker Group information
  */
-class GroupsResponse
+public class GroupsResponse
 {
-	static class Group
+	public static class Group
 	{
 		@JsonProperty("nsid")
 		String nsid;
@@ -19,9 +19,24 @@ class GroupsResponse
 
 		@JsonProperty("eighteenplus")
 		Boolean eighteenPlus;
+
+		public String getNsid()
+		{
+			return nsid;
+		}
+
+		public String getName()
+		{
+			return name;
+		}
+
+		public Boolean getEighteenPlus()
+		{
+			return eighteenPlus;
+		}
 	}
 
-	static class GroupCollectionInfo
+	public static class GroupCollectionInfo
 	{
 		@JsonProperty("page")
 		Integer page;
@@ -37,6 +52,31 @@ class GroupsResponse
 
 		@JsonProperty("group")
 		List<Group> groups;
+
+		public Integer getPage()
+		{
+			return page;
+		}
+
+		public Integer getPages()
+		{
+			return pages;
+		}
+
+		public Integer getPerPage()
+		{
+			return perPage;
+		}
+
+		public String getTotal()
+		{
+			return total;
+		}
+
+		public List<Group> getGroups()
+		{
+			return groups;
+		}
 	}
 
 	@JsonProperty("groups")
@@ -44,4 +84,14 @@ class GroupsResponse
 
 	@JsonProperty("stat")
 	String status;
+
+	public GroupCollectionInfo getGroupCollectionInfo()
+	{
+		return groupCollectionInfo;
+	}
+
+	public String getStatus()
+	{
+		return status;
+	}
 }

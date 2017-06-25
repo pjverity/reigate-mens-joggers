@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import uk.co.vhome.rmj.services.flickr.FlickrService;
+import uk.co.vhome.rmj.services.flickr.PhotosResponse;
 
 import javax.inject.Inject;
 
@@ -26,7 +27,9 @@ public class GalleryViewController
 	@GetMapping(VIEW_NAME)
 	public GalleryViewModelObject get()
 	{
-		return flickrService.getPhotoUrlsForGroup(currentGroupNsid(), 1);
+		PhotosResponse photosResponse = flickrService.fetchPhotosForGroup(currentGroupNsid(), 1);
+
+		return new GalleryViewModelObject(photosResponse, flickrService.getCurrentGroupName());
 	}
 
 	@GetMapping(VIEW_NAME + "/{groupNsid}/{page}")
@@ -39,7 +42,9 @@ public class GalleryViewController
 			return new ModelAndView(new RedirectView(VIEW_NAME, true));
 		}
 
-		modelAndView.addObject(flickrService.getPhotoUrlsForGroup(groupNsid, page));
+		PhotosResponse photosResponse = flickrService.fetchPhotosForGroup(groupNsid, page);
+
+		modelAndView.addObject(new GalleryViewModelObject(photosResponse, flickrService.getCurrentGroupName()));
 
 		return modelAndView;
 	}

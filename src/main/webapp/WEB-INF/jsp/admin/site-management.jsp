@@ -24,40 +24,47 @@
 	</div>
 
 	<div class="row">
-		<form class="form-inline">
+		<div class="col-md-12">
+			<form class="form-inline">
 
-			<div class="row">
-				<label class="control-label" for="selectedGroup">Selected Group</label>
-				<div class="form-control-static" id="selectedGroup">${groupName}&nbsp;(${nsid})</div>
-			</div>
-
-			<div class="row">
-
-				<div class="form-group">
-					<label class="control-label">Group Name</label>
-					<input id="groupName" class="form-control" placeholder="Flickr Group Name"/>
-					<button type="button" class="btn btn-default" onclick="searchFlickrGroups()">Search</button>
-
+				<div class="row">
+					<div class="col-md-12">
+						<label class="control-label" for="selectedGroup">Selected Group</label>
+						<div class="form-control-static" id="selectedGroup">${groupName}&nbsp;(${nsid})</div>
+					</div>
 				</div>
-			</div>
-		</form>
+
+				<div class="row">
+					<div class="col-md-12">
+
+						<div class="form-group">
+							<label class="control-label">Search Text</label>
+							<input id="groupName" class="form-control" placeholder="Search Flickr Groups"/>
+							<button type="button" class="btn btn-default" onclick="searchFlickrGroups()">Search</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
 	</div>
 
 	<div class="row" style="margin-top: 1em">
-		<form id="testForm" class="form" method="post">
+		<div class="col-md-6">
 
-			<div class="form-group">
+			<form id="testForm" class="form" method="post">
 
-				<label class="control-label" for="groupSelection">Groups</label>
-				<select id="groupSelection" class="form-control" size="10">
-				</select>
-				<button type="button" class="btn btn-default" onclick="saveGroupNsid()">Set</button>
-			</div>
-			<input id="formGroupName" type="hidden" name="groupName" value="">
-			<input id="formGroupId" type="hidden" name="groupId" value="">
-			<security:csrfInput/>
-		</form>
+				<div class="form-group">
 
+					<label class="control-label" for="groupSelection">Groups</label>
+					<select id="groupSelection" class="form-control" size="10">
+					</select>
+					<button type="button" class="btn btn-default" onclick="saveGroupNsid()">Set</button>
+				</div>
+				<input id="formGroupName" type="hidden" name="groupName" value="">
+				<input id="formGroupId" type="hidden" name="groupId" value="">
+				<security:csrfInput/>
+			</form>
+		</div>
 	</div>
 
 </div>

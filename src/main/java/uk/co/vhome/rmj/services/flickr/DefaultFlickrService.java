@@ -3,14 +3,9 @@ package uk.co.vhome.rmj.services.flickr;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uk.co.vhome.rmj.site.world.GalleryViewModelObject;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
-import java.text.MessageFormat;
-import java.util.Collections;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Basic implementation of the {@link FlickrService} for obtaining information from Flickr and
@@ -19,8 +14,6 @@ import java.util.stream.Collectors;
 @Service
 public class DefaultFlickrService implements FlickrService
 {
-	private static final String IMAGE_URL_PATTERN = "https://farm{0}.staticflickr.com/{1}/{2}_{3}.jpg";
-
 	private static final String SQL_SELECT_GROUP_NAME = "SELECT value from site_settings WHERE name = 'FLICKR_GROUP_NAME'";
 
 	private static final String SQL_SELECT_GROUP_NSID = "SELECT value from site_settings WHERE name = 'FLICKR_GROUP_NSID'";
@@ -41,39 +34,15 @@ public class DefaultFlickrService implements FlickrService
 	}
 
 	@Override
-	public GalleryViewModelObject getPhotoUrlsForGroup(String groupNsid, Integer page)
+	public PhotosResponse fetchPhotosForGroup(String groupNsid, Integer page)
 	{
-		PhotosResponse photosResponse = flickrApi.groupsPoolsGetPhotos(groupNsid, page);
-
-		GalleryViewModelObject galleryViewModelObject = new GalleryViewModelObject();
-
-		if (photosResponse != null)
-		{
-			galleryViewModelObject.setImageUrls(photosResponse.photoCollectionInfo.photos.stream()
-					       .map(this::toPhotoUrl)
-					       .collect(Collectors.toSet()));
-
-			galleryViewModelObject.setTotalPages(photosResponse.photoCollectionInfo.pages);
-			galleryViewModelObject.setImagesPerPage(photosResponse.photoCollectionInfo.perPage);
-			galleryViewModelObject.setCurrentPage(photosResponse.photoCollectionInfo.page);
-			galleryViewModelObject.setGalleryName(getCurrentGroupName());
-		}
-
-		return galleryViewModelObject;
+		return flickrApi.groupsPoolsGetPhotos(groupNsid, page);
 	}
 
 	@Override
-	public Map<String, String> groupsSearch(String searchText)
+	public GroupsResponse groupsSearch(String searchText)
 	{
-		GroupsResponse response = flickrApi.groupsSearch(searchText);
-
-		if (response == null)
-		{
-			return Collections.emptyMap();
-		}
-
-		return response.groupCollectionInfo.groups.stream()
-				       .collect(Collectors.toMap(group -> group.name, group -> group.nsid));
+		return flickrApi.groupsSearch(searchText);
 	}
 
 	@Override
@@ -94,11 +63,6 @@ public class DefaultFlickrService implements FlickrService
 	{
 		jdbcTemplate.update(SQL_UPDATE_GROUP_NAME, groupName);
 		jdbcTemplate.update(SQL_UPDATE_GROUP_NSID, groupNsid);
-	}
-
-	private String toPhotoUrl(PhotosResponse.Photo photo)
-	{
-		return MessageFormat.format(IMAGE_URL_PATTERN, photo.farm, photo.server, photo.id, photo.secret);
 	}
 
 }

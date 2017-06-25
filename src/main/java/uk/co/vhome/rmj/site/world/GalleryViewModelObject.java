@@ -1,14 +1,14 @@
 package uk.co.vhome.rmj.site.world;
 
-import org.springframework.stereotype.Component;
+import uk.co.vhome.rmj.services.flickr.PhotosResponse;
 
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-/**
- * Created by paulverity on 25/06/2017.
- */
-@Component
+import static uk.co.vhome.rmj.services.flickr.FlickrService.IMAGE_URL_PATTERN;
+
 public class GalleryViewModelObject
 {
 	private String galleryName;
@@ -20,6 +20,30 @@ public class GalleryViewModelObject
 	private int totalPages;
 
 	private Set<String> imageUrls = Collections.emptySet();
+
+	public GalleryViewModelObject()
+	{
+	}
+
+	public GalleryViewModelObject(PhotosResponse photosResponse, String groupName)
+	{
+		if (photosResponse != null)
+		{
+			imageUrls = photosResponse.getPhotoCollectionInfo().getPhotos().stream()
+					            .map(this::toPhotoUrl)
+					            .collect(Collectors.toSet());
+
+			currentPage = photosResponse.getPhotoCollectionInfo().getPage();
+			totalPages = photosResponse.getPhotoCollectionInfo().getPages();
+			imagesPerPage = photosResponse.getPhotoCollectionInfo().getPerPage();
+			galleryName = groupName;
+		}
+	}
+
+	private String toPhotoUrl(PhotosResponse.Photo photo)
+	{
+		return MessageFormat.format(IMAGE_URL_PATTERN, photo.getFarm(), photo.getServer(), photo.getId(), photo.getSecret());
+	}
 
 	public String getGalleryName()
 	{
