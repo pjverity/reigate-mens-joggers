@@ -3,8 +3,8 @@ package uk.co.vhome.rmj.site.world.services;
 import org.springframework.stereotype.Service;
 import uk.co.vhome.rmj.entities.Event;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
-import uk.co.vhome.rmj.services.EventManagementService;
-import uk.co.vhome.rmj.services.UserAccountManagementService;
+import uk.co.vhome.rmj.services.core.EventManagementService;
+import uk.co.vhome.rmj.services.core.UserAccountManagementService;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;

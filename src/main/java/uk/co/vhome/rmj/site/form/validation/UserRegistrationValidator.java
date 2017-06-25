@@ -3,7 +3,7 @@ package uk.co.vhome.rmj.site.form.validation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.provisioning.UserDetailsManager;
-import uk.co.vhome.rmj.services.ReCaptchaService;
+import uk.co.vhome.rmj.services.recaptcha.ReCaptchaService;
 import uk.co.vhome.rmj.site.world.UserRegistrationFormObject;
 
 import javax.inject.Inject;

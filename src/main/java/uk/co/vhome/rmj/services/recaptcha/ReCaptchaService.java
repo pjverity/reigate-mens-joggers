@@ -1,7 +1,6 @@
-package uk.co.vhome.rmj.services;
+package uk.co.vhome.rmj.services.recaptcha;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.annotation.Validated;
 
 /**

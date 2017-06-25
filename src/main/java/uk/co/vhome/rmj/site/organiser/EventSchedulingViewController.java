@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import uk.co.vhome.rmj.entities.Event;
-import uk.co.vhome.rmj.services.EventManagementService;
+import uk.co.vhome.rmj.services.core.EventManagementService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;

@@ -9,7 +9,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
-import uk.co.vhome.rmj.services.UserAccountManagementService;
+import uk.co.vhome.rmj.services.core.UserAccountManagementService;
 
 import javax.inject.Inject;
 import java.util.Comparator;

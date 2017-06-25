@@ -9,10 +9,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.co.vhome.rmj.IntegrationTestConfiguration;
 import uk.co.vhome.rmj.entities.Event;
-import uk.co.vhome.rmj.services.DefaultEventManagementService;
-import uk.co.vhome.rmj.services.DefaultTokenManagementService;
-import uk.co.vhome.rmj.services.TokenManagementService;
-import uk.co.vhome.rmj.services.UserAccountManagementService;
+import uk.co.vhome.rmj.services.core.DefaultEventManagementService;
+import uk.co.vhome.rmj.services.core.DefaultTokenManagementService;
+import uk.co.vhome.rmj.services.core.TokenManagementService;
+import uk.co.vhome.rmj.services.core.UserAccountManagementService;
 import uk.co.vhome.rmj.site.organiser.services.DefaultEventRegistrationService;
 import uk.co.vhome.rmj.site.organiser.services.EventRegistrationService;
 

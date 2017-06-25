@@ -49,14 +49,14 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-framework-bom</artifactId>
-				<version>4.3.8.RELEASE</version>
+				<version>4.3.9.RELEASE</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.data</groupId>
 				<artifactId>spring-data-releasetrain</artifactId>
-				<version>Ingalls-SR1</version>
+				<version>Ingalls-SR4</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

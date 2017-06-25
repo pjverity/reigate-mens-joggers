@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.services;
+package uk.co.vhome.rmj.services.core;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;

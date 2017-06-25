@@ -30,6 +30,7 @@ import javax.persistence.SharedCacheMode;
 import javax.persistence.ValidationMode;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -189,6 +190,22 @@ public class RootContextConfiguration
 	public RestTemplate restTemplate()
 	{
 		return new RestTemplate();
+	}
+
+	@Bean
+	public RestTemplate flickrRestTemplate()
+	{
+		SimpleJndiBeanFactory simpleJndiBeanFactory = new SimpleJndiBeanFactory();
+		String apiKey = (String) simpleJndiBeanFactory.getBean("flickr/ApiKey");
+
+		RestTemplate restTemplate = new RestTemplate();
+
+		Map<String, String> defaultVariables = new HashMap<>();
+		defaultVariables.put("apiKey", apiKey);
+
+		restTemplate.setDefaultUriVariables(defaultVariables);
+
+		return restTemplate;
 	}
 
 	@Bean

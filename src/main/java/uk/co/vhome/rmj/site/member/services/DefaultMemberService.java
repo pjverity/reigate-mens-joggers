@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.co.vhome.rmj.entities.Event;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
 import uk.co.vhome.rmj.repositories.UserDetailsRepository;
-import uk.co.vhome.rmj.services.EventManagementService;
+import uk.co.vhome.rmj.services.core.EventManagementService;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -41,6 +41,9 @@
 								<security:authorize access="hasRole('ADMIN')">
 									<li class="dropdown-header">Admin</li>
 									<li>
+										<a href="<c:url value="/admin/site-management"/>">Site Management</a>
+									</li>
+									<li>
 										<a href="<c:url value="/admin/user-management"/>">User Management</a>
 									</li>
 									<li>

@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,14 +15,16 @@ import uk.co.vhome.rmj.entities.MemberBalance;
 import uk.co.vhome.rmj.entities.Purchase;
 import uk.co.vhome.rmj.notifications.BalanceUpdatedNotification;
 import uk.co.vhome.rmj.notifications.LowBalanceNotification;
+import uk.co.vhome.rmj.services.core.DefaultTokenManagementService;
+import uk.co.vhome.rmj.services.core.NotificationService;
+import uk.co.vhome.rmj.services.core.TokenManagementService;
+import uk.co.vhome.rmj.services.core.UserAccountManagementService;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static uk.co.vhome.rmj.UserConfigurations.ENABLED_USER;

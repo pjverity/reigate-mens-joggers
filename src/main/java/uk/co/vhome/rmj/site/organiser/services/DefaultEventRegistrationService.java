@@ -6,8 +6,8 @@ import uk.co.vhome.rmj.entities.Event;
 import uk.co.vhome.rmj.entities.MemberBalance;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
 import uk.co.vhome.rmj.repositories.UserDetailsRepository;
-import uk.co.vhome.rmj.services.EventManagementService;
-import uk.co.vhome.rmj.services.TokenManagementService;
+import uk.co.vhome.rmj.services.core.EventManagementService;
+import uk.co.vhome.rmj.services.core.TokenManagementService;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;

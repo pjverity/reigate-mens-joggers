@@ -7,6 +7,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.co.vhome.rmj.entities.Purchase;
 import uk.co.vhome.rmj.repositories.PurchaseRepository;
+import uk.co.vhome.rmj.services.core.DefaultTokenManagementService;
+import uk.co.vhome.rmj.services.core.NotificationService;
+import uk.co.vhome.rmj.services.core.UserAccountManagementService;
 
 import javax.persistence.EntityManager;
 

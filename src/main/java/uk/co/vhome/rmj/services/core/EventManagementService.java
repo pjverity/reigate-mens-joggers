@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.services;
+package uk.co.vhome.rmj.services.core;
 
 import org.springframework.security.access.annotation.Secured;
 import uk.co.vhome.rmj.entities.Event;
