@@ -21,18 +21,11 @@
 
 <div class="container">
 
-	<div class="page-header">
-		<h1>Token Management</h1>
-	</div>
-
 	<form:form modelAttribute="tokenManagementFormObject">
 
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title">Member Balance</h3>
-			</div>
+		<div class="row mt-5">
 
-			<table class="table">
+			<table class="table table-sm">
 				<thead>
 				<tr>
 					<th>Member</th>
@@ -43,25 +36,26 @@
 
 				<tbody>
 				<c:forEach var="row" items="${tokenManagementFormObject.rows}" varStatus="vs">
-					<div class="form-group">
-						<tr>
-							<td>
-								<a href="mailto:${row.memberBalance.username}">${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}</a>
-							</td>
-							<td>
-								<span class="form-control-static">${row.memberBalance.balance == null ? 0 : row.memberBalance.balance}</span>
-							</td>
-							<td>
-								<form:input path="rows[${vs.index}].quantity" cssClass="form-control input-sm"/>
-								<form:errors path="rows[${vs.index}].quantity" cssClass="text-danger"/>
-							</td>
-						</tr>
-					</div>
+					<tr>
+						<td>
+							<a href="mailto:${row.memberBalance.username}">${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}</a>
+						</td>
+						<td>
+							<span class="form-control-static">${row.memberBalance.balance == null ? 0 : row.memberBalance.balance}</span>
+						</td>
+						<td>
+							<form:input path="rows[${vs.index}].quantity" cssClass="form-control input-sm"/>
+							<form:errors path="rows[${vs.index}].quantity" cssClass="text-danger"/>
+						</td>
+					</tr>
 				</c:forEach>
 				</tbody>
 			</table>
+
+			<form:button type="submit" class="btn btn-primary">Credit Accounts</form:button>
+
 		</div>
-		<form:button type="submit" class="btn btn-primary">Credit Accounts</form:button>
+
 	</form:form>
 
 </div>

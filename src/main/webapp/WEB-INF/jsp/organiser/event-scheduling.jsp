@@ -33,36 +33,25 @@
 
 <div class="container">
 
-	<div class="page-header">
-		<h1>Run Scheduling</h1>
-	</div>
-
-	<div class="row">
+	<div class="row mt-sm-2">
 		<div class="col-lg-12">
 
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">Create New Run</h3>
-				</div>
-				<div class="panel-body">
+			<div class="card">
+				<h6 class="card-header">Create Run</h6>
+				<div class="card-block">
+
 					<c:url var="createEventUrl" value="/organiser/create-event"/>
 
 					<form:form cssClass="form-inline" modelAttribute="eventCreationFormObject" action="${createEventUrl}">
 
-						<%-- The hours:mins controls are inline-blocks to prevent them from spanning the entire column on small viewports.
-									In doing so, their labels are aligned with the control. The form-inline class will only style controls as
-									inline-block's when the viewport >=768px. So this means in some cases the 'Date' label will be above the
-									control and looks out of place with the Time label which is always in line. Force  the date control an
-									inline-block all the time
-						--%>
 						<div class="form-group">
-							<label for="datepicker">Date</label>
-							<form:input cssClass="form-control" path="eventDate" type="text" id="datepicker" cssStyle="width: 9em; display: inline-block"/>
+							<label class="mr-sm-2" for="datepicker">Date</label>
+							<form:input cssClass="form-control mr-sm-2" path="eventDate" type="text" id="datepicker" cssStyle="width: 9em; display: inline-block"/>
 						</div>
 
 						<div class="form-group">
-							<label for="timePicker">Time</label>
-							<form:select cssClass="form-control" path="eventHour" id="timePicker" cssStyle="width: 4em; display: inline-block">
+							<label class="mr-sm-2" for="timePicker">Time</label>
+							<form:select cssClass="custom-select" path="eventHour" id="timePicker" cssStyle="width: 4em; display: inline-block">
 								<form:option value="6" label="06"/>
 								<form:option value="7" label="07"/>
 								<form:option value="8" label="08"/>
@@ -80,7 +69,7 @@
 								<form:option value="20"/>
 							</form:select>
 							:
-							<form:select cssClass="form-control" path="eventMinutes" cssStyle="width: 4em; display: inline-block">
+							<form:select cssClass="custom-select mr-sm-2" path="eventMinutes" cssStyle="width: 4em; display: inline-block">
 								<form:option value="0" label="00"/>
 								<form:option value="15"/>
 								<form:option value="30"/>
@@ -88,26 +77,24 @@
 							</form:select>
 						</div>
 
-						<button class="btn btn-primary" type="submit">Create Run</button>
-
+						<div class="form-group">
+							<button class="btn btn-primary ml-sm-2" type="submit">Create Run</button>
+						</div>
 						<spring:hasBindErrors name="eventCreationFormObject">
 							<form:errors cssClass="text-danger"/>
 							<form:errors path="eventDate" cssClass="text-danger"/>
 						</spring:hasBindErrors>
 
 					</form:form>
-
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="row mt-sm-2">
 		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">Upcoming Runs</h3>
-				</div>
+			<div class="card">
+				<h6 class="card-header">Upcoming Runs</h6>
 				<div class="panel-body">
 					<c:url var="cancelEventUrl" value="/organiser/cancel-event"/>
 					<form:form modelAttribute="eventCancellationFormObject" action="${cancelEventUrl}">
@@ -149,7 +136,7 @@
 
 						<%-- Cancel Event Button --%>
 
-						<a id="cancelEventButton" class="btn btn-danger disabled" data-target="#confirmModal" data-toggle="modal">Cancel Selected Runs</a>
+						<button type="button" id="cancelEventButton" class="btn btn-danger m-2" disabled data-target="#confirmModal" data-toggle="modal">Cancel Selected Runs</button>
 
 
 						<%-- Cancellation Confirmation Dialog --%>
@@ -177,10 +164,8 @@
 		</div>
 
 		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">Completed Runs (10 Most Recent)</h3>
-				</div>
+			<div class="card">
+				<h6 class="card-header">Completed Runs (10 Most Recent)</h6>
 
 
 				<%-- Completed Runs Table--%>
@@ -195,7 +180,7 @@
 					</thead>
 					<tbody>
 					<c:forEach var="event" items="${completedEvents}">
-						<c:url value="/organiser/event-scheduling" var="url" context="/">
+						<c:url value="/organiser/event-scheduling" var="url">
 							<c:param name="eventId" value="${event.id}"/>
 						</c:url>
 						<tr onclick="window.location.href='${url}'" style="cursor: pointer">
@@ -212,10 +197,8 @@
 			<%-- Selected Complete Run Details --%>
 
 			<c:if test="${not empty selectedEvent}">
-			<div class=" panel panel-success">
-				<div class="panel-heading">
-					<h3 class="panel-title">${selectedEvent.eventDateTimeFullText}</h3>
-				</div>
+			<div class="card mt-sm-2">
+				<div class="card-header">${selectedEvent.eventDateTimeFullText}</div>
 				<ul class="list-group">
 					<c:forEach var="user" items="${selectedEvent.userDetailsEntities}">
 						<li class="list-group-item"><a href="mailto:${user.username}">${user.firstName}&nbsp;${user.lastName}</a></li>
@@ -224,7 +207,6 @@
 				</c:if>
 			</div>
 		</div>
-
 	</div>
 </div>
 
@@ -232,12 +214,12 @@
     var selectedEventCount = $("form input:checkbox:checked").length;
 
     $(function () {
-        $('#cancelEventButton').toggleClass('disabled', selectedEventCount === 0);
+        updateCancelButton();
     });
 
     $("form input:checkbox").on('click', function () {
         selectedEventCount += this.checked ? 1 : -1;
-        $('#cancelEventButton').toggleClass('disabled', selectedEventCount === 0);
+        updateCancelButton()
     });
 
     $('#confirmModal').on('show.bs.modal', function (e) {
@@ -250,6 +232,18 @@
 
         $('#cancelledEventCount').html('<strong>' + count + '</strong> run' + (count === 1 ? '' : 's'));
     });
+
+    function updateCancelButton() {
+        if ( selectedEventCount === 0 )
+        {
+            $('#cancelEventButton').attr('disabled', true);
+        }
+        else
+        {
+            $('#cancelEventButton').removeAttr('disabled');
+        }
+
+    }
 </script>
 
 </body>
