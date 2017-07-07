@@ -54,26 +54,24 @@
 		<div class="col-md-6 mt-2 mt-md-0">
 			<div class="card card-outline-success">
 				<h5 class="card-header bg-success text-white">Completed Runs</h5>
-				<div class="card-block p-0">
-					<table class="table m-0">
-						<thead>
+				<table class="table m-0">
+					<thead>
+					<tr>
+						<th>Date</th>
+						<th>Distance (km)</th>
+					</tr>
+					</thead>
+					<tbody>
+					<c:forEach var="event" items="${completedEvents}">
 						<tr>
-							<th>Date</th>
-							<th>Distance (km)</th>
+							<td>${event.eventDateTimeText}</td>
+							<td><fmt:formatNumber type="number" maxFractionDigits="2" value="${event.eventInfo.distance}"/></td>
 						</tr>
-						</thead>
-						<tbody>
-						<c:forEach var="event" items="${completedEvents}">
-							<tr>
-								<td>${event.eventDateTimeText}</td>
-								<td><fmt:formatNumber type="number" maxFractionDigits="2" value="${event.eventInfo.distance}"/></td>
-							</tr>
-						</c:forEach>
-						</tbody>
-						<tfoot>
-						</tfoot>
-					</table>
-				</div>
+					</c:forEach>
+					</tbody>
+					<tfoot>
+					</tfoot>
+				</table>
 				<div class="card-footer bg-success text-white">
 					Total distance ran: <strong><fmt:formatNumber type="number" maxFractionDigits="2" value="${totalDistance}"/> km</strong>
 				</div>
@@ -83,14 +81,12 @@
 		<div class="col-md-6 mt-2 mt-md-0">
 			<div class="card card-outline-primary">
 				<h5 class="card-header bg-primary text-white">Upcoming Runs</h5>
-				<div class="card-block p-0">
 				<ul class="list-group m-0">
 					<c:forEach var="event" items="${upcomingEvents}">
 						<li class="list-group-item border-left-0 border-right-0">${event.eventDateTimeFullText}</li>
 					</c:forEach>
 				</ul>
 			</div>
-		</div>
 		</div>
 	</div>
 

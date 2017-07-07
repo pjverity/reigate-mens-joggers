@@ -31,10 +31,10 @@
 
 <%@include file="../navigation.jsp" %>
 
-<div class="container">
+<div class="container pt-3">
 
-	<div class="row mt-sm-2">
-		<div class="col-lg-12">
+	<div class="row">
+		<div class="col">
 
 			<div class="card">
 				<h6 class="card-header">Create Run</h6>
@@ -91,18 +91,21 @@
 		</div>
 	</div>
 
-	<div class="row mt-sm-2">
-		<div class="col-md-6">
+	<div class="row mt-2">
+
+
+		<%-- Upcoming Runs --%>
+
+		<div class="col">
 			<div class="card">
 				<h6 class="card-header">Upcoming Runs</h6>
-				<div class="panel-body">
 					<c:url var="cancelEventUrl" value="/organiser/cancel-event"/>
 					<form:form modelAttribute="eventCancellationFormObject" action="${cancelEventUrl}">
 
 
 						<%-- Upcoming Runs Table--%>
 
-						<table class="table table-condensed">
+						<table class="table table-sm">
 							<thead>
 							<tr>
 								<th>Date</th>
@@ -112,7 +115,7 @@
 							<tbody>
 							<c:forEach var="event" items="${eventCancellationFormObject.events}" varStatus="vs">
 								<tr>
-									<td>
+									<td nowrap>
 										<c:choose>
 											<c:when test="${event.hasStarted()}">
 												<c:url var="eventCompletionUrl" value="/organiser/event-completion">
@@ -125,7 +128,7 @@
 											</c:otherwise>
 										</c:choose>
 									</td>
-									<td>
+									<td nowrap>
 										<form:checkbox path="events[${vs.index}].cancelled"/>
 									</td>
 								</tr>
@@ -159,22 +162,21 @@
 						</div>
 
 					</form:form>
-				</div>
 			</div>
 		</div>
 
-		<div class="col-md-6">
+
+		<%-- Completed Runs --%>
+
+		<div class="col">
 			<div class="card">
 				<h6 class="card-header">Completed Runs (10 Most Recent)</h6>
 
-
-				<%-- Completed Runs Table--%>
-
-				<table class="table table-hover">
+				<table class="table table-hover table-sm">
 					<thead>
 					<tr>
 						<th>Date</th>
-						<th>Runners</th>
+						<th class="text-center">Runners</th>
 						<th>Distance (km)</th>
 					</tr>
 					</thead>
@@ -184,24 +186,23 @@
 							<c:param name="eventId" value="${event.id}"/>
 						</c:url>
 						<tr onclick="window.location.href='${url}'" style="cursor: pointer">
-							<td>${event.eventDateTimeFullText}</td>
-							<td>${fn:length(event.userDetailsEntities)}</td>
-							<td><fmt:formatNumber type="number" maxFractionDigits="2" value="${event.eventInfo.distance}"/></td>
+							<td nowrap>${event.eventDateTimeFullText}</td>
+							<td nowrap class="text-center">${fn:length(event.userDetailsEntities)}</td>
+							<td nowrap><fmt:formatNumber type="number" maxFractionDigits="2" value="${event.eventInfo.distance}"/></td>
 						</tr>
 					</c:forEach>
 					</tbody>
 				</table>
 			</div>
 
-
 			<%-- Selected Complete Run Details --%>
 
 			<c:if test="${not empty selectedEvent}">
-			<div class="card mt-sm-2">
-				<div class="card-header">${selectedEvent.eventDateTimeFullText}</div>
+			<div class="card card-outline-success mt-2">
+				<div class="card-header bg-success text-white">${selectedEvent.eventDateTimeFullText}</div>
 				<ul class="list-group">
 					<c:forEach var="user" items="${selectedEvent.userDetailsEntities}">
-						<li class="list-group-item"><a href="mailto:${user.username}">${user.firstName}&nbsp;${user.lastName}</a></li>
+						<li class="list-group-item border-left-0 border-right-0"><a href="mailto:${user.username}">${user.firstName}&nbsp;${user.lastName}</a></li>
 					</c:forEach>
 				</ul>
 				</c:if>
