@@ -18,8 +18,8 @@
 
 <%@include file="../navigation.jsp" %>
 
-<div class="container">
-	<div class="row mt-5">
+<div class="container pt-2">
+	<div class="row">
 		<div class="col-12">
 			<div class="card">
 				<h5 class="card-header">Messages</h5>
@@ -50,12 +50,12 @@
 			</div>
 		</div>
 	</div>
-	<div class="row mt-2">
-		<div class="col-md-6">
-			<div class="card">
-				<h5 class="card-header">Completed Runs</h5>
-				<div class="card-block">
-					<table class="table">
+	<div class="row mt-md-2">
+		<div class="col-md-6 mt-2 mt-md-0">
+			<div class="card card-outline-success">
+				<h5 class="card-header bg-success text-white">Completed Runs</h5>
+				<div class="card-block p-0">
+					<table class="table m-0">
 						<thead>
 						<tr>
 							<th>Date</th>
@@ -71,22 +71,22 @@
 						</c:forEach>
 						</tbody>
 						<tfoot>
-						<tr class="success">
-							<td colspan="2">Total distance ran: <strong><fmt:formatNumber type="number" maxFractionDigits="2" value="${totalDistance}"/>km</strong></td>
-						</tr>
 						</tfoot>
 					</table>
+				</div>
+				<div class="card-footer bg-success text-white">
+					Total distance ran: <strong><fmt:formatNumber type="number" maxFractionDigits="2" value="${totalDistance}"/> km</strong>
 				</div>
 			</div>
 		</div>
 
-		<div class="col-md-6">
-			<div class="card">
-				<h5 class="card-header">Upcoming Runs</h5>
-				<div class="card-block">
-				<ul class="list-group">
+		<div class="col-md-6 mt-2 mt-md-0">
+			<div class="card card-outline-primary">
+				<h5 class="card-header bg-primary text-white">Upcoming Runs</h5>
+				<div class="card-block p-0">
+				<ul class="list-group m-0">
 					<c:forEach var="event" items="${upcomingEvents}">
-						<li class="list-group-item">${event.eventDateTimeFullText}</li>
+						<li class="list-group-item border-left-0 border-right-0">${event.eventDateTimeFullText}</li>
 					</c:forEach>
 				</ul>
 			</div>
