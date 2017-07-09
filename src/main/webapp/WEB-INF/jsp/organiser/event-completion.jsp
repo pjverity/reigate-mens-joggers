@@ -84,7 +84,7 @@
 
 	<div class="form-group row">
 
-		<div class="col-12 col-md-6 ${empty events ? 'has-danger' : ''}">
+		<div class="col-12 col-md-5 ${empty events ? 'has-danger' : ''}">
 			<label for="runDateTimeSelect" class="col-form-label">Completion Date</label>
 			<c:choose>
 				<c:when test="${empty events}">
@@ -95,7 +95,7 @@
 				</c:when>
 				<c:otherwise>
 					<div class="input-group">
-						<form:select id="runDateTimeSelect" cssClass="custom-select" path="event">
+						<form:select id="runDateTimeSelect" cssClass="custom-select form-control" path="event">
 							<form:options items="${events}" itemLabel="eventDateTimeFullText"/>
 						</form:select>
 						<span class="input-group-btn">
