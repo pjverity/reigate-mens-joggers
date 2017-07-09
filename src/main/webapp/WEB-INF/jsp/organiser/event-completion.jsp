@@ -31,7 +31,7 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title">Confirm Run Completed</h4>
+					<h5 class="modal-title">Confirm Run Completed</h5>
 				</div>
 				<div class="modal-body">
 					<spring:message code="ui.event-completion.Confirm"/>

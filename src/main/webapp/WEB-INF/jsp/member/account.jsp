@@ -19,10 +19,10 @@
 
 <%@include file="../navigation.jsp" %>
 
-<div class="container">
+<div class="container pt-3">
 
 	<%-- Token balance --%>
-	<div class="row mt-5">
+	<div class="row">
 		<div class="col-12">
 			<h6>Token Balance</h6>
 			You currently have <strong>${tokenBalance}</strong> token(s) to use

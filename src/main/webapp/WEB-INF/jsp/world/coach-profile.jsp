@@ -16,7 +16,7 @@
 
 <%@include file="../navigation.jsp" %>
 
-<div class="container">
+<div class="container pt-3">
 	<div class="page-header">
 		<h1 style="text-align: center">
 			<img class="media-object" src="<c:url value="/images/richard_feist.png"/>" alt="Coach Richard" style="display: inline-block"/>
