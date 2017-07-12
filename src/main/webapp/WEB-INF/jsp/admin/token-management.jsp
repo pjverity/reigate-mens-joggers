@@ -19,49 +19,49 @@
 
 <%@include file="../navigation.jsp" %>
 
-<div class="container">
-
-	<div class="page-header">
-		<h1>Token Management</h1>
-	</div>
+<div class="container pt-3">
 
 	<form:form modelAttribute="tokenManagementFormObject">
 
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title">Member Balance</h3>
-			</div>
-
-			<table class="table">
+		<div class="row">
+			<div class="col-12">
+			<table class="table table-sm table-responsive">
 				<thead>
 				<tr>
 					<th>Member</th>
-					<th>Current Balance</th>
-					<th>Credit Amount</th>
+					<th class="text-center">Current Balance</th>
+					<th class="text-center">Credit Amount</th>
 				</tr>
 				</thead>
 
 				<tbody>
 				<c:forEach var="row" items="${tokenManagementFormObject.rows}" varStatus="vs">
-					<div class="form-group">
-						<tr>
-							<td>
-								<a href="mailto:${row.memberBalance.username}">${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}</a>
-							</td>
-							<td>
-								<span class="form-control-static">${row.memberBalance.balance == null ? 0 : row.memberBalance.balance}</span>
-							</td>
-							<td>
-								<form:input path="rows[${vs.index}].quantity" cssClass="form-control input-sm"/>
-								<form:errors path="rows[${vs.index}].quantity" cssClass="text-danger"/>
-							</td>
-						</tr>
-					</div>
+					<tr>
+						<td nowrap>
+							<div class="form-control-static form-control-sm">
+							<a href="mailto:${row.memberBalance.username}">${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}</a>
+							</div>
+						</td>
+						<td nowrap>
+							<div class="form-control-static form-control-sm text-center">${row.memberBalance.balance == null ? 0 : row.memberBalance.balance}</div>
+						</td>
+						<td nowrap>
+							<form:input path="rows[${vs.index}].quantity" cssClass="form-control form-control-sm"/>
+							<form:errors path="rows[${vs.index}].quantity" cssClass="text-danger"/>
+						</td>
+					</tr>
 				</c:forEach>
 				</tbody>
 			</table>
+			</div>
 		</div>
-		<form:button type="submit" class="btn btn-primary">Credit Accounts</form:button>
+
+		<div class="row">
+			<div class="col-12">
+				<form:button type="submit" class="btn btn-primary">Credit Accounts</form:button>
+			</div>
+		</div>
+
 	</form:form>
 
 </div>

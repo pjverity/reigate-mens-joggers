@@ -31,38 +31,27 @@
 
 <%@include file="../navigation.jsp" %>
 
-<div class="container">
-
-	<div class="page-header">
-		<h1>Run Scheduling</h1>
-	</div>
+<div class="container pt-3">
 
 	<div class="row">
-		<div class="col-lg-12">
+		<div class="col">
 
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">Create New Run</h3>
-				</div>
-				<div class="panel-body">
+			<div class="card">
+				<h6 class="card-header">Create Run</h6>
+				<div class="card-block">
+
 					<c:url var="createEventUrl" value="/organiser/create-event"/>
 
 					<form:form cssClass="form-inline" modelAttribute="eventCreationFormObject" action="${createEventUrl}">
 
-						<%-- The hours:mins controls are inline-blocks to prevent them from spanning the entire column on small viewports.
-									In doing so, their labels are aligned with the control. The form-inline class will only style controls as
-									inline-block's when the viewport >=768px. So this means in some cases the 'Date' label will be above the
-									control and looks out of place with the Time label which is always in line. Force  the date control an
-									inline-block all the time
-						--%>
 						<div class="form-group">
-							<label for="datepicker">Date</label>
-							<form:input cssClass="form-control" path="eventDate" type="text" id="datepicker" cssStyle="width: 9em; display: inline-block"/>
+							<label class="mr-sm-2" for="datepicker">Date</label>
+							<form:input cssClass="form-control mr-sm-2" path="eventDate" type="text" id="datepicker" cssStyle="width: 9em; display: inline-block"/>
 						</div>
 
 						<div class="form-group">
-							<label for="timePicker">Time</label>
-							<form:select cssClass="form-control" path="eventHour" id="timePicker" cssStyle="width: 4em; display: inline-block">
+							<label class="mr-sm-2" for="timePicker">Time</label>
+							<form:select cssClass="custom-select" path="eventHour" id="timePicker" cssStyle="width: 4em; display: inline-block">
 								<form:option value="6" label="06"/>
 								<form:option value="7" label="07"/>
 								<form:option value="8" label="08"/>
@@ -80,7 +69,7 @@
 								<form:option value="20"/>
 							</form:select>
 							:
-							<form:select cssClass="form-control" path="eventMinutes" cssStyle="width: 4em; display: inline-block">
+							<form:select cssClass="custom-select mr-sm-2" path="eventMinutes" cssStyle="width: 4em; display: inline-block">
 								<form:option value="0" label="00"/>
 								<form:option value="15"/>
 								<form:option value="30"/>
@@ -88,34 +77,37 @@
 							</form:select>
 						</div>
 
-						<button class="btn btn-primary" type="submit">Create Run</button>
-
+						<div class="form-group">
+							<button class="btn btn-primary ml-sm-2" type="submit">Create Run</button>
+						</div>
 						<spring:hasBindErrors name="eventCreationFormObject">
+					<div class="form-group ml-2">
 							<form:errors cssClass="text-danger"/>
 							<form:errors path="eventDate" cssClass="text-danger"/>
+					</div>
 						</spring:hasBindErrors>
 
 					</form:form>
-
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">Upcoming Runs</h3>
-				</div>
-				<div class="panel-body">
+	<div class="row mt-2">
+
+
+		<%-- Upcoming Runs --%>
+
+		<div class="col">
+			<div class="card">
+				<h6 class="card-header">Upcoming Runs</h6>
 					<c:url var="cancelEventUrl" value="/organiser/cancel-event"/>
 					<form:form modelAttribute="eventCancellationFormObject" action="${cancelEventUrl}">
 
 
 						<%-- Upcoming Runs Table--%>
 
-						<table class="table table-condensed">
+						<table class="table table-sm">
 							<thead>
 							<tr>
 								<th>Date</th>
@@ -125,7 +117,7 @@
 							<tbody>
 							<c:forEach var="event" items="${eventCancellationFormObject.events}" varStatus="vs">
 								<tr>
-									<td>
+									<td nowrap>
 										<c:choose>
 											<c:when test="${event.hasStarted()}">
 												<c:url var="eventCompletionUrl" value="/organiser/event-completion">
@@ -138,7 +130,7 @@
 											</c:otherwise>
 										</c:choose>
 									</td>
-									<td>
+									<td nowrap>
 										<form:checkbox path="events[${vs.index}].cancelled"/>
 									</td>
 								</tr>
@@ -149,7 +141,7 @@
 
 						<%-- Cancel Event Button --%>
 
-						<a id="cancelEventButton" class="btn btn-danger disabled" data-target="#confirmModal" data-toggle="modal">Cancel Selected Runs</a>
+						<button type="button" id="cancelEventButton" class="btn btn-danger m-2" disabled data-target="#confirmModal" data-toggle="modal">Cancel Selected Runs</button>
 
 
 						<%-- Cancellation Confirmation Dialog --%>
@@ -172,51 +164,45 @@
 						</div>
 
 					</form:form>
-				</div>
 			</div>
 		</div>
 
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">Completed Runs (10 Most Recent)</h3>
-				</div>
 
+		<%-- Completed Runs --%>
 
-				<%-- Completed Runs Table--%>
+		<div class="col">
+			<div class="card">
+				<h6 class="card-header">Completed Runs (10 Most Recent)</h6>
 
-				<table class="table table-hover">
+				<table class="table table-hover table-sm">
 					<thead>
 					<tr>
 						<th>Date</th>
-						<th>Runners</th>
+						<th class="text-center">Runners</th>
 						<th>Distance (km)</th>
 					</tr>
 					</thead>
 					<tbody>
 					<c:forEach var="event" items="${completedEvents}">
-						<c:url value="/organiser/event-scheduling" var="url" context="/">
+						<c:url value="/organiser/event-scheduling" var="url">
 							<c:param name="eventId" value="${event.id}"/>
 						</c:url>
 						<tr onclick="window.location.href='${url}'" style="cursor: pointer">
-							<td>${event.eventDateTimeFullText}</td>
-							<td>${fn:length(event.userDetailsEntities)}</td>
-							<td><fmt:formatNumber type="number" maxFractionDigits="2" value="${event.eventInfo.distance}"/></td>
+							<td nowrap>${event.eventDateTimeFullText}</td>
+							<td nowrap class="text-center">${fn:length(event.userDetailsEntities)}</td>
+							<td nowrap><fmt:formatNumber type="number" maxFractionDigits="2" value="${event.eventInfo.distance}"/></td>
 						</tr>
 					</c:forEach>
 					</tbody>
 				</table>
 			</div>
 
-
 			<%-- Selected Complete Run Details --%>
 
 			<c:if test="${not empty selectedEvent}">
-			<div class=" panel panel-success">
-				<div class="panel-heading">
-					<h3 class="panel-title">${selectedEvent.eventDateTimeFullText}</h3>
-				</div>
-				<ul class="list-group">
+			<div class="card card-outline-success mt-2">
+				<div class="card-header bg-success text-white">${selectedEvent.eventDateTimeFullText}</div>
+				<ul class="list-group list-group-flush">
 					<c:forEach var="user" items="${selectedEvent.userDetailsEntities}">
 						<li class="list-group-item"><a href="mailto:${user.username}">${user.firstName}&nbsp;${user.lastName}</a></li>
 					</c:forEach>
@@ -224,7 +210,6 @@
 				</c:if>
 			</div>
 		</div>
-
 	</div>
 </div>
 
@@ -232,12 +217,12 @@
     var selectedEventCount = $("form input:checkbox:checked").length;
 
     $(function () {
-        $('#cancelEventButton').toggleClass('disabled', selectedEventCount === 0);
+        updateCancelButton();
     });
 
     $("form input:checkbox").on('click', function () {
         selectedEventCount += this.checked ? 1 : -1;
-        $('#cancelEventButton').toggleClass('disabled', selectedEventCount === 0);
+        updateCancelButton()
     });
 
     $('#confirmModal').on('show.bs.modal', function (e) {
@@ -250,6 +235,18 @@
 
         $('#cancelledEventCount').html('<strong>' + count + '</strong> run' + (count === 1 ? '' : 's'));
     });
+
+    function updateCancelButton() {
+        if ( selectedEventCount === 0 )
+        {
+            $('#cancelEventButton').attr('disabled', true);
+        }
+        else
+        {
+            $('#cancelEventButton').removeAttr('disabled');
+        }
+
+    }
 </script>
 
 </body>

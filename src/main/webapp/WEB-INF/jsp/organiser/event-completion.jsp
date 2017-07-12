@@ -20,40 +20,40 @@
 
 <%@include file="../navigation.jsp" %>
 
-<div class="container">
-
-	<div class="page-header">
-		<h1>Run Completion</h1>
-	</div>
+<div class="container pt-3">
 
 	<form:form id="registrationForm" modelAttribute="eventCompletionFormObject">
+
+
+		<%-- Completion confirmation dialog --%>
 
 	<div id="confirmModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title">Confirm Run Completed</h4>
+					<h5 class="modal-title">Confirm Run Completed</h5>
 				</div>
 				<div class="modal-body">
 					<spring:message code="ui.event-completion.Confirm"/>
 				</div>
 				<div class="modal-footer">
-					<form:button class="btn btn-default" data-dismiss="modal">Cancel</form:button>
+					<form:button class="btn btn-secondary" data-dismiss="modal">Cancel</form:button>
 					<input type="submit" class="btn btn-primary" value="Confirm"/>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="row" style="margin-top: 1em">
-		<div class="col-md-12">
 
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">Select Runners</h3>
-				</div>
+		<%-- Runner selection --%>
 
-				<table class="table">
+	<div class="form-group row">
+		<div class="col">
+
+			<div class="card">
+				<h6 class="card-header">Select Runners</h6>
+
+				<table class="table table-sm my-0">
 					<thead>
 					<tr>
 						<th>Member</th>
@@ -65,11 +65,11 @@
 					<tbody>
 					<c:forEach var="row" items="${eventCompletionFormObject.rows}" varStatus="vs">
 						<tr>
-							<td class="form-control-static">
+							<td>
 								<a href="mailto:${row.memberBalance.username}">${row.memberBalance.firstName}&nbsp;${row.memberBalance.lastName}</a>
 							</td>
 							<td><form:checkbox cssClass="checkbox" path="rows[${vs.index}].present" name="present" value="${row.present}"/></td>
-							<td class="form-control-static">${row.memberBalance.balance == null ? 0 : row.memberBalance.balance}</td>
+							<td>${row.memberBalance.balance == null ? 0 : row.memberBalance.balance}</td>
 						</tr>
 					</c:forEach>
 					</tbody>
@@ -79,86 +79,77 @@
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-md-12">
-			<div class="well well-sm">
-				<div class="form-inline">
 
+		<%-- Run Date Selection --%>
 
-						<%-- Run Date Selection --%>
+	<div class="form-group row">
 
-					<div class="form-group ${empty events ? 'has-error' : ''}">
-						<label for="runDateTimeSelect" class="control-label">Completion Date</label>
-						<c:choose>
-							<c:when test="${empty events}">
-								<c:url value='/organiser/event-scheduling' var="url"/>
-								<div id="runDateTimeSelect" class="form-control-static">
-									<spring:message code="ui.event-completion.NoEvents" arguments="${url}"/>
-								</div>
-							</c:when>
-							<c:otherwise>
-								<form:select id="runDateTimeSelect" cssClass="form-control" path="event">
-									<form:options items="${events}" itemLabel="eventDateTimeFullText"/>
-								</form:select>
-							</c:otherwise>
-						</c:choose>
+		<div class="col-12 col-md-5 ${empty events ? 'has-danger' : ''}">
+			<label for="runDateTimeSelect" class="col-form-label">Completion Date</label>
+			<c:choose>
+				<c:when test="${empty events}">
+					<c:url value='/organiser/event-scheduling' var="url"/>
+					<div id="runDateTimeSelect" class="form-control-static">
+						<spring:message code="ui.event-completion.NoEvents" arguments="${url}"/>
 					</div>
-
-
-						<%-- Run Distance Selection --%>
-
-					<div id="distanceGroup" class="form-group">
-						<label for="distance" class="control-label">Distance</label>
-						<form:input cssClass="form-control" id="distanceInput" path="distance"/>
+				</c:when>
+				<c:otherwise>
+					<div class="input-group">
+						<form:select id="runDateTimeSelect" cssClass="custom-select form-control" path="event">
+							<form:options items="${events}" itemLabel="eventDateTimeFullText"/>
+						</form:select>
+						<span class="input-group-btn">
+							<c:url value="/organiser/event-scheduling" var="cancelEventUrl">
+								<c:param name="cancelEventId" value=""/>
+							</c:url>
+			        <button class="btn btn-danger" type="button" onclick="cancelEvent('${cancelEventUrl}')">Cancel</button>
+						</span>
 					</div>
+				</c:otherwise>
+			</c:choose>
+		</div>
 
 
-						<%-- Distance Metric --%>
-
-					<div id="metricRadioButtonGroup" class="form-group">
-						<label class="radio-inline">
-							<form:radiobutton path="metric" value="MILES"/> Miles
-						</label>
-						<label class="radio-inline">
-							<form:radiobutton path="metric" value="KILOMETERS"/> Km
-						</label>
-					</div>
+		<div class="col-12 col-md-2" id="distanceGroup">
 
 
-						<%-- Complete Run Button --%>
+				<%-- Run Distance Selection --%>
 
-					<a id="completeButton" class="btn btn-success" data-target="#confirmModal" data-toggle="modal"><span id="runnerCountBadge" class="badge">0</span> Complete Run</a>
+			<label for="distance" class="col-form-label">Distance</label>
+			<form:input cssClass="form-control" id="distanceInput" path="distance"/>
 
 
-						<%-- Cancel Run Link--%>
+				<%-- Metric Selection --%>
 
-					<c:if test="${not empty events}">
-						<c:url value="/organiser/event-scheduling" var="cancelEventUrl">
-							<c:param name="cancelEventId" value=""/>
-						</c:url>
-						or <a id="cancelEventAnchor" href="${cancelEventUrl}">Cancel Run</a>
-					</c:if>
+			<div id="metricRadioButtonGroup">
 
+				<div class="form-check form-check-inline">
+					<label class="form-check-label">
+						<form:radiobutton cssClass="form-check-input" path="metric" value="MILES"/> Miles
+					</label>
+				</div>
+
+				<div class="form-check form-check-inline">
+					<label class="form-check-label">
+						<form:radiobutton cssClass="form-check-input" path="metric" value="KILOMETERS"/> Km
+					</label>
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<spring:hasBindErrors name="eventCompletionFormObject">
-	<div class="row">
-		<div class="col-md-12">
 
-			<div class="alert alert-danger" role="alert">
-				<span><strong>Invalid input</strong></span>
-				<ul>
-					<c:forEach var="error" items="${errors.fieldErrors}">
-						<li>${error.field}&nbsp;${error.defaultMessage}</li>
-					</c:forEach>
-				</ul>
-			</div>
+			<%-- Completion button --%>
+
+		<div class="col-2">
+			<label class="col-form-label hidden-sm-down">&nbsp;</label>
+			<button type="button" id="completeButton" class="btn btn-success" data-target="#confirmModal" data-toggle="modal">
+				<span id="runnerCountBadge" class="badge badge-pill bg-faded text-success">0</span>
+				Complete Run
+			</button>
 		</div>
+
 	</div>
-	</spring:hasBindErrors>
+
 	</form:form>
 
 </body>
@@ -166,7 +157,6 @@
 <script type="text/javascript">
 
     const $runDateTimeSelect = $('#runDateTimeSelect');
-    const $cancelEventAnchor = $('#cancelEventAnchor');
     const $metricRadioButtonGroup = $('#metricRadioButtonGroup');
     const $completeButton = $('#completeButton');
     const $runnerCountBadge = $('#runnerCountBadge');
@@ -180,46 +170,32 @@
 
     $(function () {
         $runnerCountBadge.text(runnerCount);
-        $distanceGroup.toggleClass('has-error', !distanceEntered);
-        $metricRadioButtonGroup.toggleClass('has-error', !metricSelected);
+        $distanceGroup.toggleClass('has-danger', !distanceEntered);
+        $metricRadioButtonGroup.toggleClass('has-danger', !metricSelected);
 
-        $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered);
+        updateCompleteButtonState();
     });
 
     $('input[type=radio]').change(function () {
         metricSelected = true;
-        $metricRadioButtonGroup.removeClass('has-error');
+        $metricRadioButtonGroup.removeClass('has-danger');
 
-        $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered);
+        updateCompleteButtonState();
     });
 
     $('form input:checkbox').on('click', function () {
         runnerCount += this.checked ? 1 : -1;
 
         $runnerCountBadge.text(runnerCount);
-        $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered);
+        updateCompleteButtonState();
     });
-
-    $runDateTimeSelect.change(function (e) {
-
-        const eventId = $(e.target).val();
-
-        // When no run schedules are present, there will be no numeric value for eventId
-        if (!$.isNumeric(eventId)) {
-            return;
-        }
-
-        const newHref = $cancelEventAnchor.attr('href').replace(/=.*/, '=' + eventId);
-        $cancelEventAnchor.attr('href', newHref);
-
-    }).trigger('change');
 
     $distanceInput
         .on('keyup', function (e) {
             distanceEntered = $.isNumeric($(this).val());
-            $distanceGroup.toggleClass('has-error', !distanceEntered);
+            $distanceGroup.toggleClass('has-danger', !distanceEntered);
 
-            $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered);
+            updateCompleteButtonState();
         })
         .on('keydown', function (e) {
             if (!$.isNumeric(e.key) && e.keyCode !== 8 && e.keyCode !== 37 && e.keyCode !== 39 && e.keyCode !== 190) {
@@ -237,6 +213,19 @@
         $('#confirmRunDistance').html('<strong>' + distance + ' ' + metric + '</strong> ');
     });
 
+    function updateCompleteButtonState() {
+        const formIncomplete = !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered;
+        if (formIncomplete) {
+            $completeButton.attr('disabled', true);
+        }
+        else {
+            $completeButton.removeAttr('disabled');
+        }
+    }
+
+    function cancelEvent(url) {
+        window.location = url + $runDateTimeSelect.find(':selected').val();
+    }
 </script>
 
 </html>

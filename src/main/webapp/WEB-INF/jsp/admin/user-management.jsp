@@ -19,47 +19,48 @@
 
 <%@include file="../navigation.jsp" %>
 
-<div class="container">
-
-	<div class="page-header">
-		<h1>User Management</h1>
-	</div>
+<div class="container pt-3">
 
 	<form:form modelAttribute="userManagementFormObject">
 
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h3 class="panel-title">RMJ Users</h3>
-		</div>
-
-		<table class="table">
-			<thead>
-			<tr>
-				<th>Name</th>
-				<th>Email Address</th>
-				<th>Enabled</th>
-				<th>Last Login</th>
-			</tr>
-			</thead>
-
-			<tbody>
-
-			<c:forEach var="user" items="${userDetails}" varStatus="vs">
+	<div class="row">
+		<div class="col-12">
+			<table class="table table-sm table-responsive">
+				<thead>
 				<tr>
-					<td><i class="fa fa-circle" style="color: ${activeSessions[user.username] ? 'lightseagreen' : 'indianred'}" aria-hidden="true"></i> ${user.firstName}&nbsp;${user.lastName}</td>
-					<td><a href="mailto:${user.username}">${user.username}</a></td>
-					<td><form:checkbox cssClass="checkbox" path="userManagementFormRows[${vs.index}].enabled" name="enabled" /></td>
-					<td><fmt:formatDate value="${user.lastLoginAsDate}" type="both"/></td>
+					<th>Name</th>
+					<th>Email Address</th>
+					<th>Enabled</th>
+					<th>Last Login</th>
 				</tr>
-				<form:hidden path="userManagementFormRows[${vs.index}].id" name="id" />
-			</c:forEach>
-			</tbody>
-		</table>
+				</thead>
+
+				<tbody>
+
+				<c:forEach var="user" items="${userDetails}" varStatus="vs">
+					<tr>
+						<td nowrap>
+							<i class="fa fa-circle" style="color: ${activeSessions[user.username] ? 'lightseagreen' : 'indianred'}; "
+							   aria-hidden="true"></i> ${user.firstName}&nbsp;${user.lastName}
+						</td>
+						<td nowrap><a href="mailto:${user.username}">${user.username}</a></td>
+						<td nowrap><form:checkbox cssClass="checkbox" path="userManagementFormRows[${vs.index}].enabled" name="enabled"/></td>
+						<td nowrap><fmt:formatDate value="${user.lastLoginAsDate}" type="both"/></td>
+					</tr>
+					<form:hidden path="userManagementFormRows[${vs.index}].id" name="id"/>
+				</c:forEach>
+				</tbody>
+			</table>
+		</div>
 	</div>
 
-		<form:button type="submit" class="btn btn-primary">Update</form:button>
+	<div class="row">
+		<div class="col-12">
+			<form:button type="submit" class="btn btn-primary">Update</form:button>
+		</div>
+	</div>
+
 	</form:form>
-</div>
 
 </body>
 
