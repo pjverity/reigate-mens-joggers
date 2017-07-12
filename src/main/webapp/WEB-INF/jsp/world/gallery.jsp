@@ -20,7 +20,7 @@
 
 <%@include file="../navigation.jsp" %>
 
-<div class="container">
+<div class="container mt-3">
 	<div class="page-header">
 		<h1>${galleryViewModelObject.galleryName}</h1>
 	</div>
@@ -33,7 +33,7 @@
 
 	<div class="grid">
 		<c:forEach var="url" items="${galleryViewModelObject.imageUrls}">
-			<img class="thumbnail grid-item" src="${url}"/>
+			<img class="img-fluid img-thumbnail grid-item" src="${url}"/>
 		</c:forEach>
 	</div>
 

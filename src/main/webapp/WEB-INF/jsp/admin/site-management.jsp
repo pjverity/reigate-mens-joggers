@@ -11,61 +11,61 @@
 <head>
 	<%@include file="../head-common.jsp" %>
 
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 </head>
 
 <body>
 
 <%@include file="../navigation.jsp" %>
 
-<div class="container">
-	<div class="page-header">
-		<h1>Site Management</h1>
-	</div>
+<div class="container mt-3">
 
-	<div class="row">
-		<div class="col-md-12">
-			<form class="form-inline">
+	<form>
 
-				<div class="row">
-					<div class="col-md-12">
-						<label class="control-label" for="selectedGroup">Selected Group</label>
-						<div class="form-control-static" id="selectedGroup">${groupName}&nbsp;(${nsid})</div>
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-md-12">
-
-						<div class="form-group">
-							<label class="control-label">Search Text</label>
-							<input id="groupName" class="form-control" placeholder="Search Flickr Groups"/>
-							<button type="button" class="btn btn-default" onclick="searchFlickrGroups()">Search</button>
-						</div>
-					</div>
-				</div>
-			</form>
+		<div class="form-group row">
+			<div class="col">
+				<label class="col-form-label" for="selectedGroup">Selected Group</label>
+				<div class="form-control-static" id="selectedGroup">${groupName}&nbsp;(${nsid})</div>
+			</div>
 		</div>
-	</div>
 
-	<div class="row" style="margin-top: 1em">
-		<div class="col-md-6">
+		<div class="form-group row">
+			<div class="col">
 
-			<form id="testForm" class="form" method="post">
+				<div class="input-group">
+					<input id="groupName" type="text" class="form-control" placeholder="Search Flickr Groups...">
+					<span class="input-group-btn">
+            <button class="btn btn-secondary" onclick="searchFlickrGroups()" type="button">Search</button>
+          </span>
+				</div>
+
+			</div>
+		</div>
+	</form>
+
+	<form id="testForm" class="form" method="post">
+		<div class=" row">
+			<div class="col">
 
 				<div class="form-group">
-
 					<label class="control-label" for="groupSelection">Groups</label>
 					<select id="groupSelection" class="form-control" size="10">
 					</select>
-					<button type="button" class="btn btn-default" onclick="saveGroupNsid()">Set</button>
 				</div>
+
 				<input id="formGroupName" type="hidden" name="groupName" value="">
 				<input id="formGroupId" type="hidden" name="groupId" value="">
+
 				<security:csrfInput/>
-			</form>
+			</div>
 		</div>
-	</div>
+		<div class=" row justify-content-end">
+			<div class="col-11"></div>
+			<div class="col-1">
+			<button type="button" class="btn btn-primary btn-block" onclick="saveGroupNsid()">Set</button>
+			</div>
+		</div>
+	</form>
 
 </div>
 
