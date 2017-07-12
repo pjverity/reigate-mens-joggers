@@ -81,8 +81,10 @@
 							<button class="btn btn-primary ml-sm-2" type="submit">Create Run</button>
 						</div>
 						<spring:hasBindErrors name="eventCreationFormObject">
+					<div class="form-group ml-2">
 							<form:errors cssClass="text-danger"/>
 							<form:errors path="eventDate" cssClass="text-danger"/>
+					</div>
 						</spring:hasBindErrors>
 
 					</form:form>
@@ -200,9 +202,9 @@
 			<c:if test="${not empty selectedEvent}">
 			<div class="card card-outline-success mt-2">
 				<div class="card-header bg-success text-white">${selectedEvent.eventDateTimeFullText}</div>
-				<ul class="list-group">
+				<ul class="list-group list-group-flush">
 					<c:forEach var="user" items="${selectedEvent.userDetailsEntities}">
-						<li class="list-group-item border-left-0 border-right-0"><a href="mailto:${user.username}">${user.firstName}&nbsp;${user.lastName}</a></li>
+						<li class="list-group-item"><a href="mailto:${user.username}">${user.firstName}&nbsp;${user.lastName}</a></li>
 					</c:forEach>
 				</ul>
 				</c:if>

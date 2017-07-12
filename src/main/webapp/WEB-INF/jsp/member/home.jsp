@@ -81,9 +81,9 @@
 		<div class="col-md-6 mt-2 mt-md-0">
 			<div class="card card-outline-primary">
 				<h5 class="card-header bg-primary text-white">Upcoming Runs</h5>
-				<ul class="list-group m-0">
+				<ul class="list-group list-group-flush">
 					<c:forEach var="event" items="${upcomingEvents}">
-						<li class="list-group-item border-left-0 border-right-0">${event.eventDateTimeFullText}</li>
+						<li class="list-group-item">${event.eventDateTimeFullText}</li>
 					</c:forEach>
 				</ul>
 			</div>
