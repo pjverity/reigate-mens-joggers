@@ -165,77 +165,72 @@
 
 <script type="text/javascript">
 
-    const $runDateTimeSelect = $('#runDateTimeSelect');
-    const $cancelEventAnchor = $('#cancelEventAnchor');
-    const $metricRadioButtonGroup = $('#metricRadioButtonGroup');
-    const $completeButton = $('#completeButton');
-    const $runnerCountBadge = $('#runnerCountBadge');
-    const $distanceGroup = $('#distanceGroup');
-    const $distanceInput = $('#distanceInput');
+	const $runDateTimeSelect = $('#runDateTimeSelect');
+	const $cancelEventAnchor = $('#cancelEventAnchor');
+	const $metricRadioButtonGroup = $('#metricRadioButtonGroup');
+	const $completeButton = $('#completeButton');
+	const $runnerCountBadge = $('#runnerCountBadge');
+	const $distanceGroup = $('#distanceGroup');
+	const $distanceInput = $('#distanceInput');
 
-    var runnerCount = $('form input:checkbox:checked').length;
-    var runSelected = $runDateTimeSelect.find(':selected').length > 0;
-    var metricSelected = $('input[type=radio]:checked').length > 0;
-    var distanceEntered = $.isNumeric($distanceInput.val());
+	var runnerCount = $('form input:checkbox:checked').length;
+	var runSelected = $runDateTimeSelect.find(':selected').length > 0;
+	var metricSelected = $('input[type=radio]:checked').length > 0;
+	var distanceEntered = $.isNumeric($distanceInput.val());
 
-    $(function () {
-        $runnerCountBadge.text(runnerCount);
-        $distanceGroup.toggleClass('has-error', !distanceEntered);
-        $metricRadioButtonGroup.toggleClass('has-error', !metricSelected);
+	$(function () {
+		$runnerCountBadge.text(runnerCount);
+		$distanceGroup.toggleClass('has-error', !distanceEntered);
+		$metricRadioButtonGroup.toggleClass('has-error', !metricSelected);
 
-        $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered);
-    });
+		$completeButton.toggleClass('disabled', !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered);
+	});
 
-    $('input[type=radio]').change(function () {
-        metricSelected = true;
-        $metricRadioButtonGroup.removeClass('has-error');
+	$('input[type=radio]').change(function () {
+		metricSelected = true;
+		$metricRadioButtonGroup.removeClass('has-error');
 
-        $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered);
-    });
+		$completeButton.toggleClass('disabled', !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered);
+	});
 
-    $('form input:checkbox').on('click', function () {
-        runnerCount += this.checked ? 1 : -1;
+	$('form input:checkbox').on('click', function () {
+		runnerCount += this.checked ? 1 : -1;
 
-        $runnerCountBadge.text(runnerCount);
-        $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered);
-    });
+		$runnerCountBadge.text(runnerCount);
+		$completeButton.toggleClass('disabled', !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered);
+	});
 
-    $runDateTimeSelect.change(function (e) {
+	$runDateTimeSelect.change(function (e) {
 
-        const eventId = $(e.target).val();
+		const eventId = $(e.target).val();
 
-        // When no run schedules are present, there will be no numeric value for eventId
-        if (!$.isNumeric(eventId)) {
-            return;
-        }
+		// When no run schedules are present, there will be no numeric value for eventId
+		if (!$.isNumeric(eventId)) {
+			return;
+		}
 
-        const newHref = $cancelEventAnchor.attr('href').replace(/=.*/, '=' + eventId);
-        $cancelEventAnchor.attr('href', newHref);
+		const newHref = $cancelEventAnchor.attr('href').replace(/=.*/, '=' + eventId);
+		$cancelEventAnchor.attr('href', newHref);
 
-    }).trigger('change');
+	}).trigger('change');
 
-    $distanceInput
-        .on('keyup', function (e) {
-            distanceEntered = $.isNumeric($(this).val());
-            $distanceGroup.toggleClass('has-error', !distanceEntered);
+  $distanceInput
+	  .on('keyup', function (e) {
+		  distanceEntered = $.isNumeric($(this).val());
+		  $distanceGroup.toggleClass('has-error', !distanceEntered);
 
-            $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered);
-        })
-        .on('keydown', function (e) {
-            if (!$.isNumeric(e.key) && e.keyCode !== 8 && e.keyCode !== 37 && e.keyCode !== 39 && e.keyCode !== 190) {
-                e.preventDefault();
-            }
-        });
+		  $completeButton.toggleClass('disabled', !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered);
+	  });
 
-    $('#confirmModal').on('show.bs.modal', function (e) {
-        const distance = $distanceInput.val();
-        const metric = $('input[type=radio]:checked').val();
-        const dateTime = $runDateTimeSelect.find(':selected').text();
+	$('#confirmModal').on('show.bs.modal', function (e) {
+		const distance = $distanceInput.val();
+		const metric = $('input[type=radio]:checked').val();
+		const dateTime = $runDateTimeSelect.find(':selected').text();
 
-        $('#confirmRunDateTime').text(dateTime);
-        $('#confirmRunnerCount').html('<strong>' + runnerCount + '</strong> ' + (runnerCount === 1 ? 'person' : 'people'));
-        $('#confirmRunDistance').html('<strong>' + distance + ' ' + metric + '</strong> ');
-    });
+		$('#confirmRunDateTime').text(dateTime);
+		$('#confirmRunnerCount').html('<strong>' + runnerCount + '</strong> ' + (runnerCount === 1 ? 'person' : 'people'));
+		$('#confirmRunDistance').html('<strong>' + distance + ' ' + metric + '</strong> ');
+	});
 
 </script>
 
