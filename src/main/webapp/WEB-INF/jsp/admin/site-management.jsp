@@ -10,8 +10,6 @@
 
 <head>
 	<%@include file="../head-common.jsp" %>
-
-
 </head>
 
 <body>
@@ -25,7 +23,9 @@
 		<div class="form-group row">
 			<div class="col">
 				<label class="col-form-label" for="selectedGroup">Selected Group</label>
-				<div class="form-control-static" id="selectedGroup">${groupName}&nbsp;(${nsid})</div>
+				<div class="form-control-static" id="selectedGroup">
+					<a id="selectedGroupHref" href="<c:url value="/world/gallery"/>">${groupName}&nbsp;(${nsid})</a>
+				</div>
 			</div>
 		</div>
 
@@ -62,7 +62,7 @@
 		<div class=" row justify-content-end">
 			<div class="col-11"></div>
 			<div class="col-1">
-			<button type="button" class="btn btn-primary btn-block" onclick="saveGroupNsid()">Set</button>
+				<button type="button" class="btn btn-primary btn-block" onclick="saveGroupNsid()">Set</button>
 			</div>
 		</div>
 	</form>
@@ -71,33 +71,40 @@
 
 </body>
 
-<script type="text/javascript">
-    function searchFlickrGroups() {
-        const groupName = $('#groupName').val();
-        $.getJSON("/rmj/admin/flickr/searchGroups", {searchText: groupName})
-            .done(function (groups) {
-                console.log(groups);
-                $('#groupSelection > option').remove();
-                _.forOwn(groups, function (value, key) {
-                    console.log(key, value);
-                    $('#groupSelection').append('<option value="' + value + '">' + key + '</option>')
+<script id="site-management-script" type="text/javascript" data-url="<c:url value='/'/>">
 
-                });
-            })
-            .fail(function () {
-                console.log("error");
-            });
-    }
+	const contextPath = $('#site-management-script').attr('data-url');
 
-    function saveGroupNsid() {
-        const selectedGroupNsid = $('#groupSelection :selected').val();
-        const selectedGroupName = $('#groupSelection :selected').text();
-        $('#formGroupName').val(selectedGroupName);
-        $('#formGroupId').val(selectedGroupNsid);
-        var jqxhr = $.post("/rmj/admin/flickr/saveGroupNsid", $("#testForm").serialize(), function () {
-            $('#selectedGroup').text(selectedGroupName + ' (' + selectedGroupNsid + ')');
-        });
-    }
+	function searchFlickrGroups() {
+	  const groupName = $('#groupName').val();
+
+	  $.getJSON(contextPath + "admin/flickr/searchGroups", {searchText: groupName})
+		  .done(function (groups) {
+			  console.log(groups);
+			  $('#groupSelection').find('> option').remove();
+			  _.forOwn(groups, function (value, key) {
+				  console.log(key, value);
+				  $('#groupSelection').append('<option value="' + value + '">' + key + '</option>')
+
+			  });
+		  })
+		  .fail(function () {
+			  console.log("error");
+		  });
+	}
+
+  function saveGroupNsid() {
+		const $groupSelection = $('#groupSelection');
+
+	  const selectedGroupNsid = $groupSelection.find(':selected').val();
+	  const selectedGroupName = $groupSelection.find(':selected').text();
+
+	  $('#formGroupName').val(selectedGroupName);
+	  $('#formGroupId').val(selectedGroupNsid);
+	  var jqxhr = $.post(contextPath + "admin/flickr/saveGroupNsid", $("#testForm").serialize(), function () {
+		  $('#selectedGroupHref').text(selectedGroupName + ' (' + selectedGroupNsid + ')');
+	  });
+  }
 
 </script>
 

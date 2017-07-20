@@ -99,10 +99,7 @@
 							<form:options items="${events}" itemLabel="eventDateTimeFullText"/>
 						</form:select>
 						<span class="input-group-btn">
-							<c:url value="/organiser/event-scheduling" var="cancelEventUrl">
-								<c:param name="cancelEventId" value=""/>
-							</c:url>
-			        <button class="btn btn-danger" type="button" onclick="cancelEvent('${cancelEventUrl}')">Cancel</button>
+			        <button class="btn btn-danger" type="button" onclick="cancelEvent('organiser/event-scheduling?cancelEventId=')">Cancel</button>
 						</span>
 					</div>
 				</c:otherwise>
@@ -150,18 +147,36 @@
 
 	</div>
 
+	<spring:hasBindErrors name="eventCompletionFormObject">
+	<div class="form-group row">
+		<div class="col">
+
+			<div class="alert alert-danger" role="alert">
+				<span><strong>Invalid input</strong></span>
+				<ul>
+					<c:forEach var="error" items="${errors.fieldErrors}">
+						<li>${error.field}&nbsp;${error.defaultMessage}</li>
+					</c:forEach>
+				</ul>
+			</div>
+		</div>
+	</div>
+	</spring:hasBindErrors>
+
 	</form:form>
 
 </body>
 
-<script type="text/javascript">
+<script id="event-completion-script" type="text/javascript" data-url="<c:url value='/'/>">
 
-    const $runDateTimeSelect = $('#runDateTimeSelect');
-    const $metricRadioButtonGroup = $('#metricRadioButtonGroup');
-    const $completeButton = $('#completeButton');
-    const $runnerCountBadge = $('#runnerCountBadge');
-    const $distanceGroup = $('#distanceGroup');
-    const $distanceInput = $('#distanceInput');
+	const contextPath = $('#event-completion-script').attr('data-url');
+
+	const $runDateTimeSelect = $('#runDateTimeSelect');
+	const $metricRadioButtonGroup = $('#metricRadioButtonGroup');
+	const $completeButton = $('#completeButton');
+	const $runnerCountBadge = $('#runnerCountBadge');
+	const $distanceGroup = $('#distanceGroup');
+	const $distanceInput = $('#distanceInput');
 
     var runnerCount = $('form input:checkbox:checked').length;
     var runSelected = $runDateTimeSelect.find(':selected').length > 0;
@@ -190,10 +205,10 @@
         updateCompleteButtonState();
     });
 
-    $distanceInput
-        .on('keyup', function (e) {
-            distanceEntered = $.isNumeric($(this).val());
-            $distanceGroup.toggleClass('has-danger', !distanceEntered);
+	$distanceInput
+		.on('keyup', function (e) {
+			distanceEntered = $.isNumeric($(this).val());
+			$distanceGroup.toggleClass('has-danger', !distanceEntered);
 
             updateCompleteButtonState();
         })
@@ -213,19 +228,19 @@
         $('#confirmRunDistance').html('<strong>' + distance + ' ' + metric + '</strong> ');
     });
 
-    function updateCompleteButtonState() {
-        const formIncomplete = !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered;
-        if (formIncomplete) {
-            $completeButton.attr('disabled', true);
-        }
-        else {
-            $completeButton.removeAttr('disabled');
-        }
-    }
+	function updateCompleteButtonState() {
+		const formIncomplete = !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered;
+		if (formIncomplete) {
+			$completeButton.attr('disabled', true);
+		}
+		else {
+			$completeButton.removeAttr('disabled');
+		}
+	}
 
-    function cancelEvent(url) {
-        window.location = url + $runDateTimeSelect.find(':selected').val();
-    }
+	function cancelEvent(url) {
+		window.location = contextPath + url + $runDateTimeSelect.find(':selected').val();
+	}
 </script>
 
 </html>
