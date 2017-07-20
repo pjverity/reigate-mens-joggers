@@ -184,10 +184,7 @@
 					</thead>
 					<tbody>
 					<c:forEach var="event" items="${completedEvents}">
-						<c:url value="/organiser/event-scheduling" var="url">
-							<c:param name="eventId" value="${event.id}"/>
-						</c:url>
-						<tr onclick="window.location.href='${url}'" style="cursor: pointer">
+						<tr onclick="gotoUrl('organiser/event-scheduling?eventId=${event.id}')" style="cursor: pointer">
 							<td nowrap>${event.eventDateTimeFullText}</td>
 							<td nowrap class="text-center">${fn:length(event.userDetailsEntities)}</td>
 							<td nowrap><fmt:formatNumber type="number" maxFractionDigits="2" value="${event.eventInfo.distance}"/></td>
@@ -213,8 +210,11 @@
 	</div>
 </div>
 
-<script type="text/javascript">
-    var selectedEventCount = $("form input:checkbox:checked").length;
+<script id="event-scheduling-script" type="text/javascript" data-url="<c:url value='/'/>">
+
+	const contextPath = $('#event-scheduling-script').attr('data-url');
+
+	var selectedEventCount = $("form input:checkbox:checked").length;
 
     $(function () {
         updateCancelButton();
@@ -225,26 +225,28 @@
         updateCancelButton()
     });
 
-    $('#confirmModal').on('show.bs.modal', function (e) {
-        var count = 0;
-        var input = $("form input:checkbox").each(function () {
-            if (this.checked) {
-                ++count;
-            }
-        });
+	$('#confirmModal').on('show.bs.modal', function (e) {
+		var count = 0;
+		var input = $("form input:checkbox").each(function () {
+			if (this.checked) {
+				++count;
+			}
+		});
 
-        $('#cancelledEventCount').html('<strong>' + count + '</strong> run' + (count === 1 ? '' : 's'));
-    });
+		$('#cancelledEventCount').html('<strong>' + count + '</strong> run' + (count === 1 ? '' : 's'));
+	});
 
-    function updateCancelButton() {
-        if ( selectedEventCount === 0 )
-        {
-            $('#cancelEventButton').attr('disabled', true);
-        }
-        else
-        {
-            $('#cancelEventButton').removeAttr('disabled');
-        }
+	function gotoUrl(url) {
+		window.location.href = contextPath + url;
+	}
+
+  function updateCancelButton() {
+	  if (selectedEventCount === 0) {
+		  $('#cancelEventButton').attr('disabled', true);
+	  }
+	  else {
+		  $('#cancelEventButton').removeAttr('disabled');
+	  }
 
     }
 </script>

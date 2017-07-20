@@ -171,62 +171,60 @@
 
 	const contextPath = $('#event-completion-script').attr('data-url');
 
-	const $runDateTimeSelect = $('#runDateTimeSelect');
-	const $metricRadioButtonGroup = $('#metricRadioButtonGroup');
-	const $completeButton = $('#completeButton');
-	const $runnerCountBadge = $('#runnerCountBadge');
-	const $distanceGroup = $('#distanceGroup');
-	const $distanceInput = $('#distanceInput');
+    const $runDateTimeSelect = $('#runDateTimeSelect');
+    const $metricRadioButtonGroup = $('#metricRadioButtonGroup');
+    const $completeButton = $('#completeButton');
+    const $runnerCountBadge = $('#runnerCountBadge');
+    const $distanceGroup = $('#distanceGroup');
+    const $distanceInput = $('#distanceInput');
 
-    var runnerCount = $('form input:checkbox:checked').length;
-    var runSelected = $runDateTimeSelect.find(':selected').length > 0;
-    var metricSelected = $('input[type=radio]:checked').length > 0;
-    var distanceEntered = $.isNumeric($distanceInput.val());
+	var runnerCount = $('form input:checkbox:checked').length;
+	var runSelected = $runDateTimeSelect.find(':selected').length > 0;
+	var metricSelected = $('input[type=radio]:checked').length > 0;
+	var distanceEntered = $.isNumeric($distanceInput.val());
 
-    $(function () {
+	$(function () {
+		$runnerCountBadge.text(runnerCount);
+		$distanceGroup.toggleClass('has-danger', !distanceEntered);
+		$metricRadioButtonGroup.toggleClass('has-danger', !metricSelected);
+
+        updateCompleteButtonState();
+    });
+
+	$('input[type=radio]').change(function () {
+		metricSelected = true;
+		$metricRadioButtonGroup.removeClass('has-danger');
+
+        updateCompleteButtonState();
+    });
+
+	$('form input:checkbox').on('click', function () {
+		runnerCount += this.checked ? 1 : -1;
+
         $runnerCountBadge.text(runnerCount);
-        $distanceGroup.toggleClass('has-danger', !distanceEntered);
-        $metricRadioButtonGroup.toggleClass('has-danger', !metricSelected);
-
         updateCompleteButtonState();
     });
 
-    $('input[type=radio]').change(function () {
-        metricSelected = true;
-        $metricRadioButtonGroup.removeClass('has-danger');
 
-        updateCompleteButtonState();
-    });
 
-    $('form input:checkbox').on('click', function () {
-        runnerCount += this.checked ? 1 : -1;
-
-        $runnerCountBadge.text(runnerCount);
-        updateCompleteButtonState();
-    });
-
-	$distanceInput
-		.on('keyup', function (e) {
-			distanceEntered = $.isNumeric($(this).val());
-			$distanceGroup.toggleClass('has-danger', !distanceEntered);
+    $distanceInput
+        .on('keyup', function (e) {
+            distanceEntered = $.isNumeric($(this).val());
+            $distanceGroup.toggleClass('has-danger', !distanceEntered);
 
             updateCompleteButtonState();
         })
-        .on('keydown', function (e) {
-            if (!$.isNumeric(e.key) && e.keyCode !== 8 && e.keyCode !== 37 && e.keyCode !== 39 && e.keyCode !== 190) {
-                e.preventDefault();
-            }
-        });
+        ;
 
-    $('#confirmModal').on('show.bs.modal', function (e) {
-        const distance = $distanceInput.val();
-        const metric = $('input[type=radio]:checked').val();
-        const dateTime = $runDateTimeSelect.find(':selected').text();
+	$('#confirmModal').on('show.bs.modal', function (e) {
+		const distance = $distanceInput.val();
+		const metric = $('input[type=radio]:checked').val();
+		const dateTime = $runDateTimeSelect.find(':selected').text();
 
-        $('#confirmRunDateTime').text(dateTime);
-        $('#confirmRunnerCount').html('<strong>' + runnerCount + '</strong> ' + (runnerCount === 1 ? 'person' : 'people'));
-        $('#confirmRunDistance').html('<strong>' + distance + ' ' + metric + '</strong> ');
-    });
+		$('#confirmRunDateTime').text(dateTime);
+		$('#confirmRunnerCount').html('<strong>' + runnerCount + '</strong> ' + (runnerCount === 1 ? 'person' : 'people'));
+		$('#confirmRunDistance').html('<strong>' + distance + ' ' + metric + '</strong> ');
+	});
 
 	function updateCompleteButtonState() {
 		const formIncomplete = !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered;
