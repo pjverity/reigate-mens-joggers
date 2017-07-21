@@ -174,7 +174,7 @@
 			<div class="card">
 				<h6 class="card-header">Completed Runs (10 Most Recent)</h6>
 
-				<table class="table table-hover table-sm">
+				<table class="table table-hover table-sm mb-0">
 					<thead>
 					<tr>
 						<th>Date</th>

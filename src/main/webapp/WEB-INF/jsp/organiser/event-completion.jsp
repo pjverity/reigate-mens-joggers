@@ -107,29 +107,18 @@
 		</div>
 
 
-		<div class="col-12 col-md-2" id="distanceGroup">
+			<%-- Run Distance Selection --%>
 
-
-				<%-- Run Distance Selection --%>
+		<div id="distanceGroup" class="col-6 col-md-2 ${empty events ? 'has-danger' : ''}">
 
 			<label for="distance" class="col-form-label">Distance</label>
-			<form:input cssClass="form-control" id="distanceInput" path="distance"/>
-
-
-				<%-- Metric Selection --%>
-
-			<div id="metricRadioButtonGroup">
-
-				<div class="form-check form-check-inline">
-					<label class="form-check-label">
-						<form:radiobutton cssClass="form-check-input" path="metric" value="MILES"/> Miles
-					</label>
-				</div>
-
-				<div class="form-check form-check-inline">
-					<label class="form-check-label">
-						<form:radiobutton cssClass="form-check-input" path="metric" value="KILOMETERS"/> Km
-					</label>
+			<div class="input-group">
+				<form:input cssClass="form-control" id="distanceInput" path="distance"/>
+				<div class="input-group-addon p-0">
+					<form:select path="metric" class="custom-select border-0" style="width: 100%; background-color: transparent" id="metricSelection">
+						<form:option value="MILES">Miles</form:option>
+						<form:option value="KILOMETERS">Km</form:option>
+					</form:select>
 				</div>
 			</div>
 		</div>
@@ -137,15 +126,21 @@
 
 			<%-- Completion button --%>
 
-		<div class="col-2">
-			<label class="col-form-label hidden-sm-down">&nbsp;</label>
+		<div class="col-6 col-md-4">
+			<label class="col-form-label hidden-down">&nbsp;</label>
+			<div class="input-group" >
+
 			<button type="button" id="completeButton" class="btn btn-success" data-target="#confirmModal" data-toggle="modal">
 				<span id="runnerCountBadge" class="badge badge-pill bg-faded text-success">0</span>
 				Complete Run
 			</button>
+			</div>
 		</div>
 
 	</div>
+
+
+		<%-- Errors Alert Panel --%>
 
 	<spring:hasBindErrors name="eventCompletionFormObject">
 	<div class="form-group row">
@@ -171,54 +166,39 @@
 
 	const contextPath = $('#event-completion-script').attr('data-url');
 
-    const $runDateTimeSelect = $('#runDateTimeSelect');
-    const $metricRadioButtonGroup = $('#metricRadioButtonGroup');
-    const $completeButton = $('#completeButton');
-    const $runnerCountBadge = $('#runnerCountBadge');
-    const $distanceGroup = $('#distanceGroup');
-    const $distanceInput = $('#distanceInput');
+	const $runDateTimeSelect = $('#runDateTimeSelect');
+	const $metricSelection = $('#metricSelection');
+	const $completeButton = $('#completeButton');
+	const $runnerCountBadge = $('#runnerCountBadge');
+	const $distanceGroup = $('#distanceGroup');
+	const $distanceInput = $('#distanceInput');
 
 	var runnerCount = $('form input:checkbox:checked').length;
 	var runSelected = $runDateTimeSelect.find(':selected').length > 0;
-	var metricSelected = $('input[type=radio]:checked').length > 0;
 	var distanceEntered = $.isNumeric($distanceInput.val());
 
 	$(function () {
 		$runnerCountBadge.text(runnerCount);
-		$distanceGroup.toggleClass('has-danger', !distanceEntered);
-		$metricRadioButtonGroup.toggleClass('has-danger', !metricSelected);
+	  $distanceGroup.toggleClass('has-danger', !distanceEntered);
+	  updateCompleteButtonState();
+  });
 
-        updateCompleteButtonState();
-    });
+  $('form input:checkbox').on('click', function () {
+	  runnerCount += this.checked ? 1 : -1;
+	  $runnerCountBadge.text(runnerCount);
+	  updateCompleteButtonState();
+  });
 
-	$('input[type=radio]').change(function () {
-		metricSelected = true;
-		$metricRadioButtonGroup.removeClass('has-danger');
+  $distanceInput.on('keyup', function () {
+	  distanceEntered = $.isNumeric($(this).val());
+	  $distanceGroup.toggleClass('has-danger', !distanceEntered);
 
-        updateCompleteButtonState();
-    });
+	  updateCompleteButtonState();
+  });
 
-	$('form input:checkbox').on('click', function () {
-		runnerCount += this.checked ? 1 : -1;
-
-        $runnerCountBadge.text(runnerCount);
-        updateCompleteButtonState();
-    });
-
-
-
-    $distanceInput
-        .on('keyup', function (e) {
-            distanceEntered = $.isNumeric($(this).val());
-            $distanceGroup.toggleClass('has-danger', !distanceEntered);
-
-            updateCompleteButtonState();
-        })
-        ;
-
-	$('#confirmModal').on('show.bs.modal', function (e) {
+	$('#confirmModal').on('show.bs.modal', function () {
 		const distance = $distanceInput.val();
-		const metric = $('input[type=radio]:checked').val();
+		const metric = $metricSelection.find(':selected').text();
 		const dateTime = $runDateTimeSelect.find(':selected').text();
 
 		$('#confirmRunDateTime').text(dateTime);
@@ -227,7 +207,7 @@
 	});
 
 	function updateCompleteButtonState() {
-		const formIncomplete = !runSelected || runnerCount === 0 || !metricSelected || !distanceEntered;
+		const formIncomplete = !runSelected || runnerCount === 0 || !distanceEntered;
 		if (formIncomplete) {
 			$completeButton.attr('disabled', true);
 		}
@@ -239,6 +219,7 @@
 	function cancelEvent(url) {
 		window.location = contextPath + url + $runDateTimeSelect.find(':selected').val();
 	}
+
 </script>
 
 </html>
