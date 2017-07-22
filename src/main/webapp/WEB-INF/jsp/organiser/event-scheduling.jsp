@@ -40,40 +40,40 @@
 
 	<form:form cssClass="form-inline" modelAttribute="eventCreationFormObject" action="${createEventUrl}">
 
-		<div class="form-group mt-sm-2 mt-md-0">
-			<label class="col-form-label mr-sm-2" for="timePicker">Date & Time</label>
+		<div class="form-group">
+			<label class="col-form-label mr-2" for="timePicker">Date & Time</label>
 			<div class="row">
-				<div class="col-6 pr-0">
-					<form:input cssClass="form-control mr-0 pr-0" path="eventDate" type="text" id="datepicker" cssStyle="width: 100%"/>
-				</div>
-				<div class="col-3 px-0">
-					<form:select cssClass="form-control custom-select" path="eventHour" id="timePicker" cssStyle="width: 100%">
-						<form:option value="6" label="06"/>
-						<form:option value="7" label="07"/>
-						<form:option value="8" label="08"/>
-						<form:option value="9" label="09"/>
-						<form:option value="10"/>
-						<form:option value="11"/>
-						<form:option value="12"/>
-						<form:option value="13"/>
-						<form:option value="14"/>
-						<form:option value="15"/>
-						<form:option value="16"/>
-						<form:option value="17"/>
-						<form:option value="18"/>
-						<form:option value="19"/>
-						<form:option value="20"/>
-					</form:select>
-				</div>
-
-				<div class="col-3 pl-0">
-
-					<form:select cssClass="form-control custom-select mr-sm-2" path="eventMinutes" cssStyle="width: 100%">
-						<form:option value="0" label="00"/>
-						<form:option value="15"/>
-						<form:option value="30"/>
-						<form:option value="45"/>
-					</form:select>
+				<div class="col">
+					<div class="input-group p-0">
+						<form:input cssClass="form-control mr-0 pr-0" path="eventDate" type="text" id="datepicker"/>
+						<div class="input-group-addon p-0">
+							<form:select cssClass=" custom-select border-0" cssStyle="width: 100%; background-color: transparent" path="eventHour" id="timePicker">
+								<form:option value="6" label="06"/>
+								<form:option value="7" label="07"/>
+								<form:option value="8" label="08"/>
+								<form:option value="9" label="09"/>
+								<form:option value="10"/>
+								<form:option value="11"/>
+								<form:option value="12"/>
+								<form:option value="13"/>
+								<form:option value="14"/>
+								<form:option value="15"/>
+								<form:option value="16"/>
+								<form:option value="17"/>
+								<form:option value="18"/>
+								<form:option value="19"/>
+								<form:option value="20"/>
+							</form:select>
+						</div>
+						<div class="input-group-addon p-0">
+							<form:select cssClass=" custom-select border-0" path="eventMinutes" cssStyle="width: 100%; background-color: transparent">
+								<form:option value="0" label="00"/>
+								<form:option value="15"/>
+								<form:option value="30"/>
+								<form:option value="45"/>
+							</form:select>
+						</div>
+					</div>
 				</div>
 			</div>
 
@@ -84,8 +84,8 @@
 		<spring:hasBindErrors name="eventCreationFormObject">
 			<div class="form-group ml-0 ml-sm-2 mt-sm-2">
 				<div class="alert alert-danger">
-				<form:errors />
-				<form:errors path="eventDate" />
+					<form:errors/>
+					<form:errors path="eventDate"/>
 				</div>
 			</div>
 		</spring:hasBindErrors>
