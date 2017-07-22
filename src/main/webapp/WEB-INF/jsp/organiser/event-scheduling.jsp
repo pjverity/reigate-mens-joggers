@@ -21,9 +21,9 @@
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 	<script>
-      $(function () {
-          $("#datepicker").datepicker({dateFormat: "yy-mm-dd"});
-      });
+	  $(function () {
+		  $("#datepicker").datepicker({dateFormat: "yy-mm-dd"});
+	  });
 	</script>
 </head>
 
@@ -33,63 +33,69 @@
 
 <div class="container pt-3">
 
-	<div class="row">
-		<div class="col">
+	<c:url var="createEventUrl" value="/organiser/create-event"/>
 
-			<div class="card">
-				<h6 class="card-header">Create Run</h6>
-				<div class="card-block">
+	<h3><i class="fa fa-calendar-plus-o"></i> Run Creation</h3>
+	<hr/>
 
-					<c:url var="createEventUrl" value="/organiser/create-event"/>
+	<form:form cssClass="form-inline" modelAttribute="eventCreationFormObject" action="${createEventUrl}">
 
-					<form:form cssClass="form-inline" modelAttribute="eventCreationFormObject" action="${createEventUrl}">
+		<div class="form-group mt-sm-2 mt-md-0">
+			<label class="col-form-label mr-sm-2" for="timePicker">Date & Time</label>
+			<div class="row">
+				<div class="col-6 pr-0">
+					<form:input cssClass="form-control mr-0 pr-0" path="eventDate" type="text" id="datepicker" cssStyle="width: 100%"/>
+				</div>
+				<div class="col-3 px-0">
+					<form:select cssClass="form-control custom-select" path="eventHour" id="timePicker" cssStyle="width: 100%">
+						<form:option value="6" label="06"/>
+						<form:option value="7" label="07"/>
+						<form:option value="8" label="08"/>
+						<form:option value="9" label="09"/>
+						<form:option value="10"/>
+						<form:option value="11"/>
+						<form:option value="12"/>
+						<form:option value="13"/>
+						<form:option value="14"/>
+						<form:option value="15"/>
+						<form:option value="16"/>
+						<form:option value="17"/>
+						<form:option value="18"/>
+						<form:option value="19"/>
+						<form:option value="20"/>
+					</form:select>
+				</div>
 
-						<div class="form-group">
-							<label class="mr-sm-2" for="datepicker">Date</label>
-							<form:input cssClass="form-control mr-sm-2" path="eventDate" type="text" id="datepicker" cssStyle="width: 9em; display: inline-block"/>
-						</div>
+				<div class="col-3 pl-0">
 
-						<div class="form-group">
-							<label class="mr-sm-2" for="timePicker">Time</label>
-							<form:select cssClass="custom-select" path="eventHour" id="timePicker" cssStyle="width: 4em; display: inline-block">
-								<form:option value="6" label="06"/>
-								<form:option value="7" label="07"/>
-								<form:option value="8" label="08"/>
-								<form:option value="9" label="09"/>
-								<form:option value="10"/>
-								<form:option value="11"/>
-								<form:option value="12"/>
-								<form:option value="13"/>
-								<form:option value="14"/>
-								<form:option value="15"/>
-								<form:option value="16"/>
-								<form:option value="17"/>
-								<form:option value="18"/>
-								<form:option value="19"/>
-								<form:option value="20"/>
-							</form:select>
-							:
-							<form:select cssClass="custom-select mr-sm-2" path="eventMinutes" cssStyle="width: 4em; display: inline-block">
-								<form:option value="0" label="00"/>
-								<form:option value="15"/>
-								<form:option value="30"/>
-								<form:option value="45"/>
-							</form:select>
-						</div>
-
-						<div class="form-group">
-							<button class="btn btn-primary ml-sm-2" type="submit">Create Run</button>
-						</div>
-						<spring:hasBindErrors name="eventCreationFormObject">
-					<div class="form-group ml-2">
-							<form:errors cssClass="text-danger"/>
-							<form:errors path="eventDate" cssClass="text-danger"/>
-					</div>
-						</spring:hasBindErrors>
-
-					</form:form>
+					<form:select cssClass="form-control custom-select mr-sm-2" path="eventMinutes" cssStyle="width: 100%">
+						<form:option value="0" label="00"/>
+						<form:option value="15"/>
+						<form:option value="30"/>
+						<form:option value="45"/>
+					</form:select>
 				</div>
 			</div>
+
+			<button class="btn btn-primary mt-2 mt-sm-0 ml-sm-1">Create Run</button>
+
+		</div>
+
+		<spring:hasBindErrors name="eventCreationFormObject">
+			<div class="form-group ml-0 ml-sm-2 mt-sm-2">
+				<div class="alert alert-danger">
+				<form:errors />
+				<form:errors path="eventDate" />
+				</div>
+			</div>
+		</spring:hasBindErrors>
+
+	</form:form>
+
+	<div class="row mt-5">
+		<div class="col">
+			<h3><i class="fa fa-calendar"></i> Runs</h3>
+			<hr/>
 		</div>
 	</div>
 
@@ -98,81 +104,81 @@
 
 		<%-- Upcoming Runs --%>
 
-		<div class="col">
+		<div class="col-12 col-md-6">
 			<div class="card">
-				<h6 class="card-header">Upcoming Runs</h6>
-					<c:url var="cancelEventUrl" value="/organiser/cancel-event"/>
-					<form:form modelAttribute="eventCancellationFormObject" action="${cancelEventUrl}">
+				<div class="card-header">Upcoming Runs</div>
+				<c:url var="cancelEventUrl" value="/organiser/cancel-event"/>
+				<form:form modelAttribute="eventCancellationFormObject" action="${cancelEventUrl}">
 
 
-						<%-- Upcoming Runs Table--%>
+					<%-- Upcoming Runs Table--%>
 
-						<table class="table table-sm">
-							<thead>
+					<table class="table table-sm">
+						<thead>
+						<tr>
+							<th>Date</th>
+							<th>Cancel</th>
+						</tr>
+						</thead>
+						<tbody>
+						<c:forEach var="event" items="${eventCancellationFormObject.events}" varStatus="vs">
 							<tr>
-								<th>Date</th>
-								<th>Cancel</th>
+								<td nowrap>
+									<c:choose>
+										<c:when test="${event.hasStarted()}">
+											<c:url var="eventCompletionUrl" value="/organiser/event-completion">
+												<c:param name="eventId" value="${event.id}"/>
+											</c:url>
+											<a href="${eventCompletionUrl}">${event.eventDateTimeFullText}</a>
+										</c:when>
+										<c:otherwise>
+											${event.eventDateTimeFullText}
+										</c:otherwise>
+									</c:choose>
+								</td>
+								<td nowrap>
+									<form:checkbox path="events[${vs.index}].cancelled"/>
+								</td>
 							</tr>
-							</thead>
-							<tbody>
-							<c:forEach var="event" items="${eventCancellationFormObject.events}" varStatus="vs">
-								<tr>
-									<td nowrap>
-										<c:choose>
-											<c:when test="${event.hasStarted()}">
-												<c:url var="eventCompletionUrl" value="/organiser/event-completion">
-													<c:param name="eventId" value="${event.id}"/>
-												</c:url>
-												<a href="${eventCompletionUrl}">${event.eventDateTimeFullText}</a>
-											</c:when>
-											<c:otherwise>
-												${event.eventDateTimeFullText}
-											</c:otherwise>
-										</c:choose>
-									</td>
-									<td nowrap>
-										<form:checkbox path="events[${vs.index}].cancelled"/>
-									</td>
-								</tr>
-							</c:forEach>
-							</tbody>
-						</table>
+						</c:forEach>
+						</tbody>
+					</table>
 
 
-						<%-- Cancel Event Button --%>
+					<%-- Cancel Event Button --%>
 
-						<button type="button" id="cancelEventButton" class="btn btn-danger m-2" disabled data-target="#confirmModal" data-toggle="modal">Cancel Selected Runs</button>
+					<button type="button" id="cancelEventButton" class="btn btn-danger m-2" disabled data-target="#confirmModal" data-toggle="modal">Cancel Selected Runs</button>
 
 
-						<%-- Cancellation Confirmation Dialog --%>
+					<%-- Cancellation Confirmation Dialog --%>
 
-						<div id="confirmModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static">
-							<div class="modal-dialog" role="document">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h4 class="modal-title">Confirm Cancellation</h4>
-									</div>
-									<div class="modal-body">
-										<spring:message code="ui.event-scheduling.CreateEvent"/>
-									</div>
-									<div class="modal-footer">
-										<form:button type="button" class="btn btn-default" data-dismiss="modal">Cancel</form:button>
-										<form:button type="submit" class="btn btn-primary">Confirm</form:button>
-									</div>
+					<div id="confirmModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h4 class="modal-title">Confirm Cancellation</h4>
+								</div>
+								<div class="modal-body">
+									<spring:message code="ui.event-scheduling.CreateEvent"/>
+								</div>
+								<div class="modal-footer">
+									<form:button type="button" class="btn btn-default" data-dismiss="modal">Cancel</form:button>
+									<form:button type="submit" class="btn btn-primary">Confirm</form:button>
 								</div>
 							</div>
 						</div>
+					</div>
 
-					</form:form>
+				</form:form>
 			</div>
 		</div>
 
 
 		<%-- Completed Runs --%>
 
-		<div class="col">
+		<div class="col-12 col-md-6 mt-2 mt-md-0">
 			<div class="card">
-				<h6 class="card-header">Completed Runs (10 Most Recent)</h6>
+				<div class="card-header">Completed Runs (10 Most Recent)</div>
 
 				<table class="table table-hover table-sm mb-0">
 					<thead>
@@ -208,6 +214,7 @@
 			</div>
 		</div>
 	</div>
+
 </div>
 
 <script id="event-scheduling-script" type="text/javascript" data-url="<c:url value='/'/>">
@@ -216,14 +223,14 @@
 
 	var selectedEventCount = $("form input:checkbox:checked").length;
 
-    $(function () {
-        updateCancelButton();
-    });
+	$(function () {
+		updateCancelButton();
+	});
 
-    $("form input:checkbox").on('click', function () {
-        selectedEventCount += this.checked ? 1 : -1;
-        updateCancelButton()
-    });
+	$("form input:checkbox").on('click', function () {
+		selectedEventCount += this.checked ? 1 : -1;
+		updateCancelButton()
+	});
 
 	$('#confirmModal').on('show.bs.modal', function (e) {
 		var count = 0;
@@ -240,15 +247,15 @@
 		window.location.href = contextPath + url;
 	}
 
-  function updateCancelButton() {
-	  if (selectedEventCount === 0) {
-		  $('#cancelEventButton').attr('disabled', true);
-	  }
-	  else {
-		  $('#cancelEventButton').removeAttr('disabled');
-	  }
+	function updateCancelButton() {
+		if (selectedEventCount === 0) {
+			$('#cancelEventButton').attr('disabled', true);
+		}
+		else {
+			$('#cancelEventButton').removeAttr('disabled');
+		}
 
-    }
+	}
 </script>
 
 </body>
