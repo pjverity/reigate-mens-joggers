@@ -66,7 +66,7 @@
 	<br/>
 
 	<div class="row justify-content-center">
-		<div class="card w-50 card-outline-info text-center">
+		<div class="card w-75 card-outline-info text-center">
 			<div class="card-header bg-info text-white">Next Run</div>
 			<div class="card-block">
 				<h4 class="card-title">${nextEvent}</h4>
@@ -79,7 +79,7 @@
 	<div class="container">
 
 		<div class="row">
-			<div class="col-sm-12">
+			<div class="col-12">
 				<p>This is a mixed ability session so if you are returning to running, trying running for the first time or wanting to increase your running there is something for
 					everyone.</p>
 				<p>It's a fun, friendly group where no one gets left behind. We will have a real variety of sessions from hills work, speed work, interval training and steady runs. We also
@@ -88,11 +88,11 @@
 		</div>
 
 		<div class="row">
-			<div class="col-6 col-sm-3">
+			<div class="col-12 col-sm-6 col-md-3">
 				<h3><i class="fa fa-calendar-o" style="color: cornflowerblue"></i> When?</h3>
 				<p>Every Tuesday 7.30pm - 8.30pm</p>
 			</div>
-			<div class="col-6 col-sm-3">
+			<div class="col-12 col-sm-6 col-md-3">
 				<h3><i class="fa fa-map-marker" style="color: cornflowerblue"></i> Where?</h3>
 				<address>
 					<strong><a href="https://goo.gl/maps/fTJHKQQqRVK2" target="_blank">St Bedes School</a></strong><br/>
@@ -101,12 +101,12 @@
 				</address>
 				<p>Our coach Richard will be waiting you. Please do come along!</p>
 			</div>
-			<div class="col-6 col-sm-3">
+			<div class="col-12 col-sm-6 col-md-3">
 				<h3><i class="fa fa-gbp" style="color: cornflowerblue"></i> How Much?</h3>
 				<p>First session <strong>FREE!</strong></p>
 				<p>Sessions following are £5 and can be bought in blocks of 10</p>
 			</div>
-			<div class="col-6 col-sm-3">
+			<div class="col-12 col-sm-6 col-md-3">
 				<h3><i class="fa fa-group" style="color: cornflowerblue"></i> Join!</h3>
 				<p><strong><a data-toggle="modal" data-target="#signupModal" style="cursor: pointer">Sign up</a></strong>
 					to keep updated as our site grows. We'll deliver information direct to your inbox as we

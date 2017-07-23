@@ -72,8 +72,8 @@
 				<c:if test="${not empty paramValues['error']}">
 					<span class="text-muted">(Login Failed)</span>
 				</c:if>
-				<input id="username" name="username" autocomplete="username" type="text" class="form-control mr-sm-2" placeholder="e-mail address"/>
-				<input id="password" name="password" autocomplete="current-password" type="password" class="form-control mr-sm-2" placeholder="password"/>
+				<input id="username" name="username" autocomplete="username" class="form-control mr-sm-2" placeholder="e-mail address"/>
+				<input id="password" name="password" autocomplete="current-password" type="password" class="form-control mt-1 mt-sm-0 mr-sm-2" placeholder="password"/>
 				<button type="button" class="btn btn-outline-success my-2 my-sm-0" onclick="login()">Login</button>
 				<security:csrfInput/>
 			</form>
