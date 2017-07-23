@@ -173,7 +173,7 @@
     });
 
     $(function () {
-	    Galleria.loadTheme(contextPath + '/galleria/themes/classic/galleria.classic.min.js');
+	    Galleria.loadTheme(contextPath + 'galleria/themes/classic/galleria.classic.min.js');
 	    var flickr = new Galleria.Flickr();
 	    flickr.setOptions({
 		    sort: 'date-posted-desc',
