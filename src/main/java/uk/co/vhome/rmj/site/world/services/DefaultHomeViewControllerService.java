@@ -5,6 +5,7 @@ import uk.co.vhome.rmj.entities.Event;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
 import uk.co.vhome.rmj.services.core.EventManagementService;
 import uk.co.vhome.rmj.services.core.UserAccountManagementService;
+import uk.co.vhome.rmj.services.flickr.FlickrService;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
@@ -17,11 +18,14 @@ public class DefaultHomeViewControllerService implements HomeViewControllerServi
 
 	private final EventManagementService eventManagementService;
 
+	private final FlickrService flickrService;
+
 	@Inject
-	public DefaultHomeViewControllerService(UserAccountManagementService userAccountManagementService, EventManagementService eventManagementService)
+	public DefaultHomeViewControllerService(UserAccountManagementService userAccountManagementService, EventManagementService eventManagementService, FlickrService flickrService)
 	{
 		this.userAccountManagementService = userAccountManagementService;
 		this.eventManagementService = eventManagementService;
+		this.flickrService = flickrService;
 	}
 
 	@Override
@@ -36,4 +40,9 @@ public class DefaultHomeViewControllerService implements HomeViewControllerServi
 		return userAccountManagementService.registerNewUser(username, firstName, lastName, password);
 	}
 
+	@Override
+	public String flickerGroupNsid()
+	{
+		return flickrService.getCurrentGroupNsid();
+	}
 }

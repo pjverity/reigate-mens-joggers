@@ -159,4 +159,11 @@ public class HomeViewController
 		pageModel.put("error", generalErrorMessage);
 		pageModel.put("fieldErrors", conciseFieldErrors);
 	}
+
+	@ModelAttribute("flickGroupNsid")
+	public String flickGroupNsid()
+	{
+		return homeViewControllerService.flickerGroupNsid();
+	}
+
 }

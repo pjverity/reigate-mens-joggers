@@ -14,4 +14,6 @@ public interface HomeViewControllerService
 
 	@Secured({Role.ANONYMOUS, RunAs.NEW_USER})
 	UserDetailsEntity registerNewUser(String username, String firstName, String lastName, String password);
+
+	String flickerGroupNsid();
 }

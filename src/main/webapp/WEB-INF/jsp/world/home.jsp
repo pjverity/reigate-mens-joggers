@@ -11,6 +11,19 @@
 
 <head>
 <%@include file="../head-common.jsp" %>
+
+	<script src="<c:url value='/galleria/galleria-1.5.7.min.js'/>"></script>
+	<script src="<c:url value='/galleria/plugins/flickr/galleria.flickr.min.js'/>"></script>
+
+	<style>
+		.galleria {
+			max-width: 700px;
+			height: 400px;
+			background: #000;
+			margin: auto;
+		}
+	</style>
+
 </head>
 
 <body>
@@ -125,30 +138,7 @@
 
 	<hr/>
 
-	<div class="container">
-
-<h1 class="text-center"><a href="<c:url value="/world/gallery"/>">Full Gallery</a></h1>
-
-<div id="gallery-carousel" class="carousel slide" data-ride="carousel">
-
-
-			<div class="carousel-inner" role="listbox">
-				<div class="carousel-item active">
-					<img class="d-block img-fluid" src="<c:url value="/images/gallery/1.jpeg"/>" alt="First slide">
-				</div>
-				<div class="carousel-item">
-					<img class="d-block img-fluid" src="<c:url value="/images/gallery/2.jpeg"/>" alt="Second slide">
-				</div>
-				<div class="carousel-item">
-					<img class="d-block img-fluid" src="<c:url value="/images/gallery/3.jpeg"/>" alt="Third slide">
-				</div>
-				<div class="carousel-item">
-					<img class="d-block img-fluid" src="<c:url value="/images/gallery/4.jpeg"/>" alt="Third slide">
-				</div>
-			</div>
-
-		</div>
-	</div>
+	<div class="galleria"></div>
 
 	<hr/>
 
@@ -169,8 +159,11 @@
 
 </body>
 
-<script type="text/javascript">
-    $('#acceptCookies').on('click', function () {
+<script id="home-script" type="text/javascript" data-url="<c:url value='/'/>">
+
+	const contextPath = $('#home-script').attr('data-url');
+
+	$('#acceptCookies').on('click', function () {
         console.log("Accept");
         var d = new Date();
         d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
@@ -178,6 +171,22 @@
         document.cookie = 'cookiesAccepted=true;' + expires;
         $('#cookieAlert').alert('close');
     });
+
+    $(function () {
+	    Galleria.loadTheme(contextPath + '/galleria/themes/classic/galleria.classic.min.js');
+	    var flickr = new Galleria.Flickr();
+	    flickr.setOptions({
+		    sort: 'date-posted-desc',
+		    max: 20,
+		    thumbSize: 'medium'
+	    }).group('${flickGroupNsid}', function (data) {
+		    Galleria.run('.galleria', {
+			    dataSource: data
+		    });
+	    });
+
+    });
+
 </script>
 
 </html>

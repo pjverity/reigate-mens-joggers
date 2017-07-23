@@ -36,11 +36,13 @@ public class ServletContextConfiguration extends WebMvcConfigurerAdapter
 	 * the resource from the filesystem rather than from the contents of the web app.
 	 */
 	public static final String[] ADDITIONAL_RESOURCE_MATCHERS = {"/css/**",
+	                                                             "/galleria/**",
 	                                                             "/images/**",
 	                                                             "/js/**",
 	                                                             "/sitemap.xml"};
 
 	private static final String[] ADDITIONAL_RESOURCE_LOCATIONS = {"/css/",
+	                                                               "/galleria/",
 	                                                               "/images/",
 	                                                               "/js/",
 	                                                               "/"};
