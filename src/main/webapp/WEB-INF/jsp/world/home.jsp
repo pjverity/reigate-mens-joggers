@@ -108,7 +108,7 @@
 			</div>
 			<div class="col-12 col-sm-6 col-md-3">
 				<h3><i class="fa fa-group" style="color: cornflowerblue"></i> Join!</h3>
-				<p><strong><a data-toggle="modal" data-target="#signupModal" style="cursor: pointer">Sign up</a></strong>
+				<p><strong><a href="" data-toggle="modal" data-target="#signupModal">Sign up</a></strong>
 					to keep updated as our site grows. We'll deliver information direct to your inbox as we
 					add more content.
 				</p>

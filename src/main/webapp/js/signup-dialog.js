@@ -69,7 +69,7 @@ function renderFieldErrors(error, fieldErrors) {
     _.forEach(fieldErrors, function (fieldError) {
         const fieldId = '#' + fieldError.field;
         const $invalidInput = $signupForm.find(fieldId);
-        $invalidInput.parent('.form-group').addClass("has-error");
+        $invalidInput.parent('.form-group').addClass("has-danger");
 
         const errorsNodeId = fieldId + '\\.errors';
         const $errorMessages = $(errorsNodeId);
@@ -85,31 +85,31 @@ function resetErrors() {
     // Remove all error messages
     var $element = $('#firstName\\.errors');
     $element.children().remove();
-    $element.parent().removeClass('has-error');
+    $element.parent().removeClass('has-danger');
 
     $element = $('#lastName\\.errors');
     $element.children().remove();
-    $element.parent().removeClass('has-error');
+    $element.parent().removeClass('has-danger');
 
     $element = $('#emailAddress\\.errors');
     $element.children().remove();
-    $element.parent().removeClass('has-error');
+    $element.parent().removeClass('has-danger');
 
     $element = $('#confirmEmailAddress\\.errors');
     $element.children().remove();
-    $element.parent().removeClass('has-error');
+    $element.parent().removeClass('has-danger');
 
     $element = $('#password\\.errors');
     $element.children().remove();
-    $element.parent().removeClass('has-error');
+    $element.parent().removeClass('has-danger');
 
     $element = $('#reenteredPassword\\.errors');
     $element.children().remove();
-    $element.parent().removeClass('has-error');
+    $element.parent().removeClass('has-danger');
 
     $element = $('#reCaptchaResponse\\.errors');
     $element.children().remove();
-    $element.parent().removeClass('has-error');
+    $element.parent().removeClass('has-danger');
 }
 
 function resetForm() {
@@ -135,7 +135,7 @@ var onloadCallback = function () {
             $('#reCaptchaResponse').val(gRecaptchaResponse);
             const $reCaptchaResponse = $('#reCaptchaResponse\\.errors');
             $reCaptchaResponse.children().remove();
-            $reCaptchaResponse.parent().removeClass('has-error');
+            $reCaptchaResponse.parent().removeClass('has-danger');
         }
     });
 };
