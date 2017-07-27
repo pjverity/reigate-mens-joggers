@@ -42,7 +42,7 @@
 	<form id="groupSelectionForm" class="form" method="post">
 
 		<div id="groupSelectionGroup" class="form-group">
-			<label class="control-label" for="groupSelection">Groups <br/><small id="selectedGroupStatic" class="text-muted">${groupName}&nbsp;(${nsid})</small></label>
+			<label class="control-label" for="groupSelection">Search Results <br/><small class="text-muted">Currently Selected Group: <span id="selectedGroupStatic">${groupName}&nbsp;(${nsid})</span></small></label>
 			<select id="groupSelection" class="form-control" size="10">
 			</select>
 			<small class="form-control-feedback">&nbsp;</small>
