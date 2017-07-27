@@ -20,5 +20,5 @@ public interface FlickrService
 	GroupsResponse groupsSearch(String searchText);
 
 	@Secured({Role.ADMIN})
-	void saveCurrentGroup(String name, String nsid);
+	boolean saveCurrentGroup(String name, String nsid);
 }

@@ -1,5 +1,7 @@
 package uk.co.vhome.rmj.site.admin;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import uk.co.vhome.rmj.services.flickr.FlickrService;
@@ -13,6 +15,8 @@ import java.util.stream.Collectors;
 @Controller
 public class SiteManagementViewController
 {
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	private final FlickrService flickrService;
 
 	@Inject
@@ -40,15 +44,26 @@ public class SiteManagementViewController
 
 	@PostMapping(value = "/admin/flickr/saveGroupNsid")
 	@ResponseBody
-	public void setGroupId(@RequestParam("groupName") String groupName, @RequestParam("groupId") String groupId)
+	public boolean saveSelectedFlickrGroup(@RequestParam("groupName") String groupName, @RequestParam("groupId") String groupId)
 	{
-		flickrService.saveCurrentGroup(groupName, groupId);
+		if (groupName.isEmpty() || groupId.isEmpty())
+		{
+			LOGGER.warn("Failed to save incomplete group information. groupName: {}, groupId: {}", groupName, groupId);
+			return false;
+		}
+
+		return flickrService.saveCurrentGroup(groupName, groupId);
 	}
 
 	@GetMapping("/admin/flickr/searchGroups")
 	@ResponseBody
 	public Map<String, String> flickerGroupsSearch(@RequestParam("searchText") String searchText)
 	{
+		if ( searchText.isEmpty() )
+		{
+			return Collections.emptyMap();
+		}
+
 		GroupsResponse groupsResponse = flickrService.groupsSearch(searchText);
 
 		if (groupsResponse == null)

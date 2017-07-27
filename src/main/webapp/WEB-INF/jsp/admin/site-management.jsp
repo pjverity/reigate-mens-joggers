@@ -18,53 +18,42 @@
 
 <div class="container mt-3">
 
-	<form>
+	<form class="form mb-2">
 
-		<div class="form-group row">
-			<div class="col">
-				<label class="col-form-label" for="selectedGroup">Selected Group</label>
-				<div class="form-control-static" id="selectedGroup">
-					<a id="selectedGroupHref" href="<c:url value="/world/gallery"/>">${groupName}&nbsp;(${nsid})</a>
-				</div>
+
+		<%-- Search box --%>
+
+		<div id="search-form-group" class="form-group">
+			<div class="input-group">
+				<div class="input-group-addon"><i class="fa fa-fw fa-search"></i> </div>
+				<input id="groupName" class="form-control" placeholder="Search Flickr Groups...">
+				<span class="input-group-btn">
+					<button class="btn btn-secondary" onclick="searchFlickrGroups()" type="button">Search</button>
+				</span>
 			</div>
+			<small class="form-control-feedback">&nbsp;</small>
 		</div>
 
-		<div class="form-group row">
-			<div class="col">
-
-				<div class="input-group">
-					<input id="groupName" type="text" class="form-control" placeholder="Search Flickr Groups...">
-					<span class="input-group-btn">
-            <button class="btn btn-secondary" onclick="searchFlickrGroups()" type="button">Search</button>
-          </span>
-				</div>
-
-			</div>
-		</div>
 	</form>
 
-	<form id="testForm" class="form" method="post">
-		<div class=" row">
-			<div class="col">
 
-				<div class="form-group">
-					<label class="control-label" for="groupSelection">Groups</label>
-					<select id="groupSelection" class="form-control" size="10">
-					</select>
-				</div>
+	<%-- Search results --%>
 
-				<input id="formGroupName" type="hidden" name="groupName" value="">
-				<input id="formGroupId" type="hidden" name="groupId" value="">
+	<form id="groupSelectionForm" class="form" method="post">
 
-				<security:csrfInput/>
-			</div>
+		<div id="groupSelectionGroup" class="form-group">
+			<label class="control-label" for="groupSelection">Groups <br/><small id="selectedGroupStatic" class="text-muted">${groupName}&nbsp;(${nsid})</small></label>
+			<select id="groupSelection" class="form-control" size="10">
+			</select>
+			<small class="form-control-feedback">&nbsp;</small>
 		</div>
-		<div class=" row justify-content-end">
-			<div class="col-11"></div>
-			<div class="col-1">
-				<button type="button" class="btn btn-primary btn-block" onclick="saveGroupNsid()">Set</button>
-			</div>
-		</div>
+
+		<input id="formGroupName" type="hidden" name="groupName" value="">
+		<input id="formGroupId" type="hidden" name="groupId" value="">
+
+		<security:csrfInput/>
+
+		<button type="button" class="btn btn-primary" onclick="saveGroupNsid()">Set</button>
 	</form>
 
 </div>
@@ -75,36 +64,107 @@
 
 	const contextPath = $('#site-management-script').attr('data-url');
 
+	const saveGroupUrl = contextPath + "admin/flickr/saveGroupNsid";
+	const searchUrl = contextPath + "admin/flickr/searchGroups";
+
+	const $searchFormGroup = $('#search-form-group');
+	const $searchFeedback = $searchFormGroup.find('.form-control-feedback');
+
+	const $groupSelectionGroup = $('#groupSelectionGroup');
+	const $groupSelectionFeedback = $groupSelectionGroup.find('.form-control-feedback');
+
+	const $groupSelection = $('#groupSelection');
+
 	function searchFlickrGroups() {
-	  const groupName = $('#groupName').val();
 
-	  $.getJSON(contextPath + "admin/flickr/searchGroups", {searchText: groupName})
-		  .done(function (groups) {
-			  console.log(groups);
-			  $('#groupSelection').find('> option').remove();
-			  _.forOwn(groups, function (value, key) {
-				  console.log(key, value);
-				  $('#groupSelection').append('<option value="' + value + '">' + key + '</option>')
+		clearFormFeedback();
 
-			  });
-		  })
-		  .fail(function () {
-			  console.log("error");
-		  });
+		const groupName = $('#groupName').val();
+
+		startSearchSpinner();
+
+		$.getJSON(searchUrl, {searchText: groupName})
+			.done(function (groups) {
+
+				// Remove all previous options
+				$groupSelection.find('> option').remove();
+
+				// Add all new options
+				_.forOwn(groups, function (value, key) {
+					$groupSelection.append('<option value="' + value + '">' + key + '</option>')
+				});
+
+				setSearchSuccessMessage('Found ' + _.keys(groups).length + ' groups');
+
+			})
+			.fail(function (jqxhr, textStatus, error) {
+				setSearchErrorMessage(error);
+			})
+		.always(function () {
+			stopSearchSpinner();
+		});
 	}
 
-  function saveGroupNsid() {
-		const $groupSelection = $('#groupSelection');
+	function saveGroupNsid() {
 
-	  const selectedGroupNsid = $groupSelection.find(':selected').val();
-	  const selectedGroupName = $groupSelection.find(':selected').text();
+		clearFormFeedback();
 
-	  $('#formGroupName').val(selectedGroupName);
-	  $('#formGroupId').val(selectedGroupNsid);
-	  var jqxhr = $.post(contextPath + "admin/flickr/saveGroupNsid", $("#testForm").serialize(), function () {
-		  $('#selectedGroupHref').text(selectedGroupName + ' (' + selectedGroupNsid + ')');
-	  });
+		const selectedGroupNsid = $groupSelection.find(':selected').val();
+		const selectedGroupName = $groupSelection.find(':selected').text();
+
+		$('#formGroupName').val(selectedGroupName);
+		$('#formGroupId').val(selectedGroupNsid);
+
+		$.post(saveGroupUrl, $('#groupSelectionForm').serialize())
+			.done(function (response) {
+				if (response === true) {
+					$('#selectedGroupStatic').text(selectedGroupName + ' (' + selectedGroupNsid + ')');
+				}
+				else {
+					setUpdatedErrorMessage('Failed to update group information');
+				}
+			})
+			.fail(function (jqxhr, textStatus, error) {
+				setUpdatedErrorMessage(error);
+			});
+
+	}
+
+	function startSearchSpinner() {
+	  $searchFormGroup.find('.input-group-addon i').removeClass('fa-search');
+	  $searchFormGroup.find('.input-group-addon i').addClass('fa-spin fa-circle-o-notch');
+	  $searchFormGroup.find('.btn').addClass('disabled');
   }
+
+  function stopSearchSpinner() {
+	  $searchFormGroup.find('.btn').removeClass('disabled');
+	  $searchFormGroup.find('.input-group-addon i').removeClass('fa-spin fa-circle-o-notch');
+	  $searchFormGroup.find('.input-group-addon i').addClass('fa-search');
+  }
+
+	function clearFormFeedback() {
+		$searchFormGroup.toggleClass('has-danger has-success', false);
+		$groupSelectionGroup.toggleClass('has-danger has-success', false);
+
+		$searchFeedback.text('\xa0');
+		$groupSelectionFeedback.text('\xa0');
+	}
+
+	function setSearchSuccessMessage(message) {
+		$searchFormGroup.toggleClass('has-success', true);
+		$searchFeedback.text(message);
+	}
+
+	function setSearchErrorMessage(message) {
+		$searchFormGroup.toggleClass('has-danger', true);
+		$searchFeedback.text(message);
+	}
+
+	function setUpdatedErrorMessage(message) {
+		$groupSelectionGroup.toggleClass('has-danger', true);
+		$groupSelectionFeedback.text(message);
+	}
+
 
 </script>
 

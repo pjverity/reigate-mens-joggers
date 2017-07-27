@@ -1,5 +1,8 @@
 package uk.co.vhome.rmj.services.flickr;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +17,8 @@ import javax.sql.DataSource;
 @Service
 public class DefaultFlickrService implements FlickrService
 {
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	private static final String SQL_SELECT_GROUP_NAME = "SELECT value from site_settings WHERE name = 'FLICKR_GROUP_NAME'";
 
 	private static final String SQL_SELECT_GROUP_NSID = "SELECT value from site_settings WHERE name = 'FLICKR_GROUP_NSID'";
@@ -21,6 +26,10 @@ public class DefaultFlickrService implements FlickrService
 	private static final String SQL_UPDATE_GROUP_NAME = "UPDATE site_settings SET value = ? WHERE name = 'FLICKR_GROUP_NAME'";
 
 	private static final String SQL_UPDATE_GROUP_NSID = "UPDATE site_settings SET value = ? WHERE name = 'FLICKR_GROUP_NSID'";
+
+	private static final String SQL_INSERT_GROUP_NAME = "INSERT INTO site_settings VALUES(DEFAULT, 'FLICKR_GROUP_NAME', ?)";
+
+	private static final String SQL_INSERT_GROUP_NSID = "INSERT INTO site_settings VALUES(DEFAULT, 'FLICKR_GROUP_NSID', ?)";
 
 	private final FlickrApi flickrApi;
 
@@ -48,21 +57,54 @@ public class DefaultFlickrService implements FlickrService
 	@Override
 	public String getCurrentGroupNsid()
 	{
-		return jdbcTemplate.queryForObject(SQL_SELECT_GROUP_NSID, String.class);
+		try
+		{
+			return jdbcTemplate.queryForObject(SQL_SELECT_GROUP_NSID, String.class);
+		}
+		catch (IncorrectResultSizeDataAccessException e)
+		{
+			LOGGER.error("Failed to retrieve groupNsid", e.getMessage());
+			return "?";
+		}
 	}
 
 	@Override
 	public String getCurrentGroupName()
 	{
-		return jdbcTemplate.queryForObject(SQL_SELECT_GROUP_NAME, String.class);
+		try
+		{
+			return jdbcTemplate.queryForObject(SQL_SELECT_GROUP_NAME, String.class);
+		}
+		catch (IncorrectResultSizeDataAccessException e)
+		{
+			LOGGER.error("Failed to retrieve groupName", e.getMessage());
+			return "Not Found";
+		}
 	}
 
 	@Override
 	@Transactional
-	public void saveCurrentGroup(String groupName, String groupNsid)
+	public boolean saveCurrentGroup(String groupName, String groupNsid)
 	{
-		jdbcTemplate.update(SQL_UPDATE_GROUP_NAME, groupName);
-		jdbcTemplate.update(SQL_UPDATE_GROUP_NSID, groupNsid);
+		if (jdbcTemplate.update(SQL_UPDATE_GROUP_NAME, groupName) == 0)
+		{
+			if ( jdbcTemplate.update(SQL_INSERT_GROUP_NAME, groupName) == 0 )
+			{
+				LOGGER.error("Failed to update groupName");
+				return false;
+			}
+		}
+
+		if ( jdbcTemplate.update(SQL_UPDATE_GROUP_NSID, groupNsid) == 0 )
+		{
+			if ( jdbcTemplate.update(SQL_INSERT_GROUP_NSID, groupNsid) == 0 )
+			{
+				LOGGER.error("Failed to update groupNsid");
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 }
