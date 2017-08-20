@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>uk.co.vhome</groupId>
-	<artifactId>rmj</artifactId>
+	<artifactId>reigate-mens-joggers</artifactId>
 	<packaging>war</packaging>
 	<version>0.3.0-SNAPSHOT</version>
 
@@ -330,7 +330,7 @@
 					<!-- Check /etc/hosts if accessing via VPN -->
 					<url>http://server.local:${tomcat.port}/manager/text</url>
 					<server>TomcatServer</server>
-					<path>/${project.artifactId}</path>
+					<path>/rmj</path>
 				</configuration>
 			</plugin>
 
