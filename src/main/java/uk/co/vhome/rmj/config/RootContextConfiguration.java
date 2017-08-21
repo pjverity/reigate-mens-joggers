@@ -83,6 +83,7 @@ public class RootContextConfiguration
 		return (InitialSiteUser) simpleJndiBeanFactory.getBean("InitialSiteUser");
 	}
 
+/*
 	@Bean
 	public JavaMailSender javaMailSender()
 	{
@@ -95,6 +96,7 @@ public class RootContextConfiguration
 
 		return javaMailSender;
 	}
+*/
 
 	// Configure the persistence unit (Which manages our entities and configures the JPA implementation
 	// (Hibernate O/RM being the chosen JPA implementation) (p604)

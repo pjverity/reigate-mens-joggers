@@ -5,17 +5,15 @@ import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import uk.co.vhome.clubbed.core.services.EMailService;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
 import uk.co.vhome.rmj.notifications.BalanceUpdatedNotification;
 import uk.co.vhome.rmj.notifications.LowBalanceNotification;
 import uk.co.vhome.rmj.notifications.NewUserNotification;
 
 import javax.inject.Inject;
-import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -44,14 +42,14 @@ public class MailNotifier implements Notifier
 
 	private static final String FROM_NAME = "Reigate Mens Joggers";
 
-	private final JavaMailSender javaMailSender;
+	private final EMailService eMailService;
 
 	private final Configuration freemarkerConfiguration;
 
 	@Inject
-	public MailNotifier(JavaMailSender javaMailSender, Configuration freemarkerConfiguration)
+	public MailNotifier(EMailService eMailService, Configuration freemarkerConfiguration)
 	{
-		this.javaMailSender = javaMailSender;
+		this.eMailService = eMailService;
 		this.freemarkerConfiguration = freemarkerConfiguration;
 	}
 
@@ -142,24 +140,22 @@ public class MailNotifier implements Notifier
 	{
 		try
 		{
-			javaMailSender.send(mimeMessage ->
-			                    {
-				                    MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-				                    message.setFrom(new InternetAddress(FROM_ADDRESS, FROM_NAME));
-				                    userDetailEntities.forEach(details ->
-				                                               {
-					                                               try
-					                                               {
-						                                               message.addTo(details.getUsername(), String.join(" ", details.getFirstName(), details.getLastName()));
-					                                               }
-					                                               catch (MessagingException | UnsupportedEncodingException e)
-					                                               {
-						                                               LOGGER.error("Failed to add recipient", e);
-					                                               }
-				                                               });
-				                    message.setSubject(subject);
-				                    message.setText(messageContent, true);
-			                    });
+			eMailService.send(userDetailEntities.stream()
+					                  .map(details -> {
+						                       try
+						                       {
+							                       return new InternetAddress(details.getUsername(), String.join(" ", details.getFirstName(), details.getLastName()));
+						                       }
+						                       catch (UnsupportedEncodingException e)
+						                       {
+							                       LOGGER.error("Failed to generate InternetAddress from: " + details, e);
+						                       }
+						                       return null;
+					                       }),
+					                       FROM_ADDRESS,
+					                       FROM_NAME,
+					                       subject,
+					                       messageContent);
 		}
 		catch (MailException e)
 		{
