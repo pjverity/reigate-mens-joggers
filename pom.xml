@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -9,11 +10,11 @@
 
 	<name>Reigate Mens Joggers</name>
 
-	<url>https://github.com/pjverity/${artifactId}/wiki</url>
+	<url>https://github.com/pjverity/${project.artifactId}</url>
 
 	<scm>
-		<connection>scm:git:https://github.com/pjverity/reigate-mens-joggers.git</connection>
-		<developerConnection>scm:git:https://github.com/pjverity/reigate-mens-joggers.git</developerConnection>
+		<connection>scm:git:https://github.com/pjverity/${project.artifactId}.git</connection>
+		<developerConnection>scm:git:https://github.com/pjverity/${project.artifactId}.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
@@ -49,51 +50,51 @@
 		</profile>
 	</profiles>
 
-		<dependencyManagement>
-			<dependencies>
-				<dependency>
-					<groupId>uk.co.vhome.clubbed</groupId>
-					<artifactId>clubbed-bom</artifactId>
-					<version>0.0.1-SNAPSHOT</version>
-					<type>pom</type>
-					<scope>import</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.springframework</groupId>
-					<artifactId>spring-framework-bom</artifactId>
-					<version>4.3.10.RELEASE</version>
-					<scope>import</scope>
-					<type>pom</type>
-				</dependency>
-				<dependency>
-					<groupId>org.springframework.data</groupId>
-					<artifactId>spring-data-releasetrain</artifactId>
-					<version>Ingalls-SR4</version>
-					<type>pom</type>
-					<scope>import</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.springframework.security</groupId>
-					<artifactId>spring-security-bom</artifactId>
-					<version>4.2.2.RELEASE</version>
-					<scope>import</scope>
-					<type>pom</type>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.logging.log4j</groupId>
-					<artifactId>log4j-bom</artifactId>
-					<version>2.6.2</version>
-					<scope>import</scope>
-					<type>pom</type>
-				</dependency>
-			</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>uk.co.vhome.clubbed</groupId>
+				<artifactId>clubbed-bom</artifactId>
+				<version>1.0.0-SNAPSHOT</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>4.3.10.RELEASE</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.data</groupId>
+				<artifactId>spring-data-releasetrain</artifactId>
+				<version>Ingalls-SR4</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-bom</artifactId>
+				<version>4.2.2.RELEASE</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-bom</artifactId>
+				<version>2.6.2</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
 	</dependencyManagement>
 
 	<dependencies>
 
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
-			<artifactId>clubbed-core</artifactId>
+			<artifactId>clubbed-mail</artifactId>
 		</dependency>
 
 		<!--
@@ -105,14 +106,6 @@
 			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
-
-<!--
-		<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>javax.inject</artifactId>
-			<version>1</version>
-		</dependency>
--->
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -222,13 +215,6 @@
 		</dependency>
 
 		<!-- Mail support -->
-<!--
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
-		</dependency>
--->
-
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
@@ -327,9 +313,6 @@
 		<finalName>rmj</finalName>
 		<plugins>
 
-			<!--
-				Java 8 is our minimum requirement
-			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
