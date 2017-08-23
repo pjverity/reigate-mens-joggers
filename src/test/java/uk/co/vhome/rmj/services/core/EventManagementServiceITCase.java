@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.services;
+package uk.co.vhome.rmj.services.core;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +10,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.co.vhome.rmj.IntegrationTestConfiguration;
 import uk.co.vhome.rmj.entities.Event;
+import uk.co.vhome.rmj.services.DefaultEventManagementService;
+import uk.co.vhome.rmj.services.EventManagementService;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;

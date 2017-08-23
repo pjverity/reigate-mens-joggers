@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.services;
+package uk.co.vhome.rmj.services.core;
 
 
 import org.junit.jupiter.api.BeforeEach;
@@ -7,6 +7,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.co.vhome.rmj.entities.Purchase;
 import uk.co.vhome.rmj.repositories.PurchaseRepository;
+import uk.co.vhome.rmj.services.DefaultTokenManagementService;
+import uk.co.vhome.rmj.services.NotificationService;
+import uk.co.vhome.rmj.services.UserAccountManagementService;
 
 import javax.persistence.EntityManager;
 

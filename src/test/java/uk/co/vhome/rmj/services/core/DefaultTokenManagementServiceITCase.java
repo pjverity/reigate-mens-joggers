@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.services;
+package uk.co.vhome.rmj.services.core;
 
 import org.junit.After;
 import org.junit.Before;
@@ -16,6 +16,10 @@ import uk.co.vhome.rmj.entities.MemberBalance;
 import uk.co.vhome.rmj.entities.Purchase;
 import uk.co.vhome.rmj.notifications.BalanceUpdatedNotification;
 import uk.co.vhome.rmj.notifications.LowBalanceNotification;
+import uk.co.vhome.rmj.services.DefaultTokenManagementService;
+import uk.co.vhome.rmj.services.NotificationService;
+import uk.co.vhome.rmj.services.TokenManagementService;
+import uk.co.vhome.rmj.services.UserAccountManagementService;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
