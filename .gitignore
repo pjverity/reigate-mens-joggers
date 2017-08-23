@@ -1,4 +1,4 @@
 .idea/
-rmj.iml
+*.iml
 target/
 Todo.txt
