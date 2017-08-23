@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -120,7 +121,11 @@ public class EventSchedulingViewController
 	EventCancellationFormObject eventCancellationFormObject()
 	{
 		EventCancellationFormObject eventCancellationFormObject = new EventCancellationFormObject();
-		eventCancellationFormObject.setEvents(eventManagementService.findAllIncompleteEvents());
+
+		List<Event> allIncompleteEvents = eventManagementService.findAllIncompleteEvents();
+		allIncompleteEvents.sort(Comparator.comparing(Event::getEventDateTime));
+		eventCancellationFormObject.setEvents(allIncompleteEvents);
+
 		return eventCancellationFormObject;
 	}
 }
