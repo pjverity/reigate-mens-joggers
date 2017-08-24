@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.services;
+package uk.co.vhome.rmj.services.core;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

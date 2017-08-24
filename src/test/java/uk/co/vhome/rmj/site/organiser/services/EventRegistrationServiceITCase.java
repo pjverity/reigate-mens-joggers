@@ -1,4 +1,4 @@
-package uk.co.vhome.rmj.services.controller;
+package uk.co.vhome.rmj.site.organiser.services;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +13,6 @@ import uk.co.vhome.rmj.services.core.DefaultEventManagementService;
 import uk.co.vhome.rmj.services.core.DefaultTokenManagementService;
 import uk.co.vhome.rmj.services.core.TokenManagementService;
 import uk.co.vhome.rmj.services.core.UserAccountManagementService;
-import uk.co.vhome.rmj.site.organiser.services.DefaultEventRegistrationService;
-import uk.co.vhome.rmj.site.organiser.services.EventRegistrationService;
 
 import javax.inject.Inject;
 import java.util.HashSet;
