@@ -15,10 +15,6 @@ import uk.co.vhome.rmj.entities.MemberBalance;
 import uk.co.vhome.rmj.entities.Purchase;
 import uk.co.vhome.rmj.notifications.BalanceUpdatedNotification;
 import uk.co.vhome.rmj.notifications.LowBalanceNotification;
-import uk.co.vhome.rmj.services.core.DefaultTokenManagementService;
-import uk.co.vhome.rmj.services.core.NotificationService;
-import uk.co.vhome.rmj.services.core.TokenManagementService;
-import uk.co.vhome.rmj.services.core.UserAccountManagementService;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;

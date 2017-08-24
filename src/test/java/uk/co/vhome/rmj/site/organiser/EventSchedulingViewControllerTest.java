@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -14,9 +13,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.BindingResultUtils;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
-import uk.co.vhome.rmj.services.EventManagementService;
+import uk.co.vhome.rmj.services.core.EventManagementService;
 import uk.co.vhome.rmj.site.ViewControllerTestConfiguration;
 
 import java.time.LocalDate;
@@ -33,9 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {ViewControllerTestConfiguration.class})
 public class EventSchedulingViewControllerTest
 {
-
-	@Autowired
-	private WebApplicationContext wac;
 
 	private MockMvc mockMvc;
 
