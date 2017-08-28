@@ -23,6 +23,9 @@
 	</prerequisites>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 
@@ -67,13 +70,6 @@
 				<type>pom</type>
 			</dependency>
 			<dependency>
-				<groupId>org.springframework.data</groupId>
-				<artifactId>spring-data-releasetrain</artifactId>
-				<version>Ingalls-SR4</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-bom</artifactId>
 				<version>4.2.2.RELEASE</version>
@@ -97,6 +93,25 @@
 			<artifactId>clubbed-mail</artifactId>
 		</dependency>
 
+		<!-- Depended on my clubbed-mail, but provided scoped dependencies are not transitive dependencies  -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.7</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>uk.co.vhome.clubbed</groupId>
+			<artifactId>clubbed-db</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>uk.co.vhome.clubbed</groupId>
+			<artifactId>clubbed-validation</artifactId>
+		</dependency>
+
+
 		<!--
 			Basic Servlet API that is provided by the Web container at runtime. The API is used to configure the Servlet at bootstrapping.
 		-->
@@ -107,68 +122,25 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- JSP Standard Template Library tags -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
 
-		<!-- Database migration tool -->
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
-			<version>4.2.0</version>
-		</dependency>
-
-		<!--
-			A JPA implementation used for persistence. JPA (Java Persistence API) is a standardised interface for O/RM providers.
-			EclipseLink is the reference implementation of the JPA (p550, p564) org.eclipse.persistence:javax.persistence.
-			However, Hibernate is supposedly more widely used, documented and supported (p552). If EclipseLink is preferred,
-			exclude Hibernate's hibernate-jpa-2.1-api transient dependency.
-		-->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<version>5.2.9.Final</version>
-		</dependency>
-
-		<!--
-			Use Springs ORM support to provide a layer of abstraction over the JPA implementation (Hibernate in this case)
-		-->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-		</dependency>
-
-		<!-- JSON serialisation for working with REST services (reCapture for example) -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.6.4</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-jpa</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>jcl-over-slf4j</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
 		<!--
 			Use Spring's MVC framework for developing the UI. It's Dispatcher Servlet takes care of routing requests
-			too appropriated annotated POJO's
+			too appropriated @Controller annotated POJO's
 		-->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 		</dependency>
 
+
 		<!--
-			Core Spring security frameworks for provide the authentication and authorisation services to the application
+			Core Spring security frameworks to provide the authentication and authorisation services to the application
 		-->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -190,22 +162,17 @@
 			<artifactId>spring-security-taglibs</artifactId>
 		</dependency>
 
+
+		<!-- JSON serialisation for working with REST services (reCapture for example) -->
 		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>1.1.0.Final</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.6.4</version>
 		</dependency>
 
-		<!-- Provides the implementation of the javax.validation spec -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>5.4.1.Final</version>
-			<!--<scope>runtime</scope>-->
-		</dependency>
 
 		<!-- This hooks in to the compiler and catches constraint violations at compile time p.457-->
-		<!-- Marked as optional as it isn't required at runtime -->
+		<!-- Marked as optional as it isn't required at runtime and we don't want it inherited -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator-annotation-processor</artifactId>
@@ -214,20 +181,6 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- Mail support -->
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.4.7</version>
-			<!--
-				The container loads this jar to instantiate a javax.mail.Session instance.
-				If the webapp was to place this jar on its classpath it would be loaded
-				by the webapps classloader and couldn't cast or assign a container instance to
-				webapp instance/declaration. To avoid this we use the classes loaded by the
-				containers classloader. The Session object is obtained via a JNDI lookup.
-			-->
-			<scope>provided</scope>
-		</dependency>
 
 		<!-- Templating engine, used for generation of HTML mail messages-->
 		<dependency>
@@ -235,6 +188,7 @@
 			<artifactId>freemarker</artifactId>
 			<version>2.3.23</version>
 		</dependency>
+
 
 		<!--
 			Boring logging stuff

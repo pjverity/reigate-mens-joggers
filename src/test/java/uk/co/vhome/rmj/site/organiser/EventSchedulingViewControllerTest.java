@@ -1,6 +1,7 @@
 package uk.co.vhome.rmj.site.organiser;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -50,9 +51,6 @@ public class EventSchedulingViewControllerTest
 	@Test
 	public void allowsCreationOfPastEvent() throws Exception
 	{
-		LocalDate eventDate = LocalDate.of(2017, 1, 1);
-		LocalTime eventTime = LocalTime.of(12, 30, 0);
-
 		MvcResult mvcResult = mockMvc.perform(post("/organiser/create-event")
 				                                      .param("eventDate", "2017-01-01")
 				                                      .param("eventHour", "12")
@@ -65,6 +63,9 @@ public class EventSchedulingViewControllerTest
 		BindingResult bindingResult = BindingResultUtils.getBindingResult(modelAndView.getModel(), "eventCreationFormObject");
 
 		assertEquals(bindingResult.hasErrors(), false);
+
+		LocalDate eventDate = LocalDate.of(2017, 1, 1);
+		LocalTime eventTime = LocalTime.of(12, 30, 0);
 
 		verify(mockEventManagementService).createNewEvent(LocalDateTime.of(eventDate, eventTime));
 	}
