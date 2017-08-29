@@ -4,19 +4,17 @@ import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.mail.MailException;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-import uk.co.vhome.clubbed.core.services.EMailService;
+import uk.co.vhome.clubbed.mail.builders.MessageBuilder;
+import uk.co.vhome.clubbed.mail.services.EMailService;
 import uk.co.vhome.rmj.entities.UserDetailsEntity;
 import uk.co.vhome.rmj.notifications.BalanceUpdatedNotification;
 import uk.co.vhome.rmj.notifications.LowBalanceNotification;
 import uk.co.vhome.rmj.notifications.NewUserNotification;
 
 import javax.inject.Inject;
-import javax.mail.internet.InternetAddress;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
@@ -133,33 +131,23 @@ public class MailNotifier implements Notifier
 			LOGGER.error("Failed to send registration confirmation mail", e);
 			throw new RuntimeException(e);
 		}
-
 	}
 
 	private void sendMail(Collection<UserDetailsEntity> userDetailEntities, String subject, String messageContent)
 	{
-		try
-		{
-			eMailService.send(userDetailEntities.stream()
-					                  .map(details -> {
-						                       try
-						                       {
-							                       return new InternetAddress(details.getUsername(), String.join(" ", details.getFirstName(), details.getLastName()));
-						                       }
-						                       catch (UnsupportedEncodingException e)
-						                       {
-							                       LOGGER.error("Failed to generate InternetAddress from: " + details, e);
-						                       }
-						                       return null;
-					                       }),
-					                       FROM_ADDRESS,
-					                       FROM_NAME,
-					                       subject,
-					                       messageContent);
-		}
-		catch (MailException e)
-		{
-			LOGGER.error("Failed to send mail notification", e);
-		}
+		MessageBuilder messageBuilder = new MessageBuilder();
+
+		messageBuilder.setFromAddress(FROM_ADDRESS, FROM_NAME)
+				.setSubject(subject)
+				.setMessage(messageContent);
+
+		userDetailEntities.forEach(details ->
+		                           {
+			                           String name = String.join(" ", details.getFirstName(), details.getLastName());
+			                           messageBuilder.addToAddress(details.getUsername(), name);
+		                           });
+
+		eMailService.send(messageBuilder);
 	}
+
 }

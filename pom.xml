@@ -93,14 +93,6 @@
 			<artifactId>clubbed-mail</artifactId>
 		</dependency>
 
-		<!-- Depended on my clubbed-mail, but provided scoped dependencies are not transitive dependencies  -->
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.4.7</version>
-			<scope>provided</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-db</artifactId>
