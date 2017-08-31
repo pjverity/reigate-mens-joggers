@@ -90,6 +90,21 @@
 
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
+			<artifactId>clubbed-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>uk.co.vhome.clubbed</groupId>
+			<artifactId>clubbed-notifications</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>uk.co.vhome.clubbed</groupId>
+			<artifactId>clubbed-domain-objects</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-mail</artifactId>
 		</dependency>
 
@@ -103,6 +118,22 @@
 			<artifactId>clubbed-validation</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>uk.co.vhome.clubbed</groupId>
+			<artifactId>clubbed-web-user-management</artifactId>
+			<type>war</type>
+		</dependency>
+
+		<!-- TODO: Move classes out of war in to a jar -->
+		<!-- Required to be able to compile, project depends on classes in that war -->
+		<!-- The servlet container will deploy the dependant war putting bit in the correct places -->
+		<dependency>
+			<groupId>uk.co.vhome.clubbed</groupId>
+			<artifactId>clubbed-web-user-management</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<type>jar</type>
+			<classifier>classes</classifier>
+		</dependency>
 
 		<!--
 			Basic Servlet API that is provided by the Web container at runtime. The API is used to configure the Servlet at bootstrapping.
@@ -114,13 +145,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- JSP Standard Template Library tags -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-		</dependency>
-
 		<!--
 			Use Spring's MVC framework for developing the UI. It's Dispatcher Servlet takes care of routing requests
 			too appropriated @Controller annotated POJO's
@@ -128,20 +152,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-		</dependency>
-
-
-		<!--
-			Core Spring security frameworks to provide the authentication and authorisation services to the application
-		-->
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
 		</dependency>
 
 		<dependency>
@@ -171,14 +181,6 @@
 			<version>5.2.2.Final</version>
 			<scope>compile</scope>
 			<optional>true</optional>
-		</dependency>
-
-
-		<!-- Templating engine, used for generation of HTML mail messages-->
-		<dependency>
-			<groupId>org.freemarker</groupId>
-			<artifactId>freemarker</artifactId>
-			<version>2.3.23</version>
 		</dependency>
 
 
@@ -331,6 +333,14 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.1.0</version>
+				<configuration>
+					<overlays>
+						<overlay>
+							<groupId>uk.co.vhome.clubbed</groupId>
+							<artifactId>clubbed-web-user-management</artifactId>
+						</overlay>
+					</overlays>
+				</configuration>
 			</plugin>
 
 			<plugin>

@@ -5,13 +5,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.jndi.support.SimpleJndiBeanFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.client.RestTemplate;
+import uk.co.vhome.clubbed.db.InitialSiteUser;
 
+import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +30,14 @@ public class RootContextConfiguration
 {
 
 	private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
+
+	// Configure our Datasource (ie, the connection to the Database) See p.602
+	@Bean
+	public DataSource dataSource()
+	{
+		JndiDataSourceLookup lookup = new JndiDataSourceLookup();
+		return lookup.getDataSource("jdbc/RMJ");
+	}
 
 	@Bean
 	public String recaptchaSecretKey()

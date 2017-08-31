@@ -1,6 +1,6 @@
 package uk.co.vhome.rmj;
 
-import uk.co.vhome.rmj.entities.UserDetailsEntity;
+import uk.co.vhome.clubbed.domainobjects.entities.UserDetailsEntity;
 
 public class UserConfigurations
 {

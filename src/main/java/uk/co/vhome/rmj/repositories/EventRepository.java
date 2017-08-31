@@ -1,7 +1,7 @@
 package uk.co.vhome.rmj.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import uk.co.vhome.rmj.entities.Event;
+import uk.co.vhome.clubbed.domainobjects.entities.Event;
 
 import java.time.LocalDateTime;
 import java.util.List;

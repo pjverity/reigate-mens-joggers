@@ -23,9 +23,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import uk.co.vhome.clubbed.domainobjects.entities.UserDetailsEntity;
+import uk.co.vhome.clubbed.security.Role;
+import uk.co.vhome.clubbed.web.repositories.UserDetailsRepository;
 import uk.co.vhome.rmj.config.ServletContextConfiguration;
-import uk.co.vhome.rmj.entities.UserDetailsEntity;
-import uk.co.vhome.rmj.repositories.UserDetailsRepository;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;

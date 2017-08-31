@@ -1,7 +1,7 @@
 package uk.co.vhome.rmj.services.flickr;
 
 import org.springframework.security.access.annotation.Secured;
-import uk.co.vhome.rmj.security.Role;
+import uk.co.vhome.clubbed.security.Role;
 
 /**
  * Basic Service used by Controllers to access Flickr images and info

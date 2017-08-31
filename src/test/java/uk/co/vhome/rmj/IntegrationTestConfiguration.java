@@ -13,8 +13,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
-import uk.co.vhome.rmj.services.core.NotificationService;
-import uk.co.vhome.rmj.services.core.UserAccountManagementService;
+import uk.co.vhome.clubbed.notifications.services.NotificationService;
+import uk.co.vhome.clubbed.web.services.UserAccountManagementService;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -27,7 +27,8 @@ import java.util.Properties;
 @Configuration
 @EnableJpaRepositories(
 		entityManagerFactoryRef = "testEntityManagerFactory",
-		transactionManagerRef = "testTransactionManager")
+		transactionManagerRef = "testTransactionManager",
+		basePackages = "uk.co.vhome")
 @EnableTransactionManagement
 public class IntegrationTestConfiguration
 {
@@ -51,7 +52,7 @@ public class IntegrationTestConfiguration
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 		factory.setJpaVendorAdapter(vendorAdapter);
 		factory.setJpaProperties(properties);
-		factory.setPackagesToScan("uk.co.vhome.rmj.entities");
+		factory.setPackagesToScan("uk.co.vhome");
 		factory.setDataSource(dataSource());
 
 		return factory;

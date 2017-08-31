@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import uk.co.vhome.clubbed.web.services.UserAccountManagementService;
 import uk.co.vhome.rmj.services.core.TokenManagementService;
-import uk.co.vhome.rmj.services.core.UserAccountManagementService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;

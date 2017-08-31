@@ -1,7 +1,7 @@
 package uk.co.vhome.rmj.site.organiser;
 
 import org.springframework.data.geo.Metrics;
-import uk.co.vhome.rmj.entities.Event;
+import uk.co.vhome.clubbed.domainobjects.entities.Event;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

@@ -7,12 +7,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import uk.co.vhome.clubbed.domainobjects.entities.Event;
+import uk.co.vhome.clubbed.web.services.UserAccountManagementService;
 import uk.co.vhome.rmj.IntegrationTestConfiguration;
-import uk.co.vhome.rmj.entities.Event;
 import uk.co.vhome.rmj.services.core.DefaultEventManagementService;
 import uk.co.vhome.rmj.services.core.DefaultTokenManagementService;
 import uk.co.vhome.rmj.services.core.TokenManagementService;
-import uk.co.vhome.rmj.services.core.UserAccountManagementService;
 
 import javax.inject.Inject;
 import java.util.HashSet;

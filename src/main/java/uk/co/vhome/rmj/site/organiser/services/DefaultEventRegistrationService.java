@@ -2,10 +2,10 @@ package uk.co.vhome.rmj.site.organiser.services;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uk.co.vhome.rmj.entities.Event;
+import uk.co.vhome.clubbed.domainobjects.entities.Event;
+import uk.co.vhome.clubbed.domainobjects.entities.UserDetailsEntity;
+import uk.co.vhome.clubbed.web.repositories.UserDetailsRepository;
 import uk.co.vhome.rmj.entities.MemberBalance;
-import uk.co.vhome.rmj.entities.UserDetailsEntity;
-import uk.co.vhome.rmj.repositories.UserDetailsRepository;
 import uk.co.vhome.rmj.services.core.EventManagementService;
 import uk.co.vhome.rmj.services.core.TokenManagementService;
 

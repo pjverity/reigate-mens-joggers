@@ -1,8 +1,8 @@
 package uk.co.vhome.rmj.services.core;
 
 import org.springframework.security.access.annotation.Secured;
-import uk.co.vhome.rmj.entities.Event;
-import uk.co.vhome.rmj.security.Role;
+import uk.co.vhome.clubbed.domainobjects.entities.Event;
+import uk.co.vhome.clubbed.security.Role;
 
 import java.time.LocalDateTime;
 import java.util.List;

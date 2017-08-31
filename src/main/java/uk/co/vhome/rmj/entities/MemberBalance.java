@@ -1,6 +1,6 @@
 package uk.co.vhome.rmj.entities;
 
-import uk.co.vhome.rmj.security.Group;
+import uk.co.vhome.clubbed.security.Group;
 
 import javax.persistence.*;
 import java.util.Objects;

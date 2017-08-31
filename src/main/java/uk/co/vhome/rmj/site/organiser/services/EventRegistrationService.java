@@ -1,6 +1,6 @@
 package uk.co.vhome.rmj.site.organiser.services;
 
-import uk.co.vhome.rmj.entities.Event;
+import uk.co.vhome.clubbed.domainobjects.entities.Event;
 import uk.co.vhome.rmj.entities.MemberBalance;
 
 import java.util.Collection;

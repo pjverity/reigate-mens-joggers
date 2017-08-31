@@ -5,11 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import uk.co.vhome.clubbed.notifications.services.NotificationService;
+import uk.co.vhome.clubbed.web.services.UserAccountManagementService;
 import uk.co.vhome.rmj.entities.Purchase;
 import uk.co.vhome.rmj.repositories.PurchaseRepository;
-import uk.co.vhome.rmj.services.core.DefaultTokenManagementService;
-import uk.co.vhome.rmj.services.core.NotificationService;
-import uk.co.vhome.rmj.services.core.UserAccountManagementService;
 
 import javax.persistence.EntityManager;
 

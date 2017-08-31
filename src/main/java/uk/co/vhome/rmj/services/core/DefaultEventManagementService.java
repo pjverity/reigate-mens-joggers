@@ -2,8 +2,8 @@ package uk.co.vhome.rmj.services.core;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uk.co.vhome.rmj.entities.Event;
-import uk.co.vhome.rmj.entities.EventInfo;
+import uk.co.vhome.clubbed.domainobjects.entities.Event;
+import uk.co.vhome.clubbed.domainobjects.entities.EventInfo;
 import uk.co.vhome.rmj.repositories.EventRepository;
 
 import javax.inject.Inject;

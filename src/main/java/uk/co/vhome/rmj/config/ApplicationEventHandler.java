@@ -5,8 +5,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
-import uk.co.vhome.rmj.security.AuthenticatedUser;
-import uk.co.vhome.rmj.services.core.UserAccountManagementService;
+import uk.co.vhome.clubbed.security.AuthenticatedUser;
+import uk.co.vhome.clubbed.web.services.UserAccountManagementService;
 
 import javax.inject.Inject;
 

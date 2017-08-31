@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import uk.co.vhome.rmj.entities.Event;
+import uk.co.vhome.clubbed.domainobjects.entities.Event;
 import uk.co.vhome.rmj.site.organiser.services.EventRegistrationService;
 
 import javax.inject.Inject;

@@ -9,9 +9,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import uk.co.vhome.clubbed.domainobjects.entities.Event;
+import uk.co.vhome.clubbed.domainobjects.entities.UserDetailsEntity;
 import uk.co.vhome.rmj.config.ServletContextConfiguration;
-import uk.co.vhome.rmj.entities.Event;
-import uk.co.vhome.rmj.entities.UserDetailsEntity;
 import uk.co.vhome.rmj.site.world.services.HomeViewControllerService;
 
 import javax.inject.Inject;
