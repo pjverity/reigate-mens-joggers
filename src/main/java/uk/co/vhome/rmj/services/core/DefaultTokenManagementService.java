@@ -4,14 +4,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import uk.co.vhome.clubbed.dataaccess.repositories.PurchaseRepository;
+import uk.co.vhome.clubbed.domainobjects.entities.MemberBalance;
+import uk.co.vhome.clubbed.domainobjects.entities.Purchase;
 import uk.co.vhome.clubbed.domainobjects.entities.UserDetailsEntity;
 import uk.co.vhome.clubbed.notifications.BalanceUpdatedNotification;
 import uk.co.vhome.clubbed.notifications.LowBalanceNotification;
 import uk.co.vhome.clubbed.notifications.services.NotificationService;
 import uk.co.vhome.clubbed.web.services.UserAccountManagementService;
-import uk.co.vhome.rmj.entities.MemberBalance;
-import uk.co.vhome.rmj.entities.Purchase;
-import uk.co.vhome.rmj.repositories.PurchaseRepository;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;

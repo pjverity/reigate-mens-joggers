@@ -1,6 +1,6 @@
 package uk.co.vhome.rmj.site.admin;
 
-import uk.co.vhome.rmj.entities.MemberBalance;
+import uk.co.vhome.clubbed.domainobjects.entities.MemberBalance;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

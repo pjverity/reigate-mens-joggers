@@ -5,7 +5,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import uk.co.vhome.rmj.entities.MemberBalance;
+import uk.co.vhome.clubbed.domainobjects.entities.MemberBalance;
 import uk.co.vhome.rmj.services.core.TokenManagementService;
 
 import javax.validation.Valid;

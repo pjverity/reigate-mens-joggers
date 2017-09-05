@@ -1,6 +1,6 @@
 package uk.co.vhome.rmj.site.organiser;
 
-import uk.co.vhome.rmj.entities.MemberBalance;
+import uk.co.vhome.clubbed.domainobjects.entities.MemberBalance;
 
 /**
  * Represents a row in the event registration table for registering the presence of a member

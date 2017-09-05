@@ -90,6 +90,11 @@
 
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
+			<artifactId>clubbed-data-access</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-security</artifactId>
 		</dependency>
 
@@ -110,18 +115,14 @@
 
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
-			<artifactId>clubbed-db</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-validation</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
-			<artifactId>clubbed-web-user-management</artifactId>
+			<artifactId>clubbed-web-common</artifactId>
 			<type>war</type>
+			<scope>runtime</scope>
 		</dependency>
 
 		<!-- TODO: Move classes out of war in to a jar -->
@@ -129,7 +130,7 @@
 		<!-- The servlet container will deploy the dependant war putting bit in the correct places -->
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
-			<artifactId>clubbed-web-user-management</artifactId>
+			<artifactId>clubbed-web-common</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<type>jar</type>
 			<classifier>classes</classifier>

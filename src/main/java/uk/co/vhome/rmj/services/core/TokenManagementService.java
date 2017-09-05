@@ -1,9 +1,9 @@
 package uk.co.vhome.rmj.services.core;
 
 import org.springframework.security.access.annotation.Secured;
+import uk.co.vhome.clubbed.domainobjects.entities.MemberBalance;
+import uk.co.vhome.clubbed.domainobjects.entities.Purchase;
 import uk.co.vhome.clubbed.security.Role;
-import uk.co.vhome.rmj.entities.MemberBalance;
-import uk.co.vhome.rmj.entities.Purchase;
 
 import javax.validation.constraints.Min;
 import java.util.List;
