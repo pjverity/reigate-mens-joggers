@@ -11,7 +11,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import uk.co.vhome.clubbed.domainobjects.entities.Event;
 import uk.co.vhome.clubbed.domainobjects.entities.UserDetailsEntity;
-import uk.co.vhome.rmj.config.ServletContextConfiguration;
 import uk.co.vhome.rmj.site.world.services.HomeViewControllerService;
 
 import javax.inject.Inject;
@@ -26,6 +25,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static uk.co.vhome.clubbed.security.SecurityConfiguration.*;
 
 /**
  * The sites home page that also provides user registration functions
@@ -127,9 +128,9 @@ public class HomeViewController
 			// setting the session variables here
 			httpServletRequest.login(userDetailsEntity.getUsername(), userRegistrationFormObject.getPassword());
 			HttpSession httpSession = httpServletRequest.getSession();
-			httpSession.setAttribute(ServletContextConfiguration.USER_ID_SESSION_ATTRIBUTE, userDetailsEntity.getId());
-			httpSession.setAttribute(ServletContextConfiguration.USER_FIRST_NAME_SESSION_ATTRIBUTE, userDetailsEntity.getFirstName());
-			httpSession.setAttribute(ServletContextConfiguration.USER_LAST_NAME_SESSION_ATTRIBUTE, userDetailsEntity.getLastName());
+			httpSession.setAttribute(USER_ID_SESSION_ATTRIBUTE, userDetailsEntity.getId());
+			httpSession.setAttribute(USER_FIRST_NAME_SESSION_ATTRIBUTE, userDetailsEntity.getFirstName());
+			httpSession.setAttribute(USER_LAST_NAME_SESSION_ATTRIBUTE, userDetailsEntity.getLastName());
 
 			populatePageModelForRegistration(model, true, null, null);
 		}

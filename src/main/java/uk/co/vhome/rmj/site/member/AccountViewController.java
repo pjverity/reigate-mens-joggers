@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import java.security.Principal;
 
-import static uk.co.vhome.rmj.config.ServletContextConfiguration.USER_ID_SESSION_ATTRIBUTE;
+import static uk.co.vhome.clubbed.security.SecurityConfiguration.USER_ID_SESSION_ATTRIBUTE;
 
 /**
  * Controller for maintaining user account details
