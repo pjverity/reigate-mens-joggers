@@ -58,7 +58,7 @@
 
 	<div class="row justify-content-center align-items-center">
 		<a href="https://www.facebook.com/ReigateMensJoggers" class="glyphicon fa fa-2x fa-facebook-official social-buttons" style="background-color: #3B5998;"></a>
-		<a href="mailto:anna@reigateladiesjoggers.co.uk (Anna),emma@reigateladiesjoggers.co.uk (Emma)?cc=administrator@reigatemensjoggers.co.uk (RMJ Admin)&subject=RMJ%20Enquiry"
+		<a href="mailto:admin@reigatemensjoggers.co.uk (Reigate Mens Joggers)&subject=RMJ%20Enquiry"
 		   class="glyphicon fa fa-2x fa-envelope social-buttons larger" style="background-color: #5cb85c"></a>
 		<a href="https://twitter.com/MensJoggers" class="glyphicon fa fa-2x fa-twitter social-buttons" style="background-color: #55ACEE"></a>
 	</div>
