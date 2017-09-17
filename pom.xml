@@ -337,7 +337,7 @@
 					<overlays>
 						<overlay>
 							<groupId>uk.co.vhome.clubbed</groupId>
-							<artifactId>clubbed-web-user-management</artifactId>
+							<artifactId>clubbed-web-common</artifactId>
 						</overlay>
 					</overlays>
 				</configuration>
