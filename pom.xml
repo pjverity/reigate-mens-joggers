@@ -5,7 +5,7 @@
 	<groupId>uk.co.vhome</groupId>
 	<artifactId>reigate-mens-joggers</artifactId>
 	<packaging>war</packaging>
-	<version>0.3.1-SNAPSHOT</version>
+	<version>0.3.1</version>
 
 	<name>Reigate Mens Joggers</name>
 
@@ -14,7 +14,7 @@
 	<scm>
 		<connection>scm:git:https://github.com/pjverity/${project.artifactId}.git</connection>
 		<developerConnection>scm:git:https://github.com/pjverity/${project.artifactId}.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>reigate-mens-joggers-0.3.1</tag>
 	</scm>
 
 	<prerequisites>
