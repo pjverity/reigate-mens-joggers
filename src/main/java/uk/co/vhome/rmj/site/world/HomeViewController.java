@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import uk.co.vhome.clubbed.flickrapi.FlickrService;
 import uk.co.vhome.clubbed.web.controllers.userregistration.UserRegistrationFormObject;
 import uk.co.vhome.rmj.services.core.EventManagementService;
-import uk.co.vhome.rmj.services.flickr.FlickrService;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;

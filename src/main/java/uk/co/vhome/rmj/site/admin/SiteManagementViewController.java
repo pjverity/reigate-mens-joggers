@@ -4,8 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import uk.co.vhome.rmj.services.flickr.FlickrService;
-import uk.co.vhome.rmj.services.flickr.GroupsResponse;
+import uk.co.vhome.clubbed.flickrapi.FlickrService;
+import uk.co.vhome.clubbed.flickrapi.GroupsResponse;
 
 import javax.inject.Inject;
 import java.util.Collections;

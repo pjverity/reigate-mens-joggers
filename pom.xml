@@ -133,6 +133,11 @@
 			<classifier>classes</classifier>
 		</dependency>
 
+		<dependency>
+			<groupId>uk.co.vhome.clubbed</groupId>
+			<artifactId>clubbed-flickr-api</artifactId>
+		</dependency>
+
 		<!--
 			Basic Servlet API that is provided by the Web container at runtime. The API is used to configure the Servlet at bootstrapping.
 		-->
