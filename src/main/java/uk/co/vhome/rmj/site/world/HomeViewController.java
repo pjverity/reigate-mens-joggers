@@ -1,79 +1,39 @@
 package uk.co.vhome.rmj.site.world;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
-import uk.co.vhome.clubbed.domainobjects.entities.Event;
-import uk.co.vhome.clubbed.domainobjects.entities.UserDetailsEntity;
-import uk.co.vhome.rmj.site.world.services.HomeViewControllerService;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import uk.co.vhome.clubbed.web.controllers.userregistration.UserRegistrationFormObject;
+import uk.co.vhome.rmj.services.core.EventManagementService;
+import uk.co.vhome.rmj.services.flickr.FlickrService;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static uk.co.vhome.clubbed.security.SecurityConfiguration.*;
 
 /**
- * The sites home page that also provides user registration functions
+ * Reigate Mens Joggers's landing page
  */
 @Controller
 public class HomeViewController
 {
-	private static final Logger LOGGER = LogManager.getLogger();
-
 	private static final String VIEW_NAME = "world/home";
 
-	private static final String MESSAGE_CODE_VALIDATION_CONSTRAINT_USER_REGISTRATION_VALID = "validation.constraint.UserRegistrationValid";
+	private static final String NO_UPCOMING_RUN_MESSAGE = "Watch this space!";
 
-	private final MessageSource messageSource;
+	private final EventManagementService eventManagementService;
 
-	private final HomeViewControllerService homeViewControllerService;
-
-	private static class ConciseFieldError
-	{
-		private final String field;
-
-		private final String defaultMessage;
-
-		ConciseFieldError(FieldError fieldError)
-		{
-			field = fieldError.getField();
-			defaultMessage = fieldError.getDefaultMessage();
-		}
-
-		@SuppressWarnings("unused") // Used via introspection during de/serialisation
-		public String getField()
-		{
-			return field;
-		}
-
-		@SuppressWarnings("unused") // Used via introspection during de/serialisation
-		public String getDefaultMessage()
-		{
-			return defaultMessage;
-		}
-	}
+	private final FlickrService flickrService;
 
 	@Inject
-	public HomeViewController(HomeViewControllerService homeViewControllerService, MessageSource messageSource)
+	public HomeViewController(EventManagementService eventManagementService, FlickrService flickrService)
 	{
-		this.homeViewControllerService = homeViewControllerService;
-		this.messageSource = messageSource;
+		this.eventManagementService = eventManagementService;
+		this.flickrService = flickrService;
 	}
 
 	@RequestMapping(path = "/", method = RequestMethod.GET)
@@ -85,86 +45,21 @@ public class HomeViewController
 		return VIEW_NAME;
 	}
 
-	@RequestMapping(path = "/register", method = RequestMethod.POST)
-	@ResponseBody
-	public ModelMap registerNewMember(@ModelAttribute("form") @Valid UserRegistrationFormObject userRegistrationFormObject,
-	                                  BindingResult errors, HttpServletRequest httpServletRequest) throws IOException
-	{
-
-		ModelMap model = new ModelMap();
-
-		if (errors.hasErrors())
-		{
-			LOGGER.error("Validation failed for user registration: {}", userRegistrationFormObject);
-
-			List<ConciseFieldError> conciseFieldErrors = errors.getFieldErrors().stream()
-					                                             .map(ConciseFieldError::new)
-					                                             .collect(Collectors.toList());
-
-			String message;
-
-			ObjectError globalError = errors.getGlobalError();
-			if (globalError == null)
-			{
-				message = messageSource.getMessage(MESSAGE_CODE_VALIDATION_CONSTRAINT_USER_REGISTRATION_VALID, null, Locale.getDefault());
-			} else
-			{
-				message = globalError.getDefaultMessage();
-			}
-
-			populatePageModelForRegistration(model, false, conciseFieldErrors, message);
-
-			return model;
-		}
-
-		try
-		{
-			UserDetailsEntity userDetailsEntity = homeViewControllerService.registerNewUser(userRegistrationFormObject.getEmailAddress(),
-			                                                                                userRegistrationFormObject.getFirstName(),
-			                                                                                userRegistrationFormObject.getLastName(),
-			                                                                                userRegistrationFormObject.getPassword());
-
-			// This appears to by-pass the SecurityConfiguration.authenticationSuccessHandler() handler, so have to duplicate
-			// setting the session variables here
-			httpServletRequest.login(userDetailsEntity.getUsername(), userRegistrationFormObject.getPassword());
-			HttpSession httpSession = httpServletRequest.getSession();
-			httpSession.setAttribute(USER_ID_SESSION_ATTRIBUTE, userDetailsEntity.getId());
-			httpSession.setAttribute(USER_FIRST_NAME_SESSION_ATTRIBUTE, userDetailsEntity.getFirstName());
-			httpSession.setAttribute(USER_LAST_NAME_SESSION_ATTRIBUTE, userDetailsEntity.getLastName());
-
-			populatePageModelForRegistration(model, true, null, null);
-		}
-		catch (Exception e)
-		{
-			LOGGER.error("Failed to register user", e);
-			populatePageModelForRegistration(model, false, null, "Failed to register new user");
-		}
-
-		return model;
-	}
-
 	@SuppressWarnings("unused")
 	@ModelAttribute("nextEvent")
 	String nextEvent()
 	{
-		Optional<Event> optionalNextEvent = homeViewControllerService.findNextEvent();
-
-		return optionalNextEvent.map(event -> event.getEventDateTime().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.SHORT)))
-				       .orElse("Watch this space!");
-
-	}
-
-	private static void populatePageModelForRegistration(Map<String, Object> pageModel, boolean isSuccessful, List<ConciseFieldError> conciseFieldErrors, String generalErrorMessage)
-	{
-		pageModel.put("success", isSuccessful);
-		pageModel.put("error", generalErrorMessage);
-		pageModel.put("fieldErrors", conciseFieldErrors);
+		return eventManagementService.fetchEventsAfter(LocalDateTime.now(), true, false)
+				       .stream()
+				       .findFirst()
+				       .map(event -> event.getEventDateTime().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.SHORT)))
+				       .orElse(NO_UPCOMING_RUN_MESSAGE);
 	}
 
 	@ModelAttribute("flickGroupNsid")
 	public String flickGroupNsid()
 	{
-		return homeViewControllerService.flickerGroupNsid();
+		return flickrService.getCurrentGroupNsid();
 	}
 
 }

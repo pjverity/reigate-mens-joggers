@@ -15,7 +15,7 @@ import uk.co.vhome.clubbed.domainobjects.entities.Purchase;
 import uk.co.vhome.clubbed.notifications.BalanceUpdatedNotification;
 import uk.co.vhome.clubbed.notifications.LowBalanceNotification;
 import uk.co.vhome.clubbed.notifications.services.NotificationService;
-import uk.co.vhome.clubbed.web.services.UserAccountManagementService;
+import uk.co.vhome.clubbed.web.services.usermanagement.UserAccountManagementService;
 import uk.co.vhome.rmj.IntegrationTestConfiguration;
 
 import javax.inject.Inject;

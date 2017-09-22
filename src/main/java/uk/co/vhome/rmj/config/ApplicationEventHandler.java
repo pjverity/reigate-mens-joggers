@@ -6,7 +6,7 @@ import org.springframework.security.authentication.event.AuthenticationSuccessEv
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import uk.co.vhome.clubbed.security.AuthenticatedUser;
-import uk.co.vhome.clubbed.web.services.UserAccountManagementService;
+import uk.co.vhome.clubbed.web.services.usermanagement.UserAccountManagementService;
 
 import javax.inject.Inject;
 

@@ -10,7 +10,7 @@
 <c:set var="pageTitleSuffix" value="Reigate Mens Joggers"/>
 
 <head>
-<%@include file="../head-common.jsp" %>
+	<%@include file="../head-common.jsp" %>
 
 	<script src="<c:url value='/galleria/galleria-1.5.7.min.js'/>"></script>
 	<script src="<c:url value='/galleria/plugins/flickr/galleria.flickr.min.js'/>"></script>
@@ -164,7 +164,6 @@
 	const contextPath = $('#home-script').attr('data-url');
 
 	$('#acceptCookies').on('click', function () {
-        console.log("Accept");
         var d = new Date();
         d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
         var expires = "expires=" + d.toUTCString();

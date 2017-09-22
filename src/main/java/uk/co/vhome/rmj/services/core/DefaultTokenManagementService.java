@@ -11,7 +11,7 @@ import uk.co.vhome.clubbed.domainobjects.entities.UserDetailsEntity;
 import uk.co.vhome.clubbed.notifications.BalanceUpdatedNotification;
 import uk.co.vhome.clubbed.notifications.LowBalanceNotification;
 import uk.co.vhome.clubbed.notifications.services.NotificationService;
-import uk.co.vhome.clubbed.web.services.UserAccountManagementService;
+import uk.co.vhome.clubbed.web.services.usermanagement.UserAccountManagementService;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;

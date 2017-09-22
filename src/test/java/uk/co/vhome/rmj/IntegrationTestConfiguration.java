@@ -14,7 +14,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import uk.co.vhome.clubbed.notifications.services.NotificationService;
-import uk.co.vhome.clubbed.web.services.UserAccountManagementService;
+import uk.co.vhome.clubbed.web.services.usermanagement.UserAccountManagementService;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
