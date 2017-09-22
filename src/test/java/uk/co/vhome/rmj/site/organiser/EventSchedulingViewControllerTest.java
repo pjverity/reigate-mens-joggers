@@ -1,7 +1,6 @@
 package uk.co.vhome.rmj.site.organiser;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -15,7 +14,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.BindingResultUtils;
 import org.springframework.web.servlet.ModelAndView;
-import uk.co.vhome.rmj.services.core.EventManagementService;
+import uk.co.vhome.clubbed.eventmanagement.EventManagementService;
+import uk.co.vhome.clubbed.web.site.organiser.EventSchedulingViewController;
 import uk.co.vhome.rmj.site.ViewControllerTestConfiguration;
 
 import java.time.LocalDate;

@@ -15,6 +15,8 @@ import uk.co.vhome.clubbed.domainobjects.entities.Purchase;
 import uk.co.vhome.clubbed.notifications.BalanceUpdatedNotification;
 import uk.co.vhome.clubbed.notifications.LowBalanceNotification;
 import uk.co.vhome.clubbed.notifications.services.NotificationService;
+import uk.co.vhome.clubbed.paymentmanagement.DefaultTokenManagementService;
+import uk.co.vhome.clubbed.paymentmanagement.TokenManagementService;
 import uk.co.vhome.clubbed.web.services.usermanagement.UserAccountManagementService;
 import uk.co.vhome.rmj.IntegrationTestConfiguration;
 

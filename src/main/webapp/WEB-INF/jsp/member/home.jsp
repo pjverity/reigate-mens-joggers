@@ -37,7 +37,7 @@
 						We're always happy to get your feedback on the site and what you'd like to see, so drop us a message with your ideas!
 					</p>
 					<p>
-						If you spot any errors or run in to any difficulties with the site, then please contact us at <a href="mailto:administrator@reigatemensjoggers.co.uk">administrator@reigatemensjoggers.co.uk</a>
+						If you spot any errors or run in to any difficulties with the site, then please contact us at <a href="mailto:admin@reigatemensjoggers.co.uk (Reigate Mens Joggers)">admin@reigatemensjoggers.co.uk</a>
 						and we will endeavour to fix it.
 					</p>
 					<p>

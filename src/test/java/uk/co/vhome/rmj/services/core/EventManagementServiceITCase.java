@@ -9,6 +9,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.co.vhome.clubbed.domainobjects.entities.Event;
+import uk.co.vhome.clubbed.eventmanagement.DefaultEventManagementService;
+import uk.co.vhome.clubbed.eventmanagement.EventManagementService;
 import uk.co.vhome.rmj.IntegrationTestConfiguration;
 
 import javax.inject.Inject;

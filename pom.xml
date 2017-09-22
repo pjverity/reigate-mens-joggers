@@ -87,6 +87,7 @@
 
 	<dependencies>
 
+<!--
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-data-access</artifactId>
@@ -112,10 +113,7 @@
 			<artifactId>clubbed-mail</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>uk.co.vhome.clubbed</groupId>
-			<artifactId>clubbed-validation</artifactId>
-		</dependency>
+-->
 
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
@@ -131,11 +129,6 @@
 			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-web-common</artifactId>
 			<classifier>classes</classifier>
-		</dependency>
-
-		<dependency>
-			<groupId>uk.co.vhome.clubbed</groupId>
-			<artifactId>clubbed-flickr-api</artifactId>
 		</dependency>
 
 		<!--

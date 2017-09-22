@@ -8,11 +8,13 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.co.vhome.clubbed.domainobjects.entities.Event;
+import uk.co.vhome.clubbed.eventmanagement.DefaultEventManagementService;
+import uk.co.vhome.clubbed.paymentmanagement.DefaultTokenManagementService;
+import uk.co.vhome.clubbed.paymentmanagement.TokenManagementService;
 import uk.co.vhome.clubbed.web.services.usermanagement.UserAccountManagementService;
+import uk.co.vhome.clubbed.web.site.organiser.services.DefaultEventRegistrationService;
+import uk.co.vhome.clubbed.web.site.organiser.services.EventRegistrationService;
 import uk.co.vhome.rmj.IntegrationTestConfiguration;
-import uk.co.vhome.rmj.services.core.DefaultEventManagementService;
-import uk.co.vhome.rmj.services.core.DefaultTokenManagementService;
-import uk.co.vhome.rmj.services.core.TokenManagementService;
 
 import javax.inject.Inject;
 import java.util.HashSet;
