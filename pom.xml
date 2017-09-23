@@ -61,60 +61,10 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-framework-bom</artifactId>
-				<version>4.3.10.RELEASE</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-bom</artifactId>
-				<version>4.2.2.RELEASE</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-bom</artifactId>
-				<version>2.6.2</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<dependencies>
-
-<!--
-		<dependency>
-			<groupId>uk.co.vhome.clubbed</groupId>
-			<artifactId>clubbed-data-access</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>uk.co.vhome.clubbed</groupId>
-			<artifactId>clubbed-security</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>uk.co.vhome.clubbed</groupId>
-			<artifactId>clubbed-notifications</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>uk.co.vhome.clubbed</groupId>
-			<artifactId>clubbed-domain-objects</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>uk.co.vhome.clubbed</groupId>
-			<artifactId>clubbed-mail</artifactId>
-		</dependency>
-
--->
-
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-web-common</artifactId>
@@ -131,36 +81,6 @@
 			<classifier>classes</classifier>
 		</dependency>
 
-		<!--
-			Basic Servlet API that is provided by the Web container at runtime. The API is used to configure the Servlet at bootstrapping.
-		-->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!--
-			Use Spring's MVC framework for developing the UI. It's Dispatcher Servlet takes care of routing requests
-			too appropriated @Controller annotated POJO's
-		-->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-crypto</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-taglibs</artifactId>
-		</dependency>
-
-
 		<!-- This hooks in to the compiler and catches constraint violations at compile time p.457-->
 		<!-- Marked as optional as it isn't required at runtime and we don't want it inherited -->
 		<dependency>
@@ -172,31 +92,6 @@
 		</dependency>
 
 
-		<!--
-			Boring logging stuff
-		-->
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j-impl</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-web</artifactId>
-			<scope>runtime</scope>
-		</dependency>
 
 		<!--
 			Testing frameworks
@@ -221,6 +116,8 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
+			<!-- TODO: Remove hard-coded version -->
+			<version>4.3.11.RELEASE</version>
 			<scope>test</scope>
 		</dependency>
 
