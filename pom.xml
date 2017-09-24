@@ -65,6 +65,8 @@
 	</dependencyManagement>
 
 	<dependencies>
+
+		<!-- At runtime, the container will overlay the contents of the below war with this projects war -->
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-web-common</artifactId>
@@ -72,9 +74,7 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- TODO: Move classes out of war in to a jar -->
-		<!-- Required to be able to compile, project depends on classes in that war -->
-		<!-- The servlet container will deploy the dependant war putting bit in the correct places -->
+		<!-- TODO: No longer a need for this, don't need all classes. Barely any code in this project! -->
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-web-common</artifactId>
@@ -90,7 +90,6 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
-
 
 
 		<!--
