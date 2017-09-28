@@ -12,9 +12,9 @@ import uk.co.vhome.clubbed.notifications.services.NotificationService;
 import uk.co.vhome.clubbed.paymentmanagement.DefaultTokenManagementService;
 
 import javax.persistence.EntityManager;
+import java.util.Optional;
 
-import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static uk.co.vhome.rmj.UserConfigurations.*;
 
@@ -59,49 +59,43 @@ class DefaultTokenManagementServiceTest
 	}
 
 	@Test
-	void creditFailsWhenPurchaseLimitExceeded()
-	{
-		Purchase purchase = tokenManagementService.creditAccount(ENABLED_USER_ID, 11);
-		assertNull(ENABLED_USER_ID + " should not be able to purchase >10 tokens", purchase);
-
-		verifyZeroInteractions(mockPurchaseRepository);
-	}
-
-	@Test
-	void creditFailsWhenBalanceLimitExceeded()
-	{
-		when(mockPurchaseRepository.calculateBalanceForUser(ENABLED_USER_ID)).thenReturn(16);
-
-		Purchase purchase = tokenManagementService.creditAccount(ENABLED_USER_ID, 5);
-		assertNull(ENABLED_USER_ID + " should not be able to purchase tokens that would exceed balance limit", purchase);
-
-		verify(mockPurchaseRepository, never()).save(any(Purchase.class));
-	}
-
-	@Test
 	void creditOrDebitFailsForInvalidUser()
 	{
 		Long randomUserId = 4L;
 
+		when(mockUserDetailsRepository.findById(ENABLED_USER_ID)).thenReturn(Optional.of(ENABLED_USER));
+
+		Purchase purchase;
+
 		// Unknown user - Credit
-		when(mockUserDetailsRepository.findOne(randomUserId)).thenReturn(null);
-		Purchase purchase = tokenManagementService.creditAccount(randomUserId, 5);
-		assertNull(randomUserId + " should not be able to purchase tokens", purchase);
+		Throwable exception = assertThrows(RuntimeException.class, () ->
+		{
+			when(mockUserDetailsRepository.findById(randomUserId)).thenReturn(Optional.empty());
+			Purchase _purchase = tokenManagementService.creditAccount(randomUserId, 5);
+			assertNull(_purchase, randomUserId + " should not be able to purchase tokens");
+		});
+
+		assertEquals("Unable to find userId: " + randomUserId, exception.getMessage());
 
 		// Unknown user - Debit
-		when(mockUserDetailsRepository.findOne(randomUserId)).thenReturn(null);
-		purchase = tokenManagementService.debitAccount(randomUserId, 1);
-		assertNull(randomUserId + " should not be able to purchase tokens", purchase);
+		exception = assertThrows(RuntimeException.class, () ->
+		{
+			when(mockUserDetailsRepository.findById(randomUserId)).thenReturn(Optional.empty());
+			Purchase _purchase = tokenManagementService.debitAccount(randomUserId, 1);
+			assertNull(_purchase, randomUserId + " should not be able to purchase tokens");
+		});
+
+		assertEquals("Unable to find userId: " + randomUserId, exception.getMessage());
 
 		// Disabled user - Credit
-		when(mockUserDetailsRepository.findOne(DISABLED_USER_ID)).thenReturn(DISABLED_USER);
+		when(mockUserDetailsRepository.findById(DISABLED_USER_ID)).thenReturn(Optional.of(DISABLED_USER));
 		purchase = tokenManagementService.creditAccount(DISABLED_USER_ID, 5);
-		assertNull(DISABLED_USER_ID + " should not be able to purchase tokens", purchase);
+		assertNull(purchase, DISABLED_USER_ID + " should not be able to purchase tokens");
 
 		// Disabled user - Debit
-		when(mockUserDetailsRepository.findOne(DISABLED_USER_ID)).thenReturn(DISABLED_USER);
+		when(mockUserDetailsRepository.findById(DISABLED_USER_ID)).thenReturn(Optional.of(DISABLED_USER));
 		purchase = tokenManagementService.debitAccount(DISABLED_USER_ID, 1);
-		assertNull(DISABLED_USER_ID + " should not be able to purchase tokens", purchase);
+		assertNull(purchase, DISABLED_USER_ID + " should not be able to purchase tokens");
 
 		verify(mockPurchaseRepository, never()).save(any(Purchase.class));
 	}
@@ -109,11 +103,11 @@ class DefaultTokenManagementServiceTest
 	@Test
 	void creditSucceeds()
 	{
-		when(mockUserDetailsRepository.findOne(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
+		when(mockUserDetailsRepository.findById(ENABLED_USER_ID)).thenReturn(Optional.of(ENABLED_USER));
 		when(mockPurchaseRepository.calculateBalanceForUser(ENABLED_USER_ID)).thenReturn(5);
 
 		Purchase purchase = tokenManagementService.creditAccount(ENABLED_USER_ID, 1);
-		assertNotNull(ENABLED_USER_ID + " should be able to purchase 1 token", purchase);
+		assertNotNull(purchase, ENABLED_USER_ID + " should be able to purchase 1 token");
 
 		assertEquals(1, purchase.getQuantity());
 
@@ -123,11 +117,11 @@ class DefaultTokenManagementServiceTest
 	@Test
 	void creditSucceedsWithNoPreviousBalance()
 	{
-		when(mockUserDetailsRepository.findOne(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
+		when(mockUserDetailsRepository.findById(ENABLED_USER_ID)).thenReturn(Optional.of(ENABLED_USER));
 		when(mockPurchaseRepository.calculateBalanceForUser(ENABLED_USER_ID)).thenReturn(null);
 
 		Purchase purchase = tokenManagementService.creditAccount(ENABLED_USER_ID, 1);
-		assertNotNull(ENABLED_USER_ID + " should be able to purchase 1 token", purchase);
+		assertNotNull(purchase, ENABLED_USER_ID + " should be able to purchase 1 token");
 
 		assertEquals(1, purchase.getQuantity());
 
@@ -137,11 +131,11 @@ class DefaultTokenManagementServiceTest
 	@Test
 	void debitSucceeds()
 	{
-		when(mockUserDetailsRepository.findOne(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
+		when(mockUserDetailsRepository.findById(ENABLED_USER_ID)).thenReturn(Optional.of(ENABLED_USER));
 		when(mockPurchaseRepository.calculateBalanceForUser(ENABLED_USER_ID)).thenReturn(5);
 
 		Purchase purchase = tokenManagementService.debitAccount(ENABLED_USER_ID, 1);
-		assertNotNull(ENABLED_USER_ID + " should be able to spend 1 token", purchase);
+		assertNotNull(purchase, ENABLED_USER_ID + " should be able to spend 1 token");
 
 		assertEquals(-1, purchase.getQuantity());
 

@@ -1,13 +1,10 @@
 package uk.co.vhome.rmj.site.organiser;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -27,9 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
-@WebAppConfiguration
-@ContextConfiguration(classes = {ViewControllerTestConfiguration.class})
+@SpringJUnitWebConfig(classes = {ViewControllerTestConfiguration.class})
 public class EventSchedulingViewControllerTest
 {
 
@@ -38,8 +33,8 @@ public class EventSchedulingViewControllerTest
 	@Mock
 	private EventManagementService mockEventManagementService;
 
-	@Before
-	public void setup()
+	@BeforeEach
+	void setup()
 	{
 		MockitoAnnotations.initMocks(this);
 
@@ -49,7 +44,7 @@ public class EventSchedulingViewControllerTest
 	}
 
 	@Test
-	public void allowsCreationOfPastEvent() throws Exception
+	void allowsCreationOfPastEvent() throws Exception
 	{
 		MvcResult mvcResult = mockMvc.perform(post("/organiser/create-event")
 				                                      .param("eventDate", "2017-01-01")

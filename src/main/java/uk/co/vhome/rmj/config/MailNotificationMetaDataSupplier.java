@@ -30,6 +30,16 @@ public class MailNotificationMetaDataSupplier implements NotificationMetaDataSup
 	                                                                             REGISTRATION_CONFIRMATION_TEMPLATE,
 	                                                                             "Welcome to Reigate Mens Joggers!");
 
+	private static final MailMetaData BALANCE_CREDITED_MAIL_META_DATA = new MailMetaData(FROM_ADDRESS,
+	                                                                                     FROM_NAME,
+	                                                                                     BALANCE_UPDATE_NOTIFICATION_TEMPLATE,
+	                                                                                     "Your account has been credited");
+
+	private static final MailMetaData BALANCE_DEBITED_MAIL_META_DATA = new MailMetaData(FROM_ADDRESS,
+	                                                                                    FROM_NAME,
+	                                                                                    BALANCE_UPDATE_NOTIFICATION_TEMPLATE,
+	                                                                                    "Your account has been debited");
+
 	@Override
 	public MailMetaData metaDataFor(LowBalanceNotification notification)
 	{
@@ -39,12 +49,7 @@ public class MailNotificationMetaDataSupplier implements NotificationMetaDataSup
 	@Override
 	public MailMetaData metaDataFor(BalanceUpdatedNotification notification)
 	{
-		String creditedOrDebited = notification.getQuantity() < 0 ? "debited" : "credited";
-
-		return new MailMetaData(FROM_ADDRESS,
-		                        FROM_NAME,
-		                        BALANCE_UPDATE_NOTIFICATION_TEMPLATE,
-		                        "Your account has been " + creditedOrDebited);
+		return notification.getQuantity() < 0 ? BALANCE_DEBITED_MAIL_META_DATA : BALANCE_CREDITED_MAIL_META_DATA;
 	}
 
 	@Override

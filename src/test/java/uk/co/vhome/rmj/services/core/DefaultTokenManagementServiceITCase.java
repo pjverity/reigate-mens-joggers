@@ -1,14 +1,12 @@
 package uk.co.vhome.rmj.services.core;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 import uk.co.vhome.clubbed.domainobjects.entities.MemberBalance;
 import uk.co.vhome.clubbed.domainobjects.entities.Purchase;
@@ -24,17 +22,16 @@ import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static uk.co.vhome.rmj.UserConfigurations.ENABLED_USER;
 import static uk.co.vhome.rmj.UserConfigurations.ENABLED_USER_ID;
 
-@RunWith(SpringRunner.class)
 @ActiveProfiles({"integration-test"})
-@ContextConfiguration(classes = {IntegrationTestConfiguration.class, DefaultTokenManagementService.class})
+@SpringJUnitConfig(classes = {IntegrationTestConfiguration.class, DefaultTokenManagementService.class})
 @Transactional
-public class DefaultTokenManagementServiceITCase
+class DefaultTokenManagementServiceITCase
 {
 	@Inject
 	private UserAccountManagementService mockUserAccountManagementService;
@@ -45,26 +42,26 @@ public class DefaultTokenManagementServiceITCase
 	@Inject
 	private NotificationService notificationService;
 
-	@Before
-	public void setup()
+	@BeforeEach
+	void setup()
 	{
 		MockitoAnnotations.initMocks(this);
 	}
 
-	@After
-	public void teardown()
+	@AfterEach
+	void teardown()
 	{
 		reset(notificationService);
 	}
 
 	@Test
 	@Sql({"/schema.sql", "/data.sql", "/purchases.sql"})
-	public void returnsCorrectBalanceForCredit()
+	void returnsCorrectBalanceForCredit()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 
 		Purchase purchase = tokenManagementService.creditAccount(ENABLED_USER_ID, 1);
-		assertNotNull(ENABLED_USER_ID + " should be able to purchase 1 token", purchase);
+		assertNotNull(purchase, ENABLED_USER_ID + " should be able to purchase 1 token");
 
 		assertEquals(8L, (long)tokenManagementService.balanceForMember(ENABLED_USER_ID));
 
@@ -73,12 +70,12 @@ public class DefaultTokenManagementServiceITCase
 
 	@Test
 	@Sql({"/schema.sql", "/data.sql", "/purchases.sql"})
-	public void returnsCorrectBalanceForDebit()
+	void returnsCorrectBalanceForDebit()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 
 		Purchase purchase = tokenManagementService.debitAccount(ENABLED_USER_ID, 1);
-		assertNotNull(ENABLED_USER_ID + " should be able to use 1 token", purchase);
+		assertNotNull(purchase, ENABLED_USER_ID + " should be able to use 1 token");
 
 		assertEquals(6L, (long)tokenManagementService.balanceForMember(ENABLED_USER_ID));
 
@@ -87,12 +84,12 @@ public class DefaultTokenManagementServiceITCase
 
 	@Test
 	@Sql({"/schema.sql", "/data.sql", "/purchases.sql"})
-	public void sendsLowBalanceNotification()
+	void sendsLowBalanceNotification()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 
 		Purchase purchase = tokenManagementService.debitAccount(ENABLED_USER_ID, 4);
-		assertNotNull(ENABLED_USER_ID + " should be able to use 1 token", purchase);
+		assertNotNull(purchase, ENABLED_USER_ID + " should be able to use 1 token");
 
 		assertEquals(3L, (long)tokenManagementService.balanceForMember(ENABLED_USER_ID));
 
@@ -101,7 +98,7 @@ public class DefaultTokenManagementServiceITCase
 
 	@Test
 	@Sql({"/schema.sql", "/data.sql", "/purchases.sql"})
-	public void returnsExpectedBalanceForAllEnabledMembers()
+	void returnsExpectedBalanceForAllEnabledMembers()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 
@@ -117,7 +114,7 @@ public class DefaultTokenManagementServiceITCase
 
 	@Test
 	@Sql({"/schema.sql", "/data.sql"})
-	public void returnsZeroBalanceForAllEnabledMembersWithNoPurchaseHistory()
+	void returnsZeroBalanceForAllEnabledMembersWithNoPurchaseHistory()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 
@@ -131,20 +128,21 @@ public class DefaultTokenManagementServiceITCase
 		assertNull(memberBalance.get(0).getBalance());
 	}
 
-	@Test(expected = ConstraintViolationException.class)
-	public void throwsCreditConstraintViolationWhenCreditQuantityIsZero()
+	@Test
+	void throwsCreditConstraintViolationWhenCreditQuantityIsZero()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 
-		tokenManagementService.creditAccount(ENABLED_USER_ID, 0);
+		assertThrows(ConstraintViolationException.class, () -> tokenManagementService.creditAccount(ENABLED_USER_ID, 0));
+
 	}
 
-	@Test(expected = ConstraintViolationException.class)
-	public void throwsCreditConstraintViolationWhenDebitQuantityIsZero()
+	@Test
+	void throwsCreditConstraintViolationWhenDebitQuantityIsZero()
 	{
 		when(mockUserAccountManagementService.findUserDetails(ENABLED_USER_ID)).thenReturn(ENABLED_USER);
 
-		tokenManagementService.debitAccount(ENABLED_USER_ID, 0);
+		assertThrows(ConstraintViolationException.class, () -> tokenManagementService.debitAccount(ENABLED_USER_ID, 0));
 	}
 
 }

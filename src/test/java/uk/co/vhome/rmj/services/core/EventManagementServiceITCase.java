@@ -1,12 +1,10 @@
 package uk.co.vhome.rmj.services.core;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 import uk.co.vhome.clubbed.domainobjects.entities.Event;
 import uk.co.vhome.clubbed.eventmanagement.DefaultEventManagementService;
@@ -23,11 +21,10 @@ import java.util.function.Predicate;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@RunWith(SpringRunner.class)
 @ActiveProfiles({"integration-test"})
-@ContextConfiguration(classes = {IntegrationTestConfiguration.class, DefaultEventManagementService.class})
+@SpringJUnitConfig(classes = {IntegrationTestConfiguration.class, DefaultEventManagementService.class})
 @Transactional
-public class EventManagementServiceITCase
+class EventManagementServiceITCase
 {
 	private final LocalDateTime EVENT_2016_12_31 = LocalDateTime.of(2016, 12, 31, 13, 25, 0);
 
@@ -44,7 +41,7 @@ public class EventManagementServiceITCase
 
 	@Test
 	@Sql({"/schema.sql", "/data.sql"})
-	public void findsAllUncompletedSchedules() throws Exception
+	void findsAllUncompletedSchedules() throws Exception
 	{
 		List<Event> incompleteEvents = eventManagementService.findAllIncompleteEvents();
 
@@ -59,7 +56,7 @@ public class EventManagementServiceITCase
 
 	@Test
 	@Sql({"/schema.sql", "/data.sql"})
-	public void findsAllCompletedSchedules() throws Exception
+	void findsAllCompletedSchedules() throws Exception
 	{
 		List<Event> completedEvents = eventManagementService.findTop10CompletedEvents();
 
@@ -72,7 +69,7 @@ public class EventManagementServiceITCase
 
 	@Test
 	@Sql({"/schema.sql", "/data.sql"})
-	public void createsNewEvent() throws Exception
+	void createsNewEvent() throws Exception
 	{
 		eventManagementService.createNewEvent(EVENT_2017_01_03);
 
@@ -89,7 +86,7 @@ public class EventManagementServiceITCase
 
 	@Test
 	@Sql({"/schema.sql", "/data.sql"})
-	public void eventSetAsComplete() throws Exception
+	void eventSetAsComplete() throws Exception
 	{
 		List<Event> incompleteEvents = eventManagementService.findAllIncompleteEvents();
 
@@ -116,7 +113,7 @@ public class EventManagementServiceITCase
 	
 	@Test
 	@Sql({"/schema.sql", "/data.sql"})
-	public void eventCancelled() throws Exception
+	void eventCancelled() throws Exception
 	{
 		List<Event> incompleteEvents = eventManagementService.findAllIncompleteEvents();
 
@@ -130,27 +127,27 @@ public class EventManagementServiceITCase
 		assertNotEquals(incompleteEvents.get(0).getId(), eventToCancel.getId());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	@Sql({"/schema.sql", "/data.sql"})
-	public void throwsExceptionWhenCompletedEventIsCancelled() throws Exception
+	void throwsExceptionWhenCompletedEventIsCancelled() throws Exception
 	{
 		List<Event> completedEvents = eventManagementService.findTop10CompletedEvents();
 
 		Event eventToCancel = completedEvents.get(0);
 
-		eventManagementService.cancelEvent(eventToCancel);
-	}
-
-	@Test(expected = DataIntegrityViolationException.class)
-	@Sql({"/schema.sql", "/data.sql"})
-	public void throwsExceptionWhenDuplicateEventCreated() throws Exception
-	{
-		eventManagementService.createNewEvent(EVENT_2016_12_31);
+		assertThrows(IllegalArgumentException.class, () -> eventManagementService.cancelEvent(eventToCancel));
 	}
 
 	@Test
 	@Sql({"/schema.sql", "/data.sql"})
-	public void fetchesEventOnOrBeforeDate() throws Exception
+	void throwsExceptionWhenDuplicateEventCreated() throws Exception
+	{
+		assertThrows(DataIntegrityViolationException.class, () -> eventManagementService.createNewEvent(EVENT_2016_12_31));
+	}
+
+	@Test
+	@Sql({"/schema.sql", "/data.sql"})
+	void fetchesEventOnOrBeforeDate() throws Exception
 	{
 		List<Event> events = eventManagementService.fetchEventsBefore(EVENT_2017_01_01, true, false);
 
@@ -159,7 +156,7 @@ public class EventManagementServiceITCase
 
 	@Test
 	@Sql({"/schema.sql", "/data.sql"})
-	public void fetchesEventBeforeDate() throws Exception
+	void fetchesEventBeforeDate() throws Exception
 	{
 		List<Event> events = eventManagementService.fetchEventsBefore(EVENT_2017_01_01, false, false);
 
@@ -168,7 +165,7 @@ public class EventManagementServiceITCase
 
 	@Test
 	@Sql({"/schema.sql", "/data.sql"})
-	public void fetchesEventOnOrAfterDate() throws Exception
+	void fetchesEventOnOrAfterDate() throws Exception
 	{
 		List<Event> events = eventManagementService.fetchEventsAfter(EVENT_2017_01_02_MIDNIGHT, true, true);
 
@@ -177,7 +174,7 @@ public class EventManagementServiceITCase
 
 	@Test
 	@Sql({"/schema.sql", "/data.sql"})
-	public void fetchesEventAfterDate() throws Exception
+	void fetchesEventAfterDate() throws Exception
 	{
 		List<Event> events = eventManagementService.fetchEventsAfter(EVENT_2017_01_02_MIDNIGHT, false, true);
 
