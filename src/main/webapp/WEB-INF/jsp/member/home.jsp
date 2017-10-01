@@ -65,7 +65,7 @@
 					<c:forEach var="event" items="${completedEvents}">
 						<tr>
 							<td>${event.eventDateTimeText}</td>
-							<td><fmt:formatNumber type="number" maxFractionDigits="2" value="${event.eventInfo.distance}"/></td>
+							<td><fmt:formatNumber type="number" maxFractionDigits="2" value="${event.eventDetails.distance}"/></td>
 						</tr>
 					</c:forEach>
 					</tbody>
