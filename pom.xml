@@ -78,12 +78,26 @@
 
 	<dependencies>
 
+		<!-- Contains fixes for Java 9 -->
+		<!-- https://github.com/jboss-javassist/javassist/issues/147 -->
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.22.0-CR2</version>
+		</dependency>
+
 		<!-- At runtime, the container will overlay the contents of the below war with this projects war -->
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-web-common</artifactId>
 			<type>war</type>
 			<scope>runtime</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>aopalliance</artifactId>
+					<groupId>aopalliance</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- TODO: No longer a need for this, don't need all classes. Barely any code in this project! -->
@@ -91,6 +105,12 @@
 			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-web-common</artifactId>
 			<classifier>classes</classifier>
+			<exclusions>
+				<exclusion>
+					<artifactId>aopalliance</artifactId>
+					<groupId>aopalliance</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- This hooks in to the compiler and catches constraint violations at compile time p.457-->
