@@ -3,6 +3,7 @@ package uk.co.vhome.rmj.config;
 import org.springframework.stereotype.Component;
 import uk.co.vhome.clubbed.notifications.BalanceUpdatedNotification;
 import uk.co.vhome.clubbed.notifications.LowBalanceNotification;
+import uk.co.vhome.clubbed.notifications.NewInterestRegisteredNotification;
 import uk.co.vhome.clubbed.notifications.NewUserNotification;
 import uk.co.vhome.clubbed.notifications.metadatasuppliers.MailMetaData;
 import uk.co.vhome.clubbed.notifications.metadatasuppliers.NotificationMetaDataSupplier;
@@ -58,4 +59,9 @@ public class MailNotificationMetaDataSupplier implements NotificationMetaDataSup
 		return NEW_USER_MAIL_META_DATA;
 	}
 
+	@Override
+	public MailMetaData metaDataFor(NewInterestRegisteredNotification notification)
+	{
+		return null;
+	}
 }
