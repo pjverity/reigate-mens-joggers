@@ -57,7 +57,7 @@
 			<dependency>
 				<groupId>uk.co.vhome.clubbed</groupId>
 				<artifactId>clubbed-bom</artifactId>
-				<version>1.0.2</version>
+				<version>1.0.3-SNAPSHOT</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -231,6 +231,13 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>3.0.0</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>overlays</directory>
+						</fileset>
+					</filesets>
+				</configuration>
 			</plugin>
 
 			<plugin>

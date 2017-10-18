@@ -23,29 +23,31 @@
 		<div class="col-12">
 			<div class="card">
 				<h5 class="card-header">Messages</h5>
-				<div class="card-block">
-					<p>Hi ${userFirstName}!</p>
-					<p>
-						It's been a while coming, but we have our first significant site update! In this update you can:
-					</p>
-					<ul>
-						<li>Check how many tokens you have from your <a href="<c:url value="/member/account"/> ">Account</a> page</li>
-						<li>See when all our upcoming runs are planned to take place</li>
-						<li>See how many runs you've completed. (Since we started keeping track that is!)</li>
-					</ul>
-					<p>
-						We're always happy to get your feedback on the site and what you'd like to see, so drop us a message with your ideas!
-					</p>
-					<p>
-						If you spot any errors or run in to any difficulties with the site, then please contact us at <a href="mailto:admin@reigatemensjoggers.co.uk (Reigate Mens Joggers)">admin@reigatemensjoggers.co.uk</a>
-						and we will endeavour to fix it.
-					</p>
-					<p>
-						We hope to see you on our the next run!
-					</p>
-					<p>
-						The RMJ Team
-					</p>
+				<div class="card-body">
+					<div class="card-text">
+						<p>Hi ${userFirstName}!</p>
+						<p>
+							It's been a while coming, but we have our first significant site update! In this update you can:
+						</p>
+						<ul>
+							<li>Check how many tokens you have from your <a href="<c:url value="/member/account"/> ">Account</a> page</li>
+							<li>See when all our upcoming runs are planned to take place</li>
+							<li>See how many runs you've completed. (Since we started keeping track that is!)</li>
+						</ul>
+						<p>
+							We're always happy to get your feedback on the site and what you'd like to see, so drop us a message with your ideas!
+						</p>
+						<p>
+							If you spot any errors or run in to any difficulties with the site, then please contact us at <a href="mailto:admin@reigatemensjoggers.co.uk (Reigate Mens Joggers)">admin@reigatemensjoggers.co.uk</a>
+							and we will endeavour to fix it.
+						</p>
+						<p>
+							We hope to see you on our the next run!
+						</p>
+						<p>
+							The RMJ Team
+						</p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -91,6 +93,8 @@
 	</div>
 
 </div>
+
+<%@include file="../footer-common.jsp" %>
 
 </body>
 

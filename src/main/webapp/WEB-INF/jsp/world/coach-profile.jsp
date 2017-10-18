@@ -23,6 +23,7 @@
 			<br/>Richard Feist<br/>
 			<small>(Coach)</small>
 		</h1>
+		<hr/>
 	</div>
 
 	<main class="clearfix">
@@ -44,13 +45,13 @@
 			<p>I look forward to meeting you and helping you achieve your goals.</p>
 	</main>
 
-	<hr/>
-
 	<h3 class="text-center">
-	<a href="<c:url value="/" />">Home</a>
+		<a href="<c:url value="/" />">Home</a>
 	</h3>
 
 </div>
+
+<%@include file="../footer-common.jsp" %>
 
 </body>
 
