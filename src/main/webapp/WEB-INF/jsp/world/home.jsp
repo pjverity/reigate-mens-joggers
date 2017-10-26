@@ -12,6 +12,9 @@
 <head>
 	<%@include file="../head-common.jsp" %>
 
+	<meta name="description" content="Home of Mens Run Club in Reigate, Surrey">
+	<meta name="robots" content="index,follow">
+
 	<script src="<c:url value='/galleria/galleria-1.5.7.min.js'/>"></script>
 	<script src="<c:url value='/galleria/plugins/flickr/galleria.flickr.min.js'/>"></script>
 
@@ -111,7 +114,7 @@
 		</div>
 		<div class="col-6 col-sm-6 col-md-3">
 			<h3><i class="fa fa-group" style="color: cornflowerblue"></i> Join!</h3>
-			<p><strong><a href="" data-toggle="modal" data-target="#signupModal">Sign up</a></strong>
+			<p><strong><a href="" rel="nofollow" data-toggle="modal" data-target="#signupModal">Sign up</a></strong>
 				to keep updated as our site grows. We'll deliver information direct to your inbox as we
 				add more content.
 			</p>
