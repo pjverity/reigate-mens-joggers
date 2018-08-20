@@ -76,11 +76,6 @@
 			<div class="card-body">
 				<h4 class="card-text">${nextEvent}</h4>
 			</div>
-			<div class="card-footer">
-				<span class="badge badge-pill badge-success">Coming Soon!</span><br/>
-				<strong>Thursday 1st March</strong>: Mixed men's and women's sessions every Thursday @ 19:30!
-			</div>
-
 		</div>
 	</div>
 </header>
@@ -101,10 +96,7 @@
 	<div class="row">
 		<div class="col-6 col-sm-6 col-md-3">
 			<h3><i class="fa fa-calendar-o" style="color: cornflowerblue"></i> When?</h3>
-			<p>7.30pm - 8.30pm<br/>
-				<i class="fa fa-male"></i> Tuesdays<br/>
-				<i class="fa fa-male"></i>+<i class="fa fa-female"></i> Thursdays (From 1st March)
-			</p>
+			<p>Every Tuesday 7.30pm - 8.30pm</p>
 		</div>
 		<div class="col-6 col-sm-6 col-md-3">
 			<h3><i class="fa fa-map-marker" style="color: cornflowerblue"></i> Where?</h3>
