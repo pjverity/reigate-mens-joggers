@@ -118,14 +118,14 @@
 				<version>1.10.0</version>
 				<configuration>
 					<commitMessages>
-						<featureStartMessage>Updated feature branch to version @{version}</featureStartMessage>
-						<featureFinishMessage>Reset develop branch to version @{version}</featureFinishMessage>
+						<featureStartMessage>[gitflow-maven-plugin] Updated feature branch to version @{version}</featureStartMessage>
+						<featureFinishMessage>[gitflow-maven-plugin] Reset develop branch to version @{version}</featureFinishMessage>
 
-						<releaseStartMessage>Updated release branch to version @{version}</releaseStartMessage>
-						<releaseFinishMessage>Incremented develop branch to version @{version}</releaseFinishMessage>
+						<releaseStartMessage>[gitflow-maven-plugin] Updated release branch to version @{version}</releaseStartMessage>
+						<releaseFinishMessage>[gitflow-maven-plugin] Incremented develop branch to version @{version}</releaseFinishMessage>
 
-						<hotfixStartMessage>Updated hotfix branch to version @{version}</hotfixStartMessage>
-						<hotfixFinishMessage>Incremented master branch to version @{version}</hotfixFinishMessage>
+						<hotfixStartMessage>[gitflow-maven-plugin] Updated hotfix branch to version @{version}</hotfixStartMessage>
+						<hotfixFinishMessage>[gitflow-maven-plugin] Incremented master branch to version @{version}</hotfixFinishMessage>
 					</commitMessages>
 
 					<!-- Increment the minor version on develop after releases -->
