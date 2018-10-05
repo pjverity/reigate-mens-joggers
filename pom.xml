@@ -112,6 +112,26 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>com.amashchenko.maven.plugin</groupId>
+				<artifactId>gitflow-maven-plugin</artifactId>
+				<version>1.10.0</version>
+				<configuration>
+					<commitMessages>
+						<featureStartMessage>Updated feature branch to version @{version}</featureStartMessage>
+						<featureFinishMessage>Reset develop branch to version @{version}</featureFinishMessage>
+
+						<releaseStartMessage>Updated release branch to version @{version}</releaseStartMessage>
+						<releaseFinishMessage>Incremented develop branch to version @{version}</releaseFinishMessage>
+
+						<hotfixStartMessage>Updated hotfix branch to version @{version}</hotfixStartMessage>
+						<hotfixFinishMessage>Incremented master branch to version @{version}</hotfixFinishMessage>
+					</commitMessages>
+
+					<!-- Increment the minor version on develop after releases -->
+					<versionDigitToIncrement>1</versionDigitToIncrement>
+				</configuration>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
