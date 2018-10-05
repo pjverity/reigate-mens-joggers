@@ -5,7 +5,7 @@
 	<groupId>uk.co.vhome</groupId>
 	<artifactId>reigate-mens-joggers</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.3-gitflow-config-SNAPSHOT</version>
+	<version>1.0.3-SNAPSHOT</version>
 
 	<name>Reigate Mens Joggers</name>
 
