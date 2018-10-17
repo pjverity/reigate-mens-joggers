@@ -5,7 +5,7 @@
 	<groupId>uk.co.vhome</groupId>
 	<artifactId>reigate-mens-joggers</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>1.1.0</version>
 
 	<name>Reigate Mens Joggers</name>
 
@@ -24,33 +24,23 @@
 		<maven.compiler.source>9</maven.compiler.source>
 		<maven.compiler.target>9</maven.compiler.target>
 
-		<junit.jupiter.version>5.0.0</junit.jupiter.version>
+		<junit.jupiter.version>5.1.1</junit.jupiter.version>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
-
-			<!-- Override the RC4 dependencies spring-security pulls in until it's GA version is available -->
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-framework-bom</artifactId>
-				<version>5.0.1.RELEASE</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-bom</artifactId>
-				<version>2.9.1</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-
 			<dependency>
 				<groupId>uk.co.vhome.clubbed</groupId>
 				<artifactId>clubbed-bom</artifactId>
-				<version>2.0.2</version>
+				<version>3.3.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>2.0.6.RELEASE</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -59,38 +49,18 @@
 
 	<dependencies>
 
-		<!-- Contains fixes for Java 9 -->
-		<!-- https://github.com/jboss-javassist/javassist/issues/147 -->
-		<dependency>
-			<groupId>org.javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<version>3.22.0-CR2</version>
-		</dependency>
-
 		<!-- At runtime, the container will overlay the contents of the below war with this projects war -->
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-web-common</artifactId>
 			<type>war</type>
 			<scope>runtime</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>aopalliance</artifactId>
-					<groupId>aopalliance</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-web-common</artifactId>
 			<classifier>classes</classifier>
-			<exclusions>
-				<exclusion>
-					<artifactId>aopalliance</artifactId>
-					<groupId>aopalliance</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<!-- This hooks in to the compiler and catches constraint violations at compile time p.457-->
@@ -101,6 +71,34 @@
 			<version>6.0.2.Final</version>
 			<scope>compile</scope>
 			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-freemarker</artifactId>
+		</dependency>
+
+		<!--
+		Override the version that spring-boot-starter-mail pulls in. This is
+		to be provided by the container. It is loaded by the containers class
+		loader. If we used the one Spring pulled in, the JNDI call to obtain
+		the mail Session would result in a ClassCastException when it attempts
+		to cast a Session instance to another, but loaded by a different ClassLoader
+		-->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>uk.co.vhome.clubbed</groupId>
+			<artifactId>clubbed-events</artifactId>
 		</dependency>
 
 		<dependency>
@@ -118,14 +116,14 @@
 				<version>1.10.0</version>
 				<configuration>
 					<commitMessages>
-						<featureStartMessage>Updated feature branch to version @{version}</featureStartMessage>
-						<featureFinishMessage>Reset develop branch to version @{version}</featureFinishMessage>
+						<featureStartMessage>[gitflow-maven-plugin] Updated feature branch to version @{version}</featureStartMessage>
+						<featureFinishMessage>[gitflow-maven-plugin] Reset develop branch to version @{version}</featureFinishMessage>
 
-						<releaseStartMessage>Updated release branch to version @{version}</releaseStartMessage>
-						<releaseFinishMessage>Incremented develop branch to version @{version}</releaseFinishMessage>
+						<releaseStartMessage>[gitflow-maven-plugin] Updated release branch to version @{version}</releaseStartMessage>
+						<releaseFinishMessage>[gitflow-maven-plugin] Incremented develop branch to version @{version}</releaseFinishMessage>
 
-						<hotfixStartMessage>Updated hotfix branch to version @{version}</hotfixStartMessage>
-						<hotfixFinishMessage>Incremented master branch to version @{version}</hotfixFinishMessage>
+						<hotfixStartMessage>[gitflow-maven-plugin] Updated hotfix branch to version @{version}</hotfixStartMessage>
+						<hotfixFinishMessage>[gitflow-maven-plugin] Incremented master branch to version @{version}</hotfixFinishMessage>
 					</commitMessages>
 
 					<!-- Increment the minor version on develop after releases -->
@@ -196,7 +194,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.19.1</version>
 				<configuration>
-					<skipTests>true</skipTests>
+					<failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
 				</configuration>
 			</plugin>
 
