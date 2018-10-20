@@ -3,8 +3,8 @@ package uk.co.vhome.rmj.mail.service;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.Map;
 @Service
 class DefaultEmailService implements MailService
 {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultEmailService.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final String FROM_ADDRESS = "administrator@reigatemensjoggers.co.uk";
 
