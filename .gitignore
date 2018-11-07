@@ -1,5 +1,5 @@
-.idea/
 *.iml
+src/main/resources/*.properties
+.idea/
 target/
-overlays/
 Todo.txt

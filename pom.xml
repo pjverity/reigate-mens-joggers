@@ -2,12 +2,16 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.0.RELEASE</version>
+	</parent>
+
 	<groupId>uk.co.vhome</groupId>
 	<artifactId>reigate-mens-joggers</artifactId>
-	<packaging>war</packaging>
-	<version>1.2.0-22-SNAPSHOT</version>
-
-	<name>Reigate Mens Joggers</name>
+	<!--<packaging>war</packaging>-->
+	<version>2.0.0-22-SNAPSHOT</version>
 
 	<url>https://github.com/pjverity/${project.artifactId}</url>
 
@@ -18,15 +22,13 @@
 	</scm>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-		<maven.compiler.source>9</maven.compiler.source>
-		<maven.compiler.target>9</maven.compiler.target>
-
-		<junit.jupiter.version>5.1.1</junit.jupiter.version>
+		<java.version>11</java.version>
+		<axon.version>3.3.3</axon.version>
+		<!--<maven.compiler.source>11</maven.compiler.source>-->
+		<!--<maven.compiler.target>11</maven.compiler.target>-->
 	</properties>
 
+<!--
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -46,25 +48,49 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+-->
 
 	<dependencies>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.axonframework</groupId>
+			<artifactId>axon-spring-boot-autoconfigure</artifactId>
+			<version>${axon.version}</version>
+		</dependency>
+<!--
+		<dependency>
+			<groupId>org.axonframework</groupId>
+			<artifactId>axon-spring</artifactId>
+			<version>${axon.version}</version>
+		</dependency>
+-->
+
 		<!-- At runtime, the container will overlay the contents of the below war with this projects war -->
+<!--
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-web-common</artifactId>
 			<type>war</type>
 			<scope>runtime</scope>
 		</dependency>
+-->
 
+<!--
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-web-common</artifactId>
 			<classifier>classes</classifier>
 		</dependency>
+-->
 
 		<!-- This hooks in to the compiler and catches constraint violations at compile time p.457-->
 		<!-- Marked as optional as it isn't required at runtime and we don't want it inherited -->
+<!--
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator-annotation-processor</artifactId>
@@ -72,10 +98,57 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
+-->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-freemarker</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
 		</dependency>
 
 		<!--
@@ -85,31 +158,43 @@
 		the mail Session would result in a ClassCastException when it attempts
 		to cast a Session instance to another, but loaded by a different ClassLoader
 		-->
+<!--
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>javax.mail</artifactId>
 			<scope>provided</scope>
 		</dependency>
+-->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
+<!--
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-events</artifactId>
 		</dependency>
+-->
 
+<!--
 		<dependency>
 			<groupId>uk.co.vhome.clubbed</groupId>
 			<artifactId>clubbed-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+-->
 	</dependencies>
 
 	<build>
 		<plugins>
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
 			<plugin>
 				<groupId>com.amashchenko.maven.plugin</groupId>
 				<artifactId>gitflow-maven-plugin</artifactId>
@@ -133,6 +218,22 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>enforce-dependency-checks</id>
+						<goals>
+							<goal>analyze-only</goal>
+						</goals>
+						<configuration>
+							<failOnWarning>true</failOnWarning>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.6.1</version>
 			</plugin>
@@ -147,6 +248,7 @@
 				</configuration>
 			</plugin>
 
+<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
@@ -160,6 +262,7 @@
 					</overlays>
 				</configuration>
 			</plugin>
+-->
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
