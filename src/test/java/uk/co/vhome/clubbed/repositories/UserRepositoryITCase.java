@@ -1,32 +1,33 @@
 package uk.co.vhome.clubbed.repositories;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.transaction.TestTransaction;
+import uk.co.vhome.clubbed.JpaITConfiguration;
 import uk.co.vhome.clubbed.entities.UserDetailsEntity;
 import uk.co.vhome.clubbed.entities.UserEntity;
 
-import javax.sql.DataSource;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static uk.co.vhome.clubbed.test.UserConfigurations.*;
+import static uk.co.vhome.clubbed.UserConfigurations.*;
 
 // Prevent DB migrations from taking place
 @DataJpaTest(excludeAutoConfiguration = FlywayAutoConfiguration.class, showSql = false)
 // Change the default 'create-drop' strategy from to avoid a Derby specific issue (https://github.com/spring-projects/spring-boot/issues/7706)
 @TestPropertySource(properties = "spring.jpa.hibernate.ddl-auto=none")
+@Import(JpaITConfiguration.class)
 class UserRepositoryITCase
 {
 	@Autowired
@@ -35,17 +36,8 @@ class UserRepositoryITCase
 	@Autowired
 	private UserDetailsRepository userDetailsRepository;
 
-	// Used in order to create an initial user
-	private static JdbcUserDetailsManager jdbcUserDetailsManager;
-
-	@BeforeAll
-	static void setUp(@Autowired DataSource dataSource)
-	{
-		jdbcUserDetailsManager = new JdbcUserDetailsManager();
-		jdbcUserDetailsManager.setEnableGroups(true);
-		jdbcUserDetailsManager.setEnableAuthorities(false);
-		jdbcUserDetailsManager.setDataSource(dataSource);
-	}
+	@Autowired
+	private JdbcUserDetailsManager jdbcUserDetailsManager;
 
 	@Test
 	@Sql({"/user-schema.sql", "/test-users.sql"})

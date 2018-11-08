@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class InitialSiteUser
 {
-	private String id;
+	private final String id;
 
-	private String firstName;
+	private final String firstName;
 
-	private String lastName;
+	private final String lastName;
 
-	private String password;
+	private final String password;
 
 	public InitialSiteUser(@Value("${initial-site-user.id}") String id,
 	                       @Value("${initial-site-user.first-name}") String firstName,
@@ -33,19 +33,9 @@ public class InitialSiteUser
 		return id;
 	}
 
-	public void setId(String id)
-	{
-		this.id = id;
-	}
-
 	public String getFirstName()
 	{
 		return firstName;
-	}
-
-	public void setFirstName(String firstName)
-	{
-		this.firstName = firstName;
 	}
 
 	public String getLastName()
@@ -53,18 +43,8 @@ public class InitialSiteUser
 		return lastName;
 	}
 
-	public void setLastName(String lastName)
-	{
-		this.lastName = lastName;
-	}
-
 	public String getPassword()
 	{
 		return password;
-	}
-
-	public void setPassword(String password)
-	{
-		this.password = password;
 	}
 }

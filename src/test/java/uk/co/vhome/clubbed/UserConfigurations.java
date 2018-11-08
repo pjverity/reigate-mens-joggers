@@ -1,4 +1,4 @@
-package uk.co.vhome.clubbed.test;
+package uk.co.vhome.clubbed;
 
 import uk.co.vhome.clubbed.entities.UserDetailsEntity;
 import uk.co.vhome.clubbed.entities.UserEntity;
