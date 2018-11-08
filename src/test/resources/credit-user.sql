@@ -1,0 +1,1 @@
+UPDATE user_details SET balance = 6 WHERE users_id = 0;
