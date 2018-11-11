@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.lang.Nullable;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -61,11 +60,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 	 * The element accepts a filesystem path and a url that will cause the container to load
 	 * the resource from the filesystem rather than from the contents of the web app.
 	 */
-	public static final String[] UNPROTECTED_RESOURCE_MATCHERS = {"/css/**",
-	                                                              "/galleria/**",
-	                                                              "/images/**",
-	                                                              "/js/**",
-	                                                              "/sitemap.xml"};
+	private static final String[] UNPROTECTED_RESOURCE_MATCHERS = {"/css/**",
+	                                                               "/galleria/**",
+	                                                               "/images/**",
+	                                                               "/js/**",
+	                                                               "/sitemap.xml"};
 
 	public static final String USER_ID_SESSION_ATTRIBUTE = "userId";
 
@@ -146,7 +145,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 	}
 
 	@Override
-	public void configure(WebSecurity web) throws Exception
+	public void configure(WebSecurity web)
 	{
 		LOGGER.info("Configuring Web security...");
 
@@ -171,7 +170,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
 				SimpleUser simpleUser = userDetailsManager.getJdbcTemplate().queryForObject(SESSION_ATTRIBUTES_SQL, new String[]{authentication.getName()}, new RowMapper<>()
 				{
-					@Nullable
 					@Override
 					public SimpleUser mapRow(ResultSet rs, int rowNum) throws SQLException
 					{
