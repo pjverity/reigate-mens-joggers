@@ -1,3 +1,4 @@
+*.log
 *.iml
 src/main/resources/*.properties
 .idea/
