@@ -1,7 +1,7 @@
 package uk.co.vhome.clubbed.web.controllers.usermanagement;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class UserManagementController
 {
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserManagementController.class);
 
 	private final UserAccountManagementService userAccountManagementService;
 

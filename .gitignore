@@ -1,6 +1,6 @@
+.idea/
+src/main/resources-ext/
+target/
 *.log
 *.iml
-src/main/resources/*.properties
-.idea/
-target/
 Todo.txt

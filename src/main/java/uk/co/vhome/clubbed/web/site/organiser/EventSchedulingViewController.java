@@ -1,7 +1,7 @@
 package uk.co.vhome.clubbed.web.site.organiser;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.repository.query.Param;
@@ -24,7 +24,7 @@ import java.util.Optional;
 @Controller
 public class EventSchedulingViewController
 {
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LoggerFactory.getLogger(EventSchedulingViewController.class);
 
 	private static final String VIEW_NAME = "/organiser/event-scheduling";
 

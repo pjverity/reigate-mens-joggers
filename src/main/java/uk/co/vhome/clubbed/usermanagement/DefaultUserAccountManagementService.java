@@ -1,9 +1,9 @@
 package uk.co.vhome.clubbed.usermanagement;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.EventMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.session.SessionInformation;
@@ -35,7 +35,7 @@ import static org.axonframework.eventhandling.GenericEventMessage.asEventMessage
 @Service
 public class DefaultUserAccountManagementService implements UserAccountManagementService
 {
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultUserAccountManagementService.class);
 
 	private final JdbcUserDetailsManager userDetailsManager;
 

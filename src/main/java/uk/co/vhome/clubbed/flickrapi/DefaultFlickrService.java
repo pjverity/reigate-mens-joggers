@@ -1,7 +1,7 @@
 package uk.co.vhome.clubbed.flickrapi;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 @Service
 public class DefaultFlickrService implements FlickrService
 {
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultFlickrService.class);
 
 	private static final String SQL_SELECT_GROUP_NAME = "SELECT value from site_settings WHERE name = 'FLICKR_GROUP_NAME'";
 

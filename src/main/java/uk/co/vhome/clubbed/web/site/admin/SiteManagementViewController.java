@@ -1,7 +1,7 @@
 package uk.co.vhome.clubbed.web.site.admin;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Controller
 public class SiteManagementViewController
 {
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LoggerFactory.getLogger(SiteManagementViewController.class);
 
 	private final FlickrService flickrService;
 

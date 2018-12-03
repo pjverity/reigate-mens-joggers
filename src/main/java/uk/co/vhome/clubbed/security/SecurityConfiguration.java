@@ -1,7 +1,7 @@
 package uk.co.vhome.clubbed.security;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +33,7 @@ import java.sql.SQLException;
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 {
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfiguration.class);
 
 	private static class SimpleUser
 	{

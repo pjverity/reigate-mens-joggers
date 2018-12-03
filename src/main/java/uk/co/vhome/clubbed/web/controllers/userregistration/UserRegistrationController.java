@@ -1,7 +1,7 @@
 package uk.co.vhome.clubbed.web.controllers.userregistration;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -32,7 +32,7 @@ import static uk.co.vhome.clubbed.security.SecurityConfiguration.*;
 @Controller
 public class UserRegistrationController
 {
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserRegistrationController.class);
 
 	private static final String MESSAGE_CODE_VALIDATION_CONSTRAINT_USER_REGISTRATION_VALID = "validation.constraint.UserRegistrationValid";
 
