@@ -5,17 +5,17 @@ RUN mkdir -p /usr/local/assets/images \
     && adduser --system clubbedapp --ingroup clubbed
 
 USER clubbedapp
+WORKDIR /usr/local
 
-ARG BUILD_OUTPUT_PATH=/target
-ARG ARTIFACT_NAME=reigate-mens-joggers
+EXPOSE 8080
+
+ARG ARTIFACT_NAME
 ARG ARTIFACT_VERSION
 
 ENV ARTIFACT ${ARTIFACT_NAME}-${ARTIFACT_VERSION}.war
-ENV JAVA_OPTS="-Dspring.profiles.active=k8s -Dspring.config.additional-location=file:/usr/local/config/"
 
-COPY ${BUILD_OUTPUT_PATH}/${ARTIFACT} /usr/local/${ARTIFACT}
+ADD /target/${ARTIFACT} /usr/local/${ARTIFACT}
 
-EXPOSE 8080
-WORKDIR /usr/local
+ENV DATABASE_HOST=postgres DATABASE_NAME=rmj EXTERNAL_STATIC_ASSETS_PATH=/mnt/tomcat/sites/rmj
 
 CMD /usr/local/${ARTIFACT}

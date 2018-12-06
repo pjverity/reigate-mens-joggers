@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reigate-mens-joggers
+  labels:
+    app: reigate-mens-joggers
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reigate-mens-joggers
+  template:
+    metadata:
+      labels:
+        app: reigate-mens-joggers
+    spec:
+      containers:
+      - name: reigate-mens-joggers
+        image: pjverity/reigate-mens-joggers:2.0.0-22-SNAPSHOT
+        resources:
+          requests:
+            cpu: 10m
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: mail-env
+        env:
+        - name: DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: username
+        - name: DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: password
+        - name: MAIL_SERVER_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mail-credentials
+              key: username
+        - name: MAIL_SERVER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mail-credentials
+              key: password
+        - name: RECAPTCHA_KEY
+          valueFrom:
+            secretKeyRef:
+              name: recaptcha-key
+              key: api-key
+        - name: FLICKR_KEY
+          valueFrom:
+            secretKeyRef:
+              name: flickr-key
+              key: api-key
