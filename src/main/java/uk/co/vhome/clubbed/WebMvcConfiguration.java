@@ -17,14 +17,6 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer
 {
-/*
-	private static final String[] ADDITIONAL_RESOURCE_LOCATIONS = {"/css/",
-	                                                               "/galleria/",
-	                                                               "/images/",
-	                                                               "/js/",
-	                                                               "/"};
-*/
-
 	private final MessageSource messageSource;
 
 	@Autowired
@@ -38,16 +30,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer
 	{
 		registry.addViewController("/world/coach-profile").setViewName("world/coach-profile");
 	}
-
-/*
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry)
-	{
-		registry.addResourceHandler(SecurityConfiguration.UNPROTECTED_RESOURCE_MATCHERS)
-				.addResourceLocations(ADDITIONAL_RESOURCE_LOCATIONS)
-				.setCacheControl(CacheControl.maxAge(15, TimeUnit.DAYS).cachePublic());
-	}
-*/
 
 	@Override
 	public Validator getValidator()
