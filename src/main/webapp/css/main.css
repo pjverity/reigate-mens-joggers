@@ -1,0 +1,22 @@
+a.social-buttons {
+    display: inline-block;
+    color: white;
+    border-radius: 100%;
+    width: 1.5em;
+    height: 1.5em;
+    border: none;
+    text-align: center;
+    padding-top: .25em;
+    margin: .1em;
+}
+
+a.social-buttons:hover {
+    text-decoration: none;
+}
+
+a.social-buttons.larger {
+    width: 1.8em;
+    height: 1.8em;
+    font-size: 3em;
+    padding-top: .35em;
+}

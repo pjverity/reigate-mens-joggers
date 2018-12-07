@@ -1,5 +1,5 @@
 .idea/
-*.iml
+src/main/resources-ext/
 target/
-overlays/
-Todo.txt
+*.log
+*.iml
