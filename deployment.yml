@@ -30,12 +30,12 @@ spec:
         - configMapRef:
             name: mail-env
         env:
-        - name: DATASOURCE_USERNAME
+        - name: DATABASE_USERNAME
           valueFrom:
             secretKeyRef:
               name: postgres-credentials
               key: username
-        - name: DATASOURCE_PASSWORD
+        - name: DATABASE_PASSWORD
           valueFrom:
             secretKeyRef:
               name: postgres-credentials
