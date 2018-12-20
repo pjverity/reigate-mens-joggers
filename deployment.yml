@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: reigate-mens-joggers
-        image: pjverity/reigate-mens-joggers:2.0.0-22-SNAPSHOT
+        image: pjverity/reigate-mens-joggers:2.0.0
         resources:
           requests:
             cpu: 10m
