@@ -13,7 +13,7 @@ ARG ARTIFACT_VERSION
 
 ENV ARTIFACT ${ARTIFACT_NAME}-${ARTIFACT_VERSION}.war
 
-COPY /workspace/target/${ARTIFACT} /usr/local/${ARTIFACT}
+COPY /target/${ARTIFACT} /usr/local/${ARTIFACT}
 
 RUN chown clubbedapp:clubbed /usr/local/${ARTIFACT}
 
