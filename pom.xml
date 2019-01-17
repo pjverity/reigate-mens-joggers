@@ -177,38 +177,6 @@
 			</plugin>
 
 			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>dockerfile-maven-plugin</artifactId>
-				<version>1.4.9</version>
-				<executions>
-					<execution>
-						<id>default</id>
-						<goals>
-							<goal>build</goal>
-							<goal>push</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
-					<repository>pjverity/${project.artifactId}</repository>
-					<tag>${project.version}</tag>
-					<buildArgs>
-						<ARTIFACT_NAME>${project.artifactId}</ARTIFACT_NAME>
-						<ARTIFACT_VERSION>${project.version}</ARTIFACT_VERSION>
-					</buildArgs>
-				</configuration>
-				<dependencies>
-					<!-- Required to work with Java 9 -->
-					<dependency>
-						<groupId>org.codehaus.plexus</groupId>
-						<artifactId>plexus-archiver</artifactId>
-						<version>3.4</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>3.0.0</version>

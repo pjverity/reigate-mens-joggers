@@ -1,0 +1,3 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['run', '-it', '--rm', '--name', 'mvn-builder', '-v', '"$(pwd)":/usr/src/rmj', '-w', '/usr/src/rmj', 'maven:3.6.0-jdk-11-slim', 'mvn', 'clean', 'compile']
