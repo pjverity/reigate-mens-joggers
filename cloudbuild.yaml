@@ -1,6 +1,6 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['run', '-v', '.:/usr/src/rmj', '-w', '/usr/src/rmj', 'maven:3.6.0-jdk-11-slim', 'mvn', 'clean', 'package']
+    args: ['run', '-v', './:/usr/src/rmj', '-w', '/usr/src/rmj', 'maven:3.6.0-jdk-11-slim', 'mvn', 'clean', 'package']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/$PROJECT_ID/reigate-mens-joggers', '.']
     env:
