@@ -2,8 +2,5 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['run', '-v', '/workspace:/usr/src/rmj', '-w', '/usr/src/rmj', 'maven:3.6.0-jdk-11-slim', 'mvn', 'clean', 'package']
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/reigate-mens-joggers', '.']
-    env:
-      - 'ARTIFACT_NAME=reigate-mens-joggers'
-      - 'ARTIFACT_VERSION=2.1.0-gcb-SNAPSHOT'
+    args: ['build', '-t', '--build-arg', 'ARTIFACT_NAME=${_ARTIFACT_NAME}', '--build-arg', 'ARTIFACT_VERSION=${_ARTIFACT_VERSION}', '--build-arg', 'SPRING_ACTIVE_PROFILES=local', 'gcr.io/$PROJECT_ID/reigate-mens-joggers', '.']
 images: ['gcr.io/$PROJECT_ID/reigate-mens-joggers']
