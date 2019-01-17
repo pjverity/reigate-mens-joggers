@@ -1,7 +1,7 @@
 package uk.co.vhome.clubbed.web.controllers.userregistration;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.provisioning.UserDetailsManager;
 import uk.co.vhome.clubbed.web.services.recaptcha.ReCaptchaService;
@@ -17,7 +17,7 @@ import java.util.Objects;
 public class UserRegistrationValidator implements ConstraintValidator<UserRegistrationValid, UserRegistrationFormObject>
 {
 
-	private final static Logger LOGGER = LogManager.getLogger();
+	private final static Logger LOGGER = LoggerFactory.getLogger(UserRegistrationValid.class);
 
 	private final ReCaptchaService recaptchaService;
 
