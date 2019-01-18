@@ -3,4 +3,14 @@ steps:
     args: ['run', '-v', '/workspace:/usr/src/rmj', '-w', '/usr/src/rmj', 'maven:3.6.0-jdk-11-slim', 'mvn', 'clean', 'package']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/$PROJECT_ID/reigate-mens-joggers:${TAG_NAME}', '--build-arg', 'ARTIFACT_NAME=reigate-mens-joggers', '--build-arg', 'ARTIFACT_VERSION=${TAG_NAME}', '.']
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+      - set
+      - image
+      - deployment
+      - reigate-mens-joggers
+      - reigate-mens-joggers=gcr.io/$PROJECT_ID/reigate-mens-joggers:${TAG_NAME}
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=europe-west2-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=clubbed-cluster'
 images: ['gcr.io/$PROJECT_ID/reigate-mens-joggers:${TAG_NAME}']
