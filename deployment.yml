@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: reigate-mens-joggers
-        image: pjverity/reigate-mens-joggers:2.0.0
+        image: gcr.io/${PROJECT_ID}/reigate-mens-joggers:${TAG_NAME}
         resources:
           requests:
             cpu: 10m
