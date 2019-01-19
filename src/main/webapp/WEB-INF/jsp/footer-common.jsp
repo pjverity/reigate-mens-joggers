@@ -29,7 +29,7 @@
 		</div>
 		<div class="row">
 			<div class="col text-right">
-				<small class="text-muted">© Paul Verity (2018) <a href="https://github.com/pjverity/rmj"><i class="fa fa-github"></i></a></small>
+				<small class="text-muted">© Paul Verity (2019) <a href="https://github.com/pjverity/rmj"><i class="fa fa-github"></i></a></small>
 			</div>
 		</div>
 	</div>
