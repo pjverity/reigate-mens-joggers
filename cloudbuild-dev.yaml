@@ -1,0 +1,8 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['run', '-v', '/workspace:/usr/build', '-w', '/usr/build', 'maven:3.6.0-jdk-11-slim', 'mvn', 'clean', 'package']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/${PROJECT_ID}/reigate-mens-joggers:latest', '--build-arg', 'ARTIFACT_VERSION=${_DEV_VERSION}', '.']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/${PROJECT_ID}/reigate-mens-joggers:latest']
+images: ['gcr.io/${PROJECT_ID}/reigate-mens-joggers:latest']
