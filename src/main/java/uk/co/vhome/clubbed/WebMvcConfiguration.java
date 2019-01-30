@@ -29,6 +29,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer
 	public void addViewControllers(ViewControllerRegistry registry)
 	{
 		registry.addViewController("/world/coach-profile").setViewName("world/coach-profile");
+		registry.addViewController("/world/privacy-policy").setViewName("world/privacy-policy");
 	}
 
 	@Override
