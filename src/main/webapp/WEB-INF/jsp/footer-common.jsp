@@ -1,35 +1,28 @@
 <footer style="font-size: .75em" class="mt-3">
 	<div class="container-fluid bg-light text-secondary">
-		<div class="row pt-3 text-center">
-			<div class="col-12 col-sm-3">
-				Caterham
+		<div class="row pt-3 text-center justify-content-center">
+			<div class="col-4 col-sm-2">
+				Mens
 				<ul class="list-unstyled">
-					<li><a href="http://www.caterhamladiesjoggers.co.uk">Caterham Ladies Joggers</a></li>
+					<li>Reigate</li>
 				</ul>
 			</div>
-			<div class="col-12 col-sm-3">
-				Horsham
+			<div class="col-4 col-sm-2">
+				Ladies
 				<ul class="list-unstyled">
-					<li><a href="http://www.horshamladiesjoggers.co.uk">Horsham Ladies Joggers</a></li>
+					<li><a href="http://www.caterhamladiesjoggers.co.uk">Caterham</a></li>
+					<li><a href="http://www.reigateladiesjoggers.co.uk">Reigate</a></li>
+					<li><a href="http://www.dorkingladiesjoggers.co.uk">Dorking</a></li>
+					<li><a href="http://www.horshamladiesjoggers.co.uk">Horsham</a></li>
+					<li><a href="http://www.oxtedladiesjoggers.co.uk">Oxted</a></li>
 				</ul>
+				<a href='/world/privacy-policy'>Our Privacy Policy</a>
 			</div>
-			<div class="col-12 col-sm-3">
-				Oxted
+			<div class="col-4 col-sm-2">
+				Juniors
 				<ul class="list-unstyled">
-					<li><a href="http://www.oxtedladiesjoggers.co.uk">Oxted Ladies Joggers</a></li>
+					<li><a href="http://www.reigatejuniorjoggers.co.uk">Reigate</a></li>
 				</ul>
-			</div>
-			<div class="col-12 col-sm-3">
-				Reigate
-				<ul class="list-unstyled">
-					<li><a href="http://www.reigateladiesjoggers.co.uk">Reigate Ladies Joggers</a></li>
-					<li><a href="http://www.reigatejuniorjoggers.co.uk">Reigate Junior Joggers</a></li>
-				</ul>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col text-right">
-				<small class="text-muted">© Paul Verity (2019) <a href="https://github.com/pjverity/rmj"><i class="fa fa-github"></i></a></small>
 			</div>
 		</div>
 	</div>

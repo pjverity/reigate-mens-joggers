@@ -163,7 +163,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.6.1</version>
+				<version>3.8.0</version>
+				<configuration>
+					<release>${java.version}</release>
+				</configuration>
 			</plugin>
 
 			<!-- Currently no remote repository to deploy artifacts to, so configure the plugin to skip deployment -->
