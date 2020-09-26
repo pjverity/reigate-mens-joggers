@@ -20,9 +20,6 @@ spec:
         resources:
           requests:
             cpu: 10m
-        volumeMounts:
-        - mountPath: /mnt/
-          name: tomcat-storage
         ports:
         - containerPort: 8080
           protocol: TCP
@@ -60,7 +57,3 @@ spec:
             secretKeyRef:
               name: flickr-key
               key: api-key
-      volumes:
-      - name: tomcat-storage
-        persistentVolumeClaim:
-          claimName: tomcat-pv-claim

@@ -1,6 +1,8 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['run', '-v', '/workspace:/usr/build', '-w', '/usr/build', 'maven:3.6.0-jdk-11-slim', 'mvn', 'clean', 'package']
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['cp', '-r', 'gs://artifacts.${PROJECT_ID}.appspot.com/site-assets/reigate-mens-joggers/*', './assets']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/${PROJECT_ID}/reigate-mens-joggers:${TAG_NAME}', '--build-arg', 'ARTIFACT_VERSION=${TAG_NAME}', '.']
   - name: 'gcr.io/cloud-builders/docker'
