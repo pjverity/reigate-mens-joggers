@@ -12,9 +12,6 @@
 				<ul class="list-unstyled">
 					<li><a href="http://www.caterhamladiesjoggers.co.uk">Caterham</a></li>
 					<li><a href="http://www.reigateladiesjoggers.co.uk">Reigate</a></li>
-					<li><a href="http://www.dorkingladiesjoggers.co.uk">Dorking</a></li>
-					<li><a href="http://www.horshamladiesjoggers.co.uk">Horsham</a></li>
-					<li><a href="http://www.oxtedladiesjoggers.co.uk">Oxted</a></li>
 				</ul>
 				<a href='/world/privacy-policy'>Our Privacy Policy</a>
 			</div>

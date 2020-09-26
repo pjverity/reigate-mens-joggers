@@ -1,0 +1,4 @@
+# Create an 'empty' directory for CloudBuilder to copy the image assets in to
+*
+# Except this file
+!.gitignore
