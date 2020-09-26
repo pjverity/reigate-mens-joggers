@@ -9,11 +9,12 @@ EXPOSE 8080
 ARG ARTIFACT_VERSION
 
 ENV ARTIFACT reigate-mens-joggers-${ARTIFACT_VERSION}.war
-ENV DATABASE_HOST=postgres DATABASE_NAME=rmj EXTERNAL_STATIC_ASSETS_PATH=/mnt/tomcat/sites/rmj
+ENV DATABASE_HOST=postgres DATABASE_NAME=rmj EXTERNAL_STATIC_ASSETS_PATH=/usr/local/assets
 
 WORKDIR /usr/local
 
 COPY /target/${ARTIFACT} .
+COPY assets/images/* /usr/local/assets/images/
 
 RUN chown clubbedapp:clubbed ${ARTIFACT}
 
