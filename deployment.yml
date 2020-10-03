@@ -40,12 +40,12 @@ spec:
         - name: MAIL_SERVER_USERNAME
           valueFrom:
             secretKeyRef:
-              name: mail-credentials
+              name: mailjet-credentials
               key: username
         - name: MAIL_SERVER_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mail-credentials
+              name: mailjet-credentials
               key: password
         - name: RECAPTCHA_KEY
           valueFrom:
