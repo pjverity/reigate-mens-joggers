@@ -75,9 +75,13 @@
 			<h4 class="card-header bg-info text-white">Next Run</h4>
 			<div class="card-body">
 				<h4 class="card-text">${nextEvent}</h4>
+				<div class="pt-2">
+					<a class="btn btn-outline-info" href="https://www.eventbrite.co.uk/o/reigate-ladies-joggers-26844876883" role="button">Book Into A Run</a>
+				</div>
 			</div>
 		</div>
 	</div>
+
 </header>
 
 <main class="container">
